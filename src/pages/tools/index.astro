@@ -1,0 +1,121 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Icon from '@components/Icon.astro';
+import NepaliLandConverter from '@components/NepaliLandConverter.astro';
+---
+<BaseLayout title="Engineering Tools" description="Engineering calculators, standard unit conversions and a Nepal land-area converter for hill and Terai measurement systems.">
+  <PageIntro eyebrow="Practical utilities" title="Engineering tools" description="Small browser-based utilities for common calculations. Results are illustrative and should be checked against project requirements and applicable standards." />
+  <section class="content-wrap">
+    <Container>
+      <div class="tool-grid">
+        <section class="tool-panel" aria-labelledby="converter-title">
+          <div class="tool-panel__header">
+            <span class="tool-panel__icon"><Icon name="ruler" size={21} /></span>
+            <div><h2 id="converter-title">Unit converter</h2><p>Convert common engineering units.</p></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="conversion-value">Value</label><input id="conversion-value" type="number" inputmode="decimal" min="0" step="any" value="1" /></div>
+            <div class="field"><label for="conversion-type">Conversion</label><select id="conversion-type"><option value="m-ft">Metres → feet</option><option value="ft-m">Feet → metres</option><option value="km-mi">Kilometres → miles</option><option value="mi-km">Miles → kilometres</option><option value="cms-lps">m³/s → L/s</option><option value="lps-cms">L/s → m³/s</option><option value="mm-in">Millimetres → inches</option><option value="in-mm">Inches → millimetres</option></select></div>
+          </div>
+          <div class="tool-result" aria-live="polite" aria-atomic="true"><span class="tool-result__label">Converted value</span><output class="tool-result__value" id="conversion-result">3.28084 ft</output></div>
+          <p class="tool-footnote">Uses standard conversion factors. Display precision is limited for readability; retain appropriate precision in engineering calculations.</p>
+        </section>
+
+        <section class="tool-panel" aria-labelledby="manning-title">
+          <div class="tool-panel__header">
+            <span class="tool-panel__icon"><Icon name="droplets" size={21} /></span>
+            <div><h2 id="manning-title">Manning's equation</h2><p>Rectangular open-channel flow estimate.</p></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="channel-width">Channel width, b (m)</label><input id="channel-width" type="number" min="0.001" step="any" placeholder="e.g. 2.0" /></div>
+            <div class="field"><label for="flow-depth">Flow depth, y (m)</label><input id="flow-depth" type="number" min="0.001" step="any" placeholder="e.g. 0.8" /></div>
+            <div class="field"><label for="manning-n">Manning's n</label><input id="manning-n" type="number" min="0.0001" step="any" placeholder="e.g. 0.015" /></div>
+            <div class="field"><label for="channel-slope">Bed slope, S (m/m)</label><input id="channel-slope" type="number" min="0.000001" step="any" placeholder="e.g. 0.001" /></div>
+          </div>
+          <div class="tool-result" aria-live="polite" aria-atomic="true"><span class="tool-result__label">Estimated discharge, Q</span><output class="tool-result__value" id="manning-result">Enter channel dimensions</output><span class="tool-result__note" id="manning-note">Discharge and mean velocity will be shown here.</span></div>
+          <p class="tool-footnote">SI units. Assumes steady, uniform flow in a prismatic rectangular channel. Select Manning's n and slope using appropriate engineering references.</p>
+        </section>
+      </div>
+      <div class="notice" style="margin-top: 22px"><strong>Important:</strong> These utilities are learning and checking aids, not a substitute for engineering judgement, design review, field verification or applicable codes and standards.</div>
+    </Container>
+  </section>
+  <NepaliLandConverter />
+  <script>
+    const valueInput = document.querySelector<HTMLInputElement>('#conversion-value');
+    const conversionType = document.querySelector<HTMLSelectElement>('#conversion-type');
+    const conversionResult = document.querySelector<HTMLOutputElement>('#conversion-result');
+
+    const conversions = {
+      'm-ft': { factor: 3.280839895, unit: 'ft' },
+      'ft-m': { factor: 0.3048, unit: 'm' },
+      'km-mi': { factor: 0.6213711922, unit: 'mi' },
+      'mi-km': { factor: 1.609344, unit: 'km' },
+      'cms-lps': { factor: 1000, unit: 'L/s' },
+      'lps-cms': { factor: 0.001, unit: 'm³/s' },
+      'mm-in': { factor: 0.03937007874, unit: 'in' },
+      'in-mm': { factor: 25.4, unit: 'mm' },
+    } as const;
+
+    const updateConversion = (): void => {
+      if (!valueInput || !conversionType || !conversionResult) return;
+
+      const value = Number(valueInput.value);
+      const conversion = conversions[conversionType.value as keyof typeof conversions];
+      if (valueInput.value.trim() === '' || !Number.isFinite(value) || !conversion) {
+        conversionResult.textContent = 'Enter a valid number';
+        return;
+      }
+
+      const result = value * conversion.factor;
+      conversionResult.textContent = `${new Intl.NumberFormat('en', { maximumSignificantDigits: 8 }).format(result)} ${conversion.unit}`;
+    };
+
+    valueInput?.addEventListener('input', updateConversion);
+    conversionType?.addEventListener('change', updateConversion);
+    updateConversion();
+
+    const manningInputs = [
+      document.querySelector<HTMLInputElement>('#channel-width'),
+      document.querySelector<HTMLInputElement>('#flow-depth'),
+      document.querySelector<HTMLInputElement>('#manning-n'),
+      document.querySelector<HTMLInputElement>('#channel-slope'),
+    ] as const;
+    const manningResult = document.querySelector<HTMLOutputElement>('#manning-result');
+    const manningNote = document.querySelector<HTMLElement>('#manning-note');
+
+    const updateManning = (): void => {
+      const [widthInput, depthInput, roughnessInput, slopeInput] = manningInputs;
+      if (!widthInput || !depthInput || !roughnessInput || !slopeInput || !manningResult || !manningNote) return;
+
+      const values = [widthInput.value, depthInput.value, roughnessInput.value, slopeInput.value];
+      if (values.some((value) => value.trim() === '')) {
+        manningResult.textContent = 'Enter channel dimensions';
+        manningNote.textContent = 'Discharge and mean velocity will be shown here.';
+        return;
+      }
+
+      const width = Number(widthInput.value);
+      const depth = Number(depthInput.value);
+      const roughness = Number(roughnessInput.value);
+      const slope = Number(slopeInput.value);
+      if (![width, depth, roughness, slope].every(Number.isFinite) || width <= 0 || depth <= 0 || roughness <= 0 || slope <= 0) {
+        manningResult.textContent = 'Check input values';
+        manningNote.textContent = 'All four values must be positive numbers.';
+        return;
+      }
+
+      const area = width * depth;
+      const wettedPerimeter = width + (2 * depth);
+      const hydraulicRadius = area / wettedPerimeter;
+      const velocity = (1 / roughness) * Math.pow(hydraulicRadius, 2 / 3) * Math.sqrt(slope);
+      const discharge = area * velocity;
+      manningResult.textContent = `${discharge.toLocaleString('en', { maximumSignificantDigits: 6 })} m³/s`;
+      manningNote.textContent = `Area ${area.toFixed(3)} m² · Hydraulic radius ${hydraulicRadius.toFixed(3)} m · Mean velocity ${velocity.toFixed(3)} m/s`;
+    };
+
+    manningInputs.forEach((input) => input?.addEventListener('input', updateManning));
+    updateManning();
+  </script>
+</BaseLayout>

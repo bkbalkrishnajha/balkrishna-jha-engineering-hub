@@ -1,0 +1,232 @@
+---
+import Container from '@components/Container.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import Icon from '@components/Icon.astro';
+---
+<section class="section civil-fun-section" aria-label="Engineering fun tools and facts">
+  <Container>
+    <SectionHeading
+      eyebrow="A little engineering curiosity"
+      title="Take a quick break. Learn something new."
+      description="A small collection of playful tools and civil-engineering ideas for curious minds."
+    />
+
+    <div class="civil-fun-tools-grid">
+      <article class="fun-widget-card fun-number-card" aria-labelledby="number-picker-title">
+        <div class="fun-widget-heading">
+          <span class="fun-widget-icon"><Icon name="calculator" size={22} /></span>
+          <div>
+            <p class="eyebrow">Random number chooser</p>
+            <h3 id="number-picker-title">Pick a number</h3>
+          </div>
+        </div>
+        <p class="fun-widget-description">Choose a range and let the number picker make the decision for you.</p>
+        <form class="number-picker-form" data-number-form>
+          <div class="number-picker-fields">
+            <label class="number-picker-field" for="number-picker-min">
+              <span>Minimum</span>
+              <input id="number-picker-min" data-number-min type="number" inputmode="numeric" step="1" value="1" required />
+            </label>
+            <label class="number-picker-field" for="number-picker-max">
+              <span>Maximum</span>
+              <input id="number-picker-max" data-number-max type="number" inputmode="numeric" step="1" value="100" required />
+            </label>
+          </div>
+          <button class="button button--primary number-picker-button" type="submit">
+            Choose randomly <Icon name="arrow-up-right" size={16} />
+          </button>
+        </form>
+        <output class="number-picker-result" data-number-result aria-live="polite" aria-atomic="true">
+          Your selected number will appear here.
+        </output>
+        <p class="fun-widget-footnote">For fun and quick decisions—not for engineering calculations or safety-critical use.</p>
+      </article>
+
+      <article class="fun-widget-card fun-quote-card" aria-labelledby="daily-quote-title">
+        <div class="fun-widget-heading">
+          <span class="fun-widget-icon"><Icon name="notebook" size={22} /></span>
+          <div>
+            <p class="eyebrow">Daily motivation</p>
+            <h3 id="daily-quote-title">Motivation for the day</h3>
+          </div>
+        </div>
+        <div class="daily-quote-content">
+          <span class="daily-quote-mark" aria-hidden="true">“</span>
+          <blockquote data-daily-quote-text>
+            Good engineering balances safety, usefulness, cost and the needs of the people who use what we build.
+          </blockquote>
+        </div>
+        <div class="daily-quote-footer">
+          <span data-daily-quote-date>Refreshes each day in Nepal time</span>
+          <button class="button button--secondary quote-surprise-button" type="button" data-another-quote>
+            Surprise me <Icon name="arrow-right" size={15} />
+          </button>
+        </div>
+        <p class="fun-widget-footnote">Original motivational thoughts; the daily selection follows the Asia/Kathmandu calendar.</p>
+      </article>
+    </div>
+
+    <div class="civil-fun-facts-heading">
+      <div>
+        <p class="eyebrow">Quick facts</p>
+        <h3>Did you know?</h3>
+      </div>
+      <span>Four small facts from the civil engineering world</span>
+    </div>
+
+    <div class="civil-fun-facts-grid">
+      <article class="civil-fun-fact-card">
+        <span class="civil-fun-fact-icon"><Icon name="layers" size={21} /></span>
+        <p class="civil-fun-fact-category">MATERIALS</p>
+        <h4>Concrete and steel work together</h4>
+        <p>Concrete performs well in compression, while reinforcing steel helps reinforced-concrete members resist tensile stresses.</p>
+      </article>
+      <article class="civil-fun-fact-card">
+        <span class="civil-fun-fact-icon"><Icon name="activity" size={21} /></span>
+        <p class="civil-fun-fact-category">STRUCTURES</p>
+        <h4>Structures need room to move</h4>
+        <p>Temperature changes can make bridges expand or contract. Bearings and movement joints help accommodate those changes.</p>
+      </article>
+      <article class="civil-fun-fact-card">
+        <span class="civil-fun-fact-icon"><Icon name="ruler" size={21} /></span>
+        <p class="civil-fun-fact-category">SURVEYING</p>
+        <h4>A benchmark is a reference</h4>
+        <p>A survey benchmark has a known elevation and helps survey teams transfer levels accurately around a construction site.</p>
+      </article>
+      <article class="civil-fun-fact-card">
+        <span class="civil-fun-fact-icon"><Icon name="building-2" size={21} /></span>
+        <p class="civil-fun-fact-category">TRANSPORTATION</p>
+        <h4>Roads spread wheel loads</h4>
+        <p>Pavement layers distribute vehicle loads over a wider area before the stresses reach the soil subgrade.</p>
+      </article>
+    </div>
+  </Container>
+</section>
+
+<script>
+  const numberForm = document.querySelector<HTMLFormElement>('[data-number-form]');
+  const minimumInput = document.querySelector<HTMLInputElement>('[data-number-min]');
+  const maximumInput = document.querySelector<HTMLInputElement>('[data-number-max]');
+  const numberResult = document.querySelector<HTMLOutputElement>('[data-number-result]');
+
+  numberForm?.addEventListener('submit', (event: SubmitEvent) => {
+    event.preventDefault();
+    if (!minimumInput || !maximumInput || !numberResult) return;
+
+    const minimum = Number(minimumInput.value);
+    const maximum = Number(maximumInput.value);
+    const span = maximum - minimum + 1;
+
+    if (
+      minimumInput.value.trim() === '' ||
+      maximumInput.value.trim() === '' ||
+      !Number.isSafeInteger(minimum) ||
+      !Number.isSafeInteger(maximum) ||
+      maximum < minimum ||
+      !Number.isSafeInteger(span) ||
+      span < 1
+    ) {
+      numberResult.textContent = 'Enter whole numbers and make sure the maximum is not smaller than the minimum.';
+      numberResult.classList.add('is-error');
+      return;
+    }
+
+    const selectedNumber = minimum + Math.floor(Math.random() * span);
+    numberResult.textContent = `Your number is ${selectedNumber.toLocaleString('en-US')}.`;
+    numberResult.classList.remove('is-error');
+  });
+
+  const quoteText = document.querySelector<HTMLElement>('[data-daily-quote-text]');
+  const quoteDate = document.querySelector<HTMLElement>('[data-daily-quote-date]');
+  const anotherQuoteButton = document.querySelector<HTMLButtonElement>('[data-another-quote]');
+  // Original motivational lines: no external author attribution is implied.
+  const motivationalQuotes = [
+    'Start where you are; improve one drawing, one calculation, one decision at a time.',
+    'Consistency turns small daily efforts into work you can be proud of.',
+    'You do not need to know everything to take the next useful step.',
+    'A difficult problem is often an invitation to learn a better method.',
+    'Progress is built by showing up, asking questions and checking your work.',
+    'Let curiosity guide your learning and discipline guide your practice.',
+    'Confidence grows when preparation meets action.',
+    'A setback can reveal what needs to be strengthened before the next attempt.',
+    'Measure progress by what you understand today that you did not understand yesterday.',
+    'Great work is usually the result of many careful, ordinary steps.',
+    'Keep your standards high and your willingness to learn higher.',
+    'Every expert was once a beginner willing to practise.',
+    'The best time to improve a skill is during the small moments you can give it.',
+    'Do not rush the foundation; strong results depend on sound beginnings.',
+    'A clear plan turns a large goal into manageable work.',
+    'When the answer is not clear, return to the evidence and examine the assumptions.',
+    'Be patient with the process and honest about the results.',
+    'Your future work is shaped by the habits you practise now.',
+    'Focus on making the next decision accurate, useful and responsible.',
+    'Growth begins when you are willing to ask a better question.',
+    'Mistakes are useful when you study them and change your method.',
+    'A meaningful career is built through service, learning and integrity.',
+    'Do the simple things carefully; they are the structure of dependable work.',
+    'Stay curious enough to explore and disciplined enough to finish.',
+    'Good engineers keep learning because every site and every problem is different.',
+    'Progress is not always dramatic; sometimes it is simply doing today’s work well.',
+    'Treat every calculation as a chance to understand, not just to get a number.',
+    'Listen carefully, verify thoughtfully and communicate clearly.',
+    'A strong team is built when people share knowledge and take responsibility.',
+    'Ambitious goals become achievable when converted into consistent actions.',
+    'Let your work speak through its accuracy, safety and usefulness.',
+    'A challenging chapter does not decide the whole story; keep learning.',
+    'Take pride in preparation, patience and the quality of your decisions.',
+    'Success is not a shortcut; it is the accumulation of sound choices.',
+    'Build your knowledge patiently, then use it to make a positive difference.',
+    'Choose progress over perfection, but never compromise on safety.',
+    'Keep moving forward, even when the next step is small.',
+    'A good question can save time, effort and uncertainty.',
+    'The strongest foundations are built before anyone sees the structure.',
+    'Turn every opportunity to learn into an improvement in your practice.',
+    'Good engineering balances safety, usefulness, cost and the needs of the people who use what we build.',
+    'Strong infrastructure begins with careful questions about the ground beneath it.',
+    'Every accurate measurement is a small investment in a better-built result.',
+    'A drawing communicates an idea; sound construction turns it into something people can rely on.',
+    'Good roads connect places; thoughtful planning helps connect communities.',
+    'The details that are easiest to overlook can be the details that matter most.',
+    'Engineering progress grows from clear calculations, careful observation and responsible decisions.',
+    'A practical solution is one that works safely in the real conditions of its site.',
+    'Before choosing a design, understand the problem it must solve.',
+    'Precision in planning creates confidence during construction.'
+  ];
+
+  const renderQuote = (index: number): void => {
+    if (!quoteText) return;
+    quoteText.textContent = motivationalQuotes[index];
+  };
+
+  if (quoteText) {
+    const now = new Date();
+    const nepalDateParts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kathmandu',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(now);
+    const getDatePart = (partName: string): string =>
+      nepalDateParts.find((part) => part.type === partName)?.value ?? '0';
+    const year = Number(getDatePart('year'));
+    const month = Number(getDatePart('month'));
+    const day = Number(getDatePart('day'));
+    const nepalDayNumber = Math.floor(Date.UTC(year, month - 1, day) / 86_400_000);
+    const dailyIndex = nepalDayNumber % motivationalQuotes.length;
+
+    renderQuote(dailyIndex);
+    if (quoteDate) {
+      quoteDate.textContent = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Kathmandu',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(now) + ' · Nepal time';
+    }
+
+    anotherQuoteButton?.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+      renderQuote(randomIndex === dailyIndex ? (randomIndex + 1) % motivationalQuotes.length : randomIndex);
+    });
+  }
+</script>

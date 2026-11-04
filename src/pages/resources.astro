@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+---
+<BaseLayout title="Resources" description="A curated library of engineering references, learning resources and documents.">
+  <PageIntro eyebrow="Reference library" title="Engineering resources" description="A growing library of useful references, technical documents, learning material and engineering links." />
+  <section class="content-wrap">
+    <Container>
+      <div class="empty-state">
+        <p class="eyebrow">Resource library</p>
+        <h2>Resources will be published here.</h2>
+        <p>Files and external references will be added after their source, licence, version and suitability have been checked. No document downloads are available yet.</p>
+      </div>
+      <div style="margin-top: 45px">
+        <SectionHeading eyebrow="Planned organisation" title="Find material by purpose" description="The library is designed around engineering tasks rather than a miscellaneous list of downloads." />
+        <div class="card-grid">
+          <article class="feature-card"><span class="feature-card__number">CATEGORY 01</span><h3>Codes &amp; standards</h3><p>Official standards, specifications, manuals and guidance, with source information and edition details.</p><span class="feature-card__link">Planned category</span></article>
+          <article class="feature-card"><span class="feature-card__number">CATEGORY 02</span><h3>Technical references</h3><p>Reference notes, formula sheets, methods and technical reading across civil engineering design, construction and project delivery.</p><span class="feature-card__link">Planned category</span></article>
+          <article class="feature-card"><span class="feature-card__number">CATEGORY 03</span><h3>Templates &amp; guides</h3><p>Reusable checklists, calculation formats and documentation guides where sharing is appropriate.</p><span class="feature-card__link">Planned category</span></article>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

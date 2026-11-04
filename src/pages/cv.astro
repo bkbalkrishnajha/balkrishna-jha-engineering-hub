@@ -1,0 +1,103 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Icon from '@components/Icon.astro';
+import { awards, education, experience, geotechnicalAward, leadership, participation, publication, professionalSummary, technicalSkills } from '@data/profile';
+---
+<BaseLayout title="CV" description="Curriculum vitae of Balkrishna Jha, Civil Engineer: experience, education, skills, publication and achievements.">
+  <PageIntro eyebrow="Professional profile" title="Curriculum vitae" description="Education, professional experience, technical skills, research publication, awards and community involvement." />
+  <section class="content-wrap">
+    <Container>
+      <div class="cv-profile-header">
+        <div>
+          <p class="eyebrow">Balkrishna Jha</p>
+          <h2>Civil Engineer</h2>
+          <p>{professionalSummary}</p>
+          <p class="cv-online-note">This is the online version of my professional profile. For professional enquiries, please use the contact page.</p>
+        </div>
+        <a href="/contact/" class="button button--secondary">Professional links <Icon name="arrow-up-right" size={16} /></a>
+      </div>
+
+      <section class="cv-section" aria-labelledby="cv-experience-heading">
+        <div class="cv-section-heading"><p class="eyebrow">01 / Career</p><h2 id="cv-experience-heading">Experience</h2></div>
+        <div class="cv-entry-list">
+          {experience.map((item) => (
+            <article class="cv-entry">
+              <div class="cv-entry__heading"><h3>{item.title}</h3><span>{item.period}</span></div>
+              <p class="cv-entry__organisation">{item.organisation}{item.context ? ` | ${item.context}` : ''}</p>
+              {item.responsibilities.length > 0 && <ul>{item.responsibilities.map((responsibility) => <li>{responsibility}</li>)}</ul>}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="cv-section" aria-labelledby="cv-education-heading">
+        <div class="cv-section-heading"><p class="eyebrow">02 / Academic</p><h2 id="cv-education-heading">Education</h2></div>
+        <div class="profile-education-list profile-education-list--wide">
+          {education.map((item) => (
+            <article class="profile-education-item">
+              <div class="profile-education-item__top"><strong>{item.qualification}</strong><span>{item.period}</span></div>
+              <p>{item.institution}{item.affiliation ? ` | ${item.affiliation}` : ''}</p>
+              <span class="profile-result">{item.result}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="cv-section" aria-labelledby="cv-skills-heading">
+        <div class="cv-section-heading"><p class="eyebrow">03 / Software</p><h2 id="cv-skills-heading">Technical skills</h2></div>
+        <div class="tag-list">{technicalSkills.map((skill) => <span class="tag">{skill}</span>)}</div>
+      </section>
+
+      <section class="cv-section" aria-labelledby="cv-publication-heading">
+        <div class="cv-section-heading"><p class="eyebrow">04 / Research</p><h2 id="cv-publication-heading">Publication</h2></div>
+        <article class="publication-entry">
+          <h3>{publication.title}</h3>
+          <p>{publication.authors}</p>
+          <p><em>{publication.journal}</em></p>
+          <a href={publication.doi} target="_blank" rel="noreferrer">Read publication via DOI <Icon name="arrow-up-right" size={14} /></a>
+        </article>
+      </section>
+
+      <section class="cv-section" aria-labelledby="cv-awards-heading">
+        <div class="cv-section-heading"><p class="eyebrow">05 / Recognition</p><h2 id="cv-awards-heading">Achievements and awards</h2></div>
+        <div class="recognition-list">
+          {awards.map((award) => (
+            <article class="recognition-item">
+              <div><h3>{award.title}</h3><p>{award.organisation}</p></div>
+              {award.year && <span>{award.year}</span>}
+            </article>
+          ))}
+          <article class="recognition-detail">
+            <p class="eyebrow">Award-winning project details</p>
+            <h3>{geotechnicalAward.projectTitle}</h3>
+            <p>{geotechnicalAward.description}</p>
+            <p><strong>Tectonic zones:</strong> {geotechnicalAward.tectonicZones.join(' · ')}</p>
+            <p><strong>Approach:</strong> {geotechnicalAward.approach}</p>
+          </article>
+          {participation.map((item) => (
+            <article class="recognition-item">
+              <div><h3>{item.title}</h3><p>{item.role}</p></div>
+              <span>{item.year}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="cv-section" aria-labelledby="cv-leadership-heading">
+        <div class="cv-section-heading"><p class="eyebrow">06 / Service</p><h2 id="cv-leadership-heading">Leadership and community service</h2></div>
+        <div class="recognition-list">
+          {leadership.map((item) => (
+            <article class="recognition-item">
+              <div><h3>{item.title}</h3><p>{item.role}</p></div>
+              {item.period && <span>{item.period}</span>}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div class="notice cv-privacy-note"><strong>Contact:</strong> Public contact information and professional profile links are available on the Contact page.</div>
+    </Container>
+  </section>
+</BaseLayout>

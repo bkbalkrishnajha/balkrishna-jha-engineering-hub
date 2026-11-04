@@ -1,0 +1,372 @@
+---
+import Icon from '@components/Icon.astro';
+---
+<section class="section nepali-time-section" data-nepali-widget aria-labelledby="nepali-widget-title">
+  <div class="site-container">
+    <div class="nepali-widget-heading">
+      <div>
+        <p class="eyebrow">Nepal Standard Time · NPT</p>
+        <h2 id="nepali-widget-title">नेपालको समय, पात्रो र वार्षिक प्रगति</h2>
+        <p class="nepali-widget-description">नेपालको स्थानीय समय, विक्रम संवत् मिति र चालु वर्षको प्रगति एकै ठाउँमा।</p>
+      </div>
+      <div class="nepali-zone-badge"><Icon name="globe" size={17} /> <span>Asia/Kathmandu</span><strong>UTC +05:45</strong></div>
+    </div>
+
+    <div class="nepali-widget-grid">
+      <section class="nepali-calendar-panel" aria-label="Nepali date and calendar">
+        <div class="nepali-clock-panel">
+          <div>
+            <span class="nepali-clock-label">नेपाल समय</span>
+            <time class="nepali-clock-time" data-nepal-time aria-live="off">--:--:--</time>
+            <p class="nepali-clock-date" data-nepali-full-date>मिति लोड हुँदैछ…</p>
+          </div>
+          <span class="nepali-clock-icon"><Icon name="clock" size={25} /></span>
+        </div>
+
+        <div class="nepali-calendar-head">
+          <div>
+            <p class="nepali-calendar-overline">विक्रम संवत् पात्रो</p>
+            <h3 data-calendar-title>पात्रो लोड हुँदैछ…</h3>
+            <p class="nepali-calendar-today" data-calendar-today-label></p>
+          </div>
+          <div class="nepali-calendar-controls" aria-label="Calendar navigation">
+            <button type="button" data-calendar-prev aria-label="अघिल्लो महिना"><span aria-hidden="true">‹</span></button>
+            <button type="button" data-calendar-reset aria-label="आजको महिना">आज</button>
+            <button type="button" data-calendar-next aria-label="अर्को महिना"><span aria-hidden="true">›</span></button>
+          </div>
+        </div>
+
+        <div class="nepali-calendar-weekdays" aria-hidden="true">
+          <span>आइत</span><span>सोम</span><span>मंगल</span><span>बुध</span><span>बिहि</span><span>शुक्र</span><span>शनि</span>
+        </div>
+        <div class="nepali-calendar-grid" data-calendar-grid aria-label="महिनाको दिनहरू">
+          <span class="nepali-calendar-loading">पात्रो तयार हुँदैछ…</span>
+        </div>
+        <div class="nepali-calendar-foot">
+          <span><i aria-hidden="true"></i> आजको मिति</span>
+          <span data-gregorian-date></span>
+        </div>
+      </section>
+
+      <aside class="nepali-year-panel" aria-label="Bikram Sambat year completion">
+        <div class="nepali-year-panel-head">
+          <div>
+            <p class="eyebrow">Annual overview</p>
+            <h3>वर्ष प्रगति</h3>
+            <p class="nepali-year-subtitle">चालु विक्रम संवत् वर्षको पूर्णता</p>
+          </div>
+          <span class="nepali-year-badge" data-year-badge>वि.सं.</span>
+        </div>
+
+        <div class="nepali-year-progress-main">
+          <div class="nepali-progress-ring" role="progressbar" aria-label="विक्रम संवत् वर्षको प्रगति" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-year-progress>
+            <svg viewBox="0 0 112 112" aria-hidden="true">
+              <circle class="nepali-progress-ring-track" cx="56" cy="56" r="47"></circle>
+              <circle class="nepali-progress-ring-value" cx="56" cy="56" r="47" data-progress-ring></circle>
+            </svg>
+            <div class="nepali-progress-ring-copy"><strong data-year-percent>--%</strong><span>पूरा</span></div>
+          </div>
+          <div class="nepali-year-stats">
+            <strong data-year-title>२०८३</strong>
+            <span>विक्रम संवत्</span>
+            <p data-year-summary>वार्षिक प्रगति गणना हुँदैछ…</p>
+          </div>
+        </div>
+
+        <div class="nepali-year-bar" role="presentation"><span data-year-bar></span></div>
+        <div class="nepali-year-range">
+          <span data-days-elapsed>-- दिन पूरा</span>
+          <span data-days-remaining>-- दिन बाँकी</span>
+        </div>
+
+        <div class="nepali-month-chart-heading"><span>महिनाअनुसार प्रगति</span><span>बैशाख – चैत्र</span></div>
+        <div class="nepali-month-chart" data-year-chart role="img" aria-label="विक्रम संवत् वर्षको महिनाअनुसार प्रगति"></div>
+        <p class="nepali-year-footnote">वर्षको वास्तविक सुरु र अन्त्य मितिका आधारमा गणना गरिएको।</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  import NepaliDate from 'nepali-date-converter';
+
+  type BsDateParts = { year: number; month: number; day: number };
+  type MonthDay = { date: Date; day: number };
+
+  const MONTHS_NP = ['बैशाख', 'जेठ', 'असार', 'श्रावण', 'भदौ', 'असोज', 'कार्तिक', 'मंसिर', 'पुष', 'माघ', 'फाल्गुन', 'चैत्र'];
+  const MONTHS_SHORT = ['बै', 'जे', 'असा', 'श्रा', 'भा', 'असो', 'का', 'मंसि', 'पौ', 'मा', 'फा', 'चै'];
+  const WEEKDAYS_NP = ['आइतबार', 'सोमबार', 'मंगलबार', 'बुधबार', 'बिहीबार', 'शुक्रबार', 'शनिबार'];
+  const NEPALI_DIGITS = '०१२३४५६७८९';
+  const DAY_MS = 86_400_000;
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 47;
+
+  const toNepaliDigits = (value: number | string): string => String(value).replace(/[0-9]/g, (digit) => NEPALI_DIGITS[Number(digit)]);
+
+  // The converter receives a local-noon Date so the Gregorian calendar day is
+  // stable even when a visitor's computer is set to a different time zone.
+  const getBsParts = (date: Date): BsDateParts => {
+    const formatted = new NepaliDate(date).format('YYYY-MM-DD');
+    const [year, month, day] = formatted.split(/[-/]/).map(Number);
+    if (!year || !month || !day || month < 1 || month > 12) {
+      throw new Error(`Unexpected Bikram Sambat date returned by converter: ${formatted}`);
+    }
+    return { year, month, day };
+  };
+
+  const localNoon = (year: number, month: number, day: number): Date => new Date(year, month - 1, day, 12, 0, 0, 0);
+  const shiftDays = (date: Date, amount: number): Date => {
+    const shifted = new Date(date);
+    shifted.setDate(shifted.getDate() + amount);
+    return shifted;
+  };
+  const serialDay = (date: Date): number => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  const daysBetween = (from: Date, to: Date): number => Math.round((serialDay(to) - serialDay(from)) / DAY_MS);
+
+  const getNepalToday = (): Date => {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kathmandu', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return localNoon(Number(values.year), Number(values.month), Number(values.day));
+  };
+
+  const formatNepalDate = (date: Date): string => {
+    const parts = getBsParts(date);
+    return `${WEEKDAYS_NP[date.getDay()]}, ${toNepaliDigits(parts.day)} ${MONTHS_NP[parts.month - 1]} ${toNepaliDigits(parts.year)}`;
+  };
+
+  const findMonthStart = (date: Date, parts: BsDateParts): Date => {
+    let start = new Date(date);
+    for (let index = 0; index < 34; index += 1) {
+      const previous = shiftDays(start, -1);
+      const previousParts = getBsParts(previous);
+      if (previousParts.year !== parts.year || previousParts.month !== parts.month) break;
+      start = previous;
+    }
+    return start;
+  };
+
+  const getMonthDays = (start: Date, year: number, month: number): MonthDay[] => {
+    const days: MonthDay[] = [];
+    let cursor = new Date(start);
+    for (let index = 0; index < 34; index += 1) {
+      const parts = getBsParts(cursor);
+      if (parts.year !== year || parts.month !== month) break;
+      days.push({ date: new Date(cursor), day: parts.day });
+      cursor = shiftDays(cursor, 1);
+    }
+    return days;
+  };
+
+  const getYearBounds = (today: Date, year: number): { start: Date; end: Date } => {
+    let start = new Date(today);
+    let end = new Date(today);
+
+    for (let index = 0; index < 370; index += 1) {
+      const previous = shiftDays(start, -1);
+      if (getBsParts(previous).year !== year) break;
+      start = previous;
+    }
+    for (let index = 0; index < 370; index += 1) {
+      const next = shiftDays(end, 1);
+      if (getBsParts(next).year !== year) break;
+      end = next;
+    }
+    return { start, end };
+  };
+
+  const widget = document.querySelector<HTMLElement>('[data-nepali-widget]');
+  if (widget) {
+    const timeNode = widget.querySelector<HTMLTimeElement>('[data-nepal-time]');
+    const fullDateNode = widget.querySelector<HTMLElement>('[data-nepali-full-date]');
+    const gregorianNode = widget.querySelector<HTMLElement>('[data-gregorian-date]');
+    const calendarTitle = widget.querySelector<HTMLElement>('[data-calendar-title]');
+    const calendarToday = widget.querySelector<HTMLElement>('[data-calendar-today-label]');
+    const calendarGrid = widget.querySelector<HTMLElement>('[data-calendar-grid]');
+    const yearBadge = widget.querySelector<HTMLElement>('[data-year-badge]');
+    const yearTitle = widget.querySelector<HTMLElement>('[data-year-title]');
+    const yearPercent = widget.querySelector<HTMLElement>('[data-year-percent]');
+    const yearSummary = widget.querySelector<HTMLElement>('[data-year-summary]');
+    const daysElapsed = widget.querySelector<HTMLElement>('[data-days-elapsed]');
+    const daysRemaining = widget.querySelector<HTMLElement>('[data-days-remaining]');
+    const yearBar = widget.querySelector<HTMLElement>('[data-year-bar]');
+    const yearRing = widget.querySelector<SVGCircleElement>('[data-progress-ring]');
+    const yearProgress = widget.querySelector<HTMLElement>('[data-year-progress]');
+    const yearChart = widget.querySelector<HTMLElement>('[data-year-chart]');
+    const previousButton = widget.querySelector<HTMLButtonElement>('[data-calendar-prev]');
+    const nextButton = widget.querySelector<HTMLButtonElement>('[data-calendar-next]');
+    const todayButton = widget.querySelector<HTMLButtonElement>('[data-calendar-reset]');
+
+    const timeFormatter = new Intl.DateTimeFormat('ne-NP', {
+      timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true,
+    });
+    const gregorianFormatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kathmandu', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    });
+
+    let today = getNepalToday();
+    let todayParts = getBsParts(today);
+    let viewStart = findMonthStart(today, todayParts);
+
+    const updateClock = (): void => {
+      const now = new Date();
+      if (timeNode) {
+        timeNode.textContent = timeFormatter.format(now);
+        timeNode.dateTime = now.toISOString();
+      }
+    };
+
+    const renderCalendar = (): void => {
+      if (!calendarGrid) return;
+      const firstParts = getBsParts(viewStart);
+      if (calendarTitle) calendarTitle.textContent = `${MONTHS_NP[firstParts.month - 1]} ${toNepaliDigits(firstParts.year)}`;
+      if (calendarToday) calendarToday.textContent = firstParts.year === todayParts.year && firstParts.month === todayParts.month
+        ? `आज ${toNepaliDigits(todayParts.day)} गते`
+        : 'विक्रम संवत्';
+
+      const days = getMonthDays(viewStart, firstParts.year, firstParts.month);
+      const cells: (MonthDay | null)[] = Array.from({ length: viewStart.getDay() }, () => null);
+      cells.push(...days);
+      while (cells.length % 7 !== 0) cells.push(null);
+
+      const fragment = document.createDocumentFragment();
+      cells.forEach((cell) => {
+        if (!cell) {
+          const blank = document.createElement('span');
+          blank.className = 'nepali-calendar-day is-empty';
+          blank.setAttribute('aria-hidden', 'true');
+          fragment.append(blank);
+          return;
+        }
+        const day = document.createElement('span');
+        day.className = 'nepali-calendar-day';
+        day.textContent = toNepaliDigits(cell.day);
+        const parts = getBsParts(cell.date);
+        const isToday = parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day;
+        if (isToday) {
+          day.classList.add('is-today');
+          day.setAttribute('aria-current', 'date');
+          day.title = 'आजको मिति';
+        }
+        fragment.append(day);
+      });
+      calendarGrid.replaceChildren(fragment);
+    };
+
+    const renderYearProgress = (): void => {
+      const { start, end } = getYearBounds(today, todayParts.year);
+      const total = daysBetween(start, end) + 1;
+      const elapsed = Math.min(total, Math.max(1, daysBetween(start, today) + 1));
+      const remaining = Math.max(0, total - elapsed);
+      const percent = Math.min(100, (elapsed / total) * 100);
+      const percentText = `${toNepaliDigits(percent.toFixed(1))}%`;
+
+      if (yearBadge) yearBadge.textContent = `वि.सं. ${toNepaliDigits(todayParts.year)}`;
+      if (yearTitle) yearTitle.textContent = toNepaliDigits(todayParts.year);
+      if (yearPercent) yearPercent.textContent = percentText;
+      if (yearSummary) yearSummary.textContent = `${toNepaliDigits(total)} दिनको वर्षमध्ये ${toNepaliDigits(elapsed)} दिन पूरा।`;
+      if (daysElapsed) daysElapsed.textContent = `${toNepaliDigits(elapsed)} दिन पूरा`;
+      if (daysRemaining) daysRemaining.textContent = `${toNepaliDigits(remaining)} दिन बाँकी`;
+      if (yearBar) yearBar.style.width = `${percent}%`;
+      if (yearRing) yearRing.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - percent / 100));
+      if (yearProgress) yearProgress.setAttribute('aria-valuenow', percent.toFixed(1));
+
+      // Build a twelve-column month graph from the actual BS year boundaries.
+      const monthTotals = Array.from({ length: 12 }, () => ({ total: 0, elapsed: 0 }));
+      for (let cursor = new Date(start); serialDay(cursor) <= serialDay(end); cursor = shiftDays(cursor, 1)) {
+        const parts = getBsParts(cursor);
+        const data = monthTotals[parts.month - 1];
+        if (data) {
+          data.total += 1;
+          if (serialDay(cursor) <= serialDay(today)) data.elapsed += 1;
+        }
+      }
+      if (yearChart) {
+        const fragment = document.createDocumentFragment();
+        monthTotals.forEach((data, index) => {
+          const column = document.createElement('div');
+          column.className = 'nepali-month-column';
+          const fraction = data.total ? (data.elapsed / data.total) * 100 : 0;
+          const label = `${MONTHS_NP[index]}: ${toNepaliDigits(data.elapsed)} / ${toNepaliDigits(data.total)} दिन`;
+          column.title = label;
+          column.setAttribute('aria-label', label);
+          const track = document.createElement('span');
+          track.className = 'nepali-month-track';
+          const fill = document.createElement('span');
+          fill.className = 'nepali-month-fill';
+          fill.style.height = `${fraction}%`;
+          if (index + 1 === todayParts.month) fill.classList.add('is-current');
+          track.append(fill);
+          const monthLabel = document.createElement('span');
+          monthLabel.className = 'nepali-month-label';
+          monthLabel.textContent = MONTHS_SHORT[index];
+          column.append(track, monthLabel);
+          fragment.append(column);
+        });
+        yearChart.replaceChildren(fragment);
+      }
+    };
+
+    const refreshNepalDate = (): void => {
+      today = getNepalToday();
+      todayParts = getBsParts(today);
+      if (fullDateNode) fullDateNode.textContent = formatNepalDate(today);
+      if (gregorianNode) gregorianNode.textContent = gregorianFormatter.format(new Date());
+      renderCalendar();
+      renderYearProgress();
+    };
+
+    const goToAdjacentMonth = (direction: -1 | 1): void => {
+      const currentParts = getBsParts(viewStart);
+      if (direction > 0) {
+        let cursor = new Date(viewStart);
+        for (let index = 0; index < 34; index += 1) {
+          cursor = shiftDays(cursor, 1);
+          const parts = getBsParts(cursor);
+          if (parts.year !== currentParts.year || parts.month !== currentParts.month) {
+            viewStart = cursor;
+            break;
+          }
+        }
+      } else {
+        let cursor = shiftDays(viewStart, -1);
+        const targetParts = getBsParts(cursor);
+        for (let index = 0; index < 34; index += 1) {
+          const previous = shiftDays(cursor, -1);
+          const parts = getBsParts(previous);
+          if (parts.year !== targetParts.year || parts.month !== targetParts.month) break;
+          cursor = previous;
+        }
+        viewStart = cursor;
+      }
+      renderCalendar();
+    };
+
+    previousButton?.addEventListener('click', () => goToAdjacentMonth(-1));
+    nextButton?.addEventListener('click', () => goToAdjacentMonth(1));
+    todayButton?.addEventListener('click', () => {
+      viewStart = findMonthStart(today, todayParts);
+      renderCalendar();
+    });
+
+    updateClock();
+    refreshNepalDate();
+    window.setInterval(updateClock, 1000);
+    window.setInterval(() => {
+      const currentNepalDay = getNepalToday();
+      const currentParts = getBsParts(currentNepalDay);
+      if (currentParts.year !== todayParts.year || currentParts.month !== todayParts.month || currentParts.day !== todayParts.day) {
+        const wasViewingCurrentMonth = (() => {
+          const viewParts = getBsParts(viewStart);
+          return viewParts.year === todayParts.year && viewParts.month === todayParts.month;
+        })();
+        today = currentNepalDay;
+        todayParts = currentParts;
+        if (wasViewingCurrentMonth) viewStart = findMonthStart(today, todayParts);
+        refreshNepalDate();
+      } else {
+        if (gregorianNode) gregorianNode.textContent = gregorianFormatter.format(new Date());
+      }
+    }, 30_000);
+  }
+</script>

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import Icon from '@components/Icon.astro';
+import { geotechnicalAward, publication } from '@data/profile';
+---
+<BaseLayout title="Projects" description="Civil engineering project portfolio and verified project recognition of Balkrishna Jha.">
+  <PageIntro eyebrow="Portfolio" title="Engineering projects" description="A curated record of civil engineering project work, technical responsibilities and lessons from practice." />
+  <section class="content-wrap">
+    <Container>
+      <article class="project-case-study">
+        <div class="project-case-study__top">
+          <div>
+            <p class="eyebrow">Undergraduate geotechnical project · {geotechnicalAward.year}</p>
+            <h2>{geotechnicalAward.projectTitle}</h2>
+          </div>
+          <span class="project-award-mark"><Icon name="award" size={19} /> Award-winning project</span>
+        </div>
+        <p class="project-case-study__summary">{geotechnicalAward.description} The study title identifies an empirical and numerical approach to the analysis.</p>
+        <div class="project-case-study__detail-grid">
+          <div>
+            <p class="eyebrow">Tectonic zones considered</p>
+            <div class="project-zone-list">
+              {geotechnicalAward.tectonicZones.map((zone, index) => <span><b>0{index + 1}</b>{zone}</span>)}
+            </div>
+          </div>
+          <div class="project-method-card">
+            <p class="eyebrow">Study approach</p>
+            <strong>{geotechnicalAward.approach}</strong>
+            <p>Focus: deformation and support analysis of headrace tunnels.</p>
+          </div>
+        </div>
+        <div class="project-case-study__recognition">
+          <div>
+            <p class="eyebrow">Recognition · {geotechnicalAward.year}</p>
+            <h3>{geotechnicalAward.title}</h3>
+            <p>Recognised by {geotechnicalAward.organisation}.</p>
+          </div>
+          <a href={publication.doi} target="_blank" rel="noopener noreferrer" class="button button--secondary">Read related publication <Icon name="arrow-up-right" size={15} /></a>
+        </div>
+      </article>
+      <div class="empty-state empty-state--compact" style="margin-top: 22px">
+        <p class="eyebrow">Additional project documentation</p>
+        <h2>Further civil engineering case studies are being prepared.</h2>
+        <p>Other project case studies will be added when the project scope, your specific responsibilities and shareable technical details are confirmed.</p>
+      </div>
+      <div style="margin-top: 42px">
+        <SectionHeading eyebrow="Project documentation" title="A consistent project record" description="Each published case study will distinguish personal responsibilities from the work of the wider project team." />
+        <div class="detail-list">
+          <div class="detail-row"><div class="detail-row__label">01 / Context</div><div><h2>Project overview</h2><p>Project name, location, client or public agency where disclosure is permitted, and the engineering need being addressed.</p></div></div>
+          <div class="detail-row"><div class="detail-row__label">02 / Contribution</div><div><h2>Role and responsibilities</h2><p>Clearly distinguish personal responsibilities from the work of the wider project team.</p></div></div>
+          <div class="detail-row"><div class="detail-row__label">03 / Technical</div><div><h2>Methods and outputs</h2><p>Relevant design basis, analysis methods, drawings, reports or other approved deliverables.</p></div></div>
+          <div class="detail-row"><div class="detail-row__label">04 / Learning</div><div><h2>Engineering reflections</h2><p>Practical constraints, decisions and lessons that can be shared without disclosing sensitive information.</p></div></div>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

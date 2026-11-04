@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Icon from '@components/Icon.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <section class="content-wrap">
+    <Container>
+      <a href="/blog/" class="article-back"><Icon name="arrow-right" size={15} /> All articles</a>
+      <header class="article-header">
+        <div class="listing-meta"><span class="listing-category">{post.data.category}</span><span>{formatDate(post.data.publishDate)}</span></div>
+        <h1>{post.data.title}</h1>
+        <p class="article-description">{post.data.description}</p>
+        {post.data.tags.length > 0 && <div class="tag-list">{post.data.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+      </header>
+      <article class="prose"><Content /></article>
+    </Container>
+  </section>
+</BaseLayout>

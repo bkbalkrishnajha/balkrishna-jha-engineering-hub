@@ -1,0 +1,132 @@
+---
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import '@styles/global.css';
+import { site } from '@data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noIndex?: boolean;
+}
+const {
+  title = site.title,
+  description = site.description,
+  image = '/images/og-default.svg',
+  noIndex = false,
+} = Astro.props;
+const pageTitle = title === site.title ? `${site.name} | ${site.title}` : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const socialImage = new URL(image, site.url).toString();
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`${site.name} | ${site.title}`} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: site.name,
+      url: site.url,
+      jobTitle: site.profession,
+      email: site.email,
+      telephone: site.phone,
+      address: { '@type': 'PostalAddress', addressLocality: 'Sarlahi', addressCountry: 'NP' },
+      sameAs: [site.linkedin, site.github],
+    })} />
+    <slot name="head" />
+  </head>
+  <body>
+    <div id="top"></div>
+    <Header />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      const root = document.documentElement;
+      const menuButton = document.querySelector('[data-menu-toggle]');
+      const navigation = document.querySelector('[data-navigation]');
+      const themeButton = document.querySelector('[data-theme-toggle]');
+
+      type Theme = 'light' | 'dark';
+      const applyTheme = (theme: Theme): void => {
+        root.dataset.theme = theme;
+        themeButton?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        const icon = themeButton?.querySelector('[data-theme-icon]');
+        if (icon) icon.innerHTML = theme === 'dark'
+          ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>'
+          : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>';
+      };
+
+      try {
+        const savedTheme = localStorage.getItem('bj-theme');
+        const preferredTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const initialTheme: Theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : preferredTheme;
+        applyTheme(initialTheme);
+      } catch {
+        applyTheme('light');
+      }
+
+      themeButton?.addEventListener('click', () => {
+        const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+        try { localStorage.setItem('bj-theme', nextTheme); } catch { /* Theme still works for this page. */ }
+      });
+
+      menuButton?.addEventListener('click', () => {
+        const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', String(!isOpen));
+        menuButton.setAttribute('aria-label', isOpen ? 'Open navigation' : 'Close navigation');
+        navigation?.classList.toggle('is-open', !isOpen);
+        const icon = menuButton.querySelector('[data-menu-icon]');
+        if (icon) icon.innerHTML = isOpen
+          ? '<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+          : '<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+      });
+
+      navigation?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          navigation.classList.remove('is-open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+          menuButton?.setAttribute('aria-label', 'Open navigation');
+          const icon = menuButton?.querySelector('[data-menu-icon]');
+          if (icon) icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'; 
+        });
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && navigation?.classList.contains('is-open')) {
+          navigation.classList.remove('is-open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+          menuButton?.setAttribute('aria-label', 'Open navigation');
+          if (menuButton instanceof HTMLElement) {
+            menuButton.focus();
+          }  
+        }
+      });
+    </script>
+  </body>
+</html>

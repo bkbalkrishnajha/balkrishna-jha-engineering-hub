@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Icon from '@components/Icon.astro';
+import { education, professionalSummary, technicalSkills } from '@data/profile';
+---
+<BaseLayout title="About" description="About Balkrishna Jha, Civil Engineer, including education, technical skills and professional background.">
+  <PageIntro eyebrow="About" title="A Civil Engineer focused on practice and continuous learning." description="A professional profile shaped by civil engineering education, public-sector engineering work and field-survey experience." />
+  <section class="content-wrap">
+    <Container>
+      <div class="content-grid">
+        <div class="prose">
+          <p class="eyebrow">Professional profile</p>
+          <h2>About Balkrishna Jha</h2>
+          <p>{professionalSummary}</p>
+          <p>My professional background includes engineering responsibilities with the Department of Roads and the Infrastructure Development Office, Sarlahi, as well as a part-time survey-camp teaching assignment at Khwopa College of Engineering.</p>
+          <p>This website brings together my professional background, civil engineering interests, technical notes, project documentation and practical engineering tools. Content is presented with an emphasis on clear assumptions, verifiable information and responsible engineering practice.</p>
+          <h2>Education</h2>
+          <div class="profile-education-list">
+            {education.map((item) => (
+              <article class="profile-education-item">
+                <div class="profile-education-item__top"><strong>{item.qualification}</strong><span>{item.period}</span></div>
+                <p>{item.institution}{item.affiliation ? ` | ${item.affiliation}` : ''}</p>
+                <span class="profile-result">{item.result}</span>
+              </article>
+            ))}
+          </div>
+          <h2>Technical skills</h2>
+          <p>Tools and software listed in my CV:</p>
+          <div class="tag-list" aria-label="Technical skills">
+            {technicalSkills.map((skill) => <span class="tag">{skill}</span>)}
+          </div>
+        </div>
+        <aside>
+          <div class="sidebar-card">
+            <h2>Professional focus</h2>
+            <ul>
+              <li>Civil engineering practice</li>
+              <li>Roads, bridges and infrastructure</li>
+              <li>Technical verification and documentation</li>
+              <li>Surveying, teaching and technical learning</li>
+            </ul>
+          </div>
+          <div class="sidebar-card" style="margin-top: 14px">
+            <h2>Explore my profile</h2>
+            <p>See the roles, responsibilities, education, publication and recognitions recorded in my CV.</p>
+            <a href="/experience/" class="feature-card__link">View experience <Icon name="arrow-right" size={15} /></a>
+            <a href="/cv/" class="feature-card__link">View CV details <Icon name="arrow-right" size={15} /></a>
+          </div>
+        </aside>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

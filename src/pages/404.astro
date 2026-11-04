@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Icon from '@components/Icon.astro';
+---
+<BaseLayout title="Page not found" description="The page you are looking for could not be found.">
+  <section class="content-wrap" style="min-height: 55vh; display: grid; align-items: center">
+    <Container>
+      <div style="max-width: 620px; margin-inline: auto; text-align: center">
+        <p class="eyebrow" style="justify-content: center">Error 404</p>
+        <h1 style="margin: 15px 0; font: 800 clamp(45px, 8vw, 72px)/1 var(--font-display); letter-spacing: -3px">Page not found.</h1>
+        <p style="color: var(--muted); margin-bottom: 25px">The address may be incorrect, or the page may have moved. Return to the homepage to continue exploring.</p>
+        <a href="/" class="button button--primary">Back to homepage <Icon name="arrow-right" size={16} /></a>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

@@ -1,0 +1,49 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Icon from '@components/Icon.astro';
+import { site } from '@data/site';
+---
+<BaseLayout title="Contact" description="Contact details and professional links for Balkrishna Jha, Civil Engineer.">
+  <PageIntro eyebrow="Contact" title="Connect professionally." description="For professional enquiries, technical discussions or collaboration, use the contact details and profile links below." />
+  <section class="content-wrap">
+    <Container>
+      <div class="contact-grid contact-grid--polished">
+        <div class="contact-intro-card">
+          <p class="eyebrow">Professional enquiries</p>
+          <h2>Let’s connect.</h2>
+          <p>I welcome professional communication related to civil engineering, infrastructure, technical knowledge and learning.</p>
+          <div class="contact-location"><Icon name="map-pin" size={18} /><span>{site.location}, Nepal</span></div>
+        </div>
+        <div class="contact-options">
+          <a class="contact-option contact-option--link" href={`mailto:${site.email}`}>
+            <span class="contact-option__icon"><Icon name="mail" size={20} /></span>
+            <span><h2>Email</h2><p>{site.email}</p></span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="contact-option contact-option--link" href={`tel:${site.phone.replace(/\s/g, '')}`}>
+            <span class="contact-option__icon"><Icon name="phone" size={20} /></span>
+            <span><h2>Phone</h2><p>{site.phone}</p></span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="contact-option contact-option--link" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+            <span class="contact-option__icon"><Icon name="linkedin" size={20} /></span>
+            <span><h2>LinkedIn</h2><p>Professional profile</p></span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="contact-option contact-option--link" href={site.github} target="_blank" rel="noopener noreferrer">
+            <span class="contact-option__icon"><Icon name="github" size={20} /></span>
+            <span><h2>GitHub</h2><p>Code and technical work</p></span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="contact-option contact-option--link" href={site.url} target="_blank" rel="noopener noreferrer">
+            <span class="contact-option__icon"><Icon name="globe" size={20} /></span>
+            <span><h2>Website</h2><p>balkrishnajha.com.np</p></span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
