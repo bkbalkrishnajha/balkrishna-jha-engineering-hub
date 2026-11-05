@@ -5,7 +5,7 @@ import PageIntro from '@components/PageIntro.astro';
 import { experience, education } from '@data/profile';
 ---
 <BaseLayout title="Experience" description="Civil engineering work experience, a survey-camp teaching assignment and education of Balkrishna Jha.">
-  <PageIntro eyebrow="Experience" title="Professional experience" description="Engineering roles, technical responsibilities, a consolidated survey-camp teaching assignment and education drawn from my CV." />
+  <PageIntro eyebrow="Experience" title="Professional experience" description="Engineering roles, technical responsibilities, a consolidated survey-camp teaching assignment and education drawn from my CV." nepaliEyebrow="अनुभव" nepaliTitle="व्यावसायिक अनुभव" nepaliDescription="इन्जिनियरिङ पद, प्राविधिक जिम्मेवारी, सर्वेक्षण क्याम्पको शिक्षण अनुभव र शैक्षिक पृष्ठभूमि।" />
   <section class="content-wrap">
     <Container>
       <div class="experience-section-heading">
@@ -46,7 +46,6 @@ import { experience, education } from '@data/profile';
           </article>
         ))}
       </div>
-      <p class="profile-source-note">Role titles, organisations, dates and responsibilities are transcribed from the supplied CV. Date formats are retained as provided.</p>
     </Container>
   </section>
 </BaseLayout>

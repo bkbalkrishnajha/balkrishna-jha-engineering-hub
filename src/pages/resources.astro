@@ -2,25 +2,20 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import PageIntro from '@components/PageIntro.astro';
-import SectionHeading from '@components/SectionHeading.astro';
+import Icon from '@components/Icon.astro';
+const sections = [
+  {number:'01',icon:'notebook',title:'Bachelor Civil Engineering',description:'Subject-wise notes, formulas, solved problems and undergraduate references.',href:'/resources/bachelor-civil-engineering/'},
+  {number:'02',icon:'library',title:'Lok Sewa Resources',description:'Civil Engineering, Hydrology sub-group, past questions and general knowledge.',href:'/resources/loksewa/'},
+  {number:'03',icon:'file-text',title:'Codes and Laws',description:'NBC, procurement rules, engineering laws, official standards and guidelines.',href:'/resources/codes-and-laws/'},
+  {number:'04',icon:'library',title:'Engineering Reference',description:'Research, technical manuals, software documentation and reference links.',href:'/resources/engineering-reference/'},
+] as const;
 ---
-<BaseLayout title="Resources" description="A curated library of engineering references, learning resources and documents.">
-  <PageIntro eyebrow="Reference library" title="Engineering resources" description="A growing library of useful references, technical documents, learning material and engineering links." />
-  <section class="content-wrap">
-    <Container>
-      <div class="empty-state">
-        <p class="eyebrow">Resource library</p>
-        <h2>Resources will be published here.</h2>
-        <p>Files and external references will be added after their source, licence, version and suitability have been checked. No document downloads are available yet.</p>
-      </div>
-      <div style="margin-top: 45px">
-        <SectionHeading eyebrow="Planned organisation" title="Find material by purpose" description="The library is designed around engineering tasks rather than a miscellaneous list of downloads." />
-        <div class="card-grid">
-          <article class="feature-card"><span class="feature-card__number">CATEGORY 01</span><h3>Codes &amp; standards</h3><p>Official standards, specifications, manuals and guidance, with source information and edition details.</p><span class="feature-card__link">Planned category</span></article>
-          <article class="feature-card"><span class="feature-card__number">CATEGORY 02</span><h3>Technical references</h3><p>Reference notes, formula sheets, methods and technical reading across civil engineering design, construction and project delivery.</p><span class="feature-card__link">Planned category</span></article>
-          <article class="feature-card"><span class="feature-card__number">CATEGORY 03</span><h3>Templates &amp; guides</h3><p>Reusable checklists, calculation formats and documentation guides where sharing is appropriate.</p><span class="feature-card__link">Planned category</span></article>
-        </div>
-      </div>
-    </Container>
-  </section>
+<BaseLayout title="Engineering Resources" description="Organised civil engineering study resources, Lok Sewa preparation, Nepal codes and laws, and technical references.">
+  <PageIntro eyebrow="Reference library" title="Engineering resources" description="A structured library for academic study, public service examination preparation, engineering practice and technical research." nepaliEyebrow="सन्दर्भ पुस्तकालय" nepaliTitle="इन्जिनियरिङ स्रोत सामग्री" nepaliDescription="शैक्षिक अध्ययन, लोक सेवा परीक्षा तयारी, इन्जिनियरिङ अभ्यास र प्राविधिक अनुसन्धानका लागि व्यवस्थित स्रोत पुस्तकालय।" />
+  <section class="content-wrap"><Container>
+    <div class="resource-directory-grid">
+      {sections.map((section) => <a class="resource-directory-card" href={section.href}><span class="feature-card__number">{section.number} / LIBRARY</span><span class="resource-directory-icon"><Icon name={section.icon} size={24}/></span><h2>{section.title}</h2><p>{section.description}</p><span class="feature-card__link">Browse resources <Icon name="arrow-right" size={15}/></span></a>)}
+    </div>
+    <div class="notice resource-notice"><strong>Quality and copyright:</strong> Resource entries will include their source, edition or publication date where available. Only public, licensed or authorised material will be shared; otherwise the site will link to the publisher.</div>
+  </Container></section>
 </BaseLayout>

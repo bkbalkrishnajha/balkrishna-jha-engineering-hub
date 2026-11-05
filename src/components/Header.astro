@@ -8,7 +8,7 @@ const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.st
 <header class="site-header">
   <div class="site-container header-inner">
     <a class="brand" href="/" aria-label={`${site.name} — home`}>
-      <span class="brand-mark" aria-hidden="true">BJ<span>.</span></span>
+      <img class="brand-logo" src="/images/bkj-logo-placeholder.svg" alt="BKJ logo placeholder" width="42" height="42" />
       <span class="brand-copy">
         <span class="brand-name">{site.name}</span>
         <span class="brand-subtitle">{site.profession}</span>
@@ -20,15 +20,21 @@ const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.st
     </button>
 
     <nav class="primary-nav" id="primary-navigation" aria-label="Main navigation" data-navigation>
-      {navigation.map((item) => (
+      {navigation.map((item) => { const nepali: Record<string, string> = { Home: 'गृहपृष्ठ', About: 'परिचय', Experience: 'अनुभव', Projects: 'परियोजनाहरू', 'Engineering Blog': 'इन्जिनियरिङ लेख', Resources: 'स्रोत सामग्री', 'Engineering Tools': 'इन्जिनियरिङ उपकरण', CV: 'जीवनवृत्त', Contact: 'सम्पर्क', 'Nepali Calendar': 'नेपाली पात्रो' }; return (
         <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
-          {item.label}
+          <span data-en={item.label} data-ne={nepali[item.label] ?? item.label}>{item.label}</span>
         </a>
-      ))}
+      ); })}
     </nav>
 
+    <div class="header-actions">
+      <div class="language-switch" role="group" aria-label="Choose language">
+        <button type="button" data-language="en" aria-pressed="true">EN</button>
+        <button type="button" data-language="ne" aria-pressed="false">नेपाली</button>
+      </div>
     <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Toggle colour theme" data-theme-toggle>
       <span data-theme-icon><Icon name="moon" size={18} /></span>
     </button>
+    </div>
   </div>
 </header>

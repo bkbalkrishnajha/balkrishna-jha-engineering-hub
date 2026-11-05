@@ -1,20 +1,20 @@
 ---
 import { navigation, site } from '@data/site';
 import Icon from './Icon.astro';
-const footerLinks = navigation.filter((item) => ['About', 'Experience', 'Projects', 'Engineering Blog', 'Resources', 'Engineering Tools'].includes(item.label));
+const footerLinks = navigation.filter((item) => ['About', 'Experience', 'Projects', 'Engineering Blog', 'Resources', 'Engineering Tools', 'Nepali Calendar'].includes(item.label));
 ---
 <footer class="site-footer">
   <div class="site-container">
     <div class="footer-main">
       <div class="footer-brand-block">
         <a class="brand brand--footer" href="/" aria-label={`${site.name} — home`}>
-          <span class="brand-mark" aria-hidden="true">BJ<span>.</span></span>
+          <img class="brand-logo" src="/images/bkj-logo-placeholder.svg" alt="BKJ logo placeholder" width="42" height="42" />
           <span class="brand-copy">
             <span class="brand-name">{site.name}</span>
             <span class="brand-subtitle">{site.profession}</span>
           </span>
         </a>
-        <p>A professional portfolio for civil engineering practice, infrastructure work, technical learning and practical tools.</p>
+        <p data-en="A professional portfolio for civil engineering practice, infrastructure work, technical learning and practical tools." data-ne="सिभिल इन्जिनियरिङ अभ्यास, पूर्वाधार कार्य, प्राविधिक अध्ययन र उपयोगी उपकरणहरूको व्यावसायिक पोर्टफोलियो।">A professional portfolio for civil engineering practice, infrastructure work, technical learning and practical tools.</p>
         <div class="footer-socials">
           <a href={site.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Icon name="linkedin" size={17} /></a>
           <a href={site.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Icon name="github" size={17} /></a>
@@ -22,13 +22,13 @@ const footerLinks = navigation.filter((item) => ['About', 'Experience', 'Project
         </div>
       </div>
       <div class="footer-nav-block">
-        <p class="footer-label">Explore</p>
+        <p class="footer-label" data-en="Explore" data-ne="अन्वेषण">Explore</p>
         <nav aria-label="Footer navigation" class="footer-nav">
           {footerLinks.map((item) => <a href={item.href}>{item.label}</a>)}
         </nav>
       </div>
       <div class="footer-contact-block">
-        <p class="footer-label">Get in touch</p>
+        <p class="footer-label" data-en="Get in touch" data-ne="सम्पर्क">Get in touch</p>
         <a href={`mailto:${site.email}`} class="footer-contact-link">{site.email} <Icon name="arrow-up-right" size={15} /></a>
         <p class="footer-note">{site.phone}</p>
         <p class="footer-note">{site.location}</p>
@@ -36,7 +36,7 @@ const footerLinks = navigation.filter((item) => ['About', 'Experience', 'Project
     </div>
     <div class="footer-bottom">
       <span>© {new Date().getFullYear()} {site.name}. All rights reserved.</span>
-      <span>Built for clarity, accuracy and practical use.</span>
+      <span data-en="Built for clarity, accuracy and practical use." data-ne="स्पष्टता, शुद्धता र व्यावहारिक उपयोगका लागि निर्मित।">Built for clarity, accuracy and practical use.</span>
       <a href="#top" class="back-to-top">Back to top ↑</a>
     </div>
   </div>

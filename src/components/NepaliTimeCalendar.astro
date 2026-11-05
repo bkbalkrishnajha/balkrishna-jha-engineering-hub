@@ -6,8 +6,8 @@ import Icon from '@components/Icon.astro';
     <div class="nepali-widget-heading">
       <div>
         <p class="eyebrow">Nepal Standard Time · NPT</p>
-        <h2 id="nepali-widget-title">नेपालको समय, पात्रो र वार्षिक प्रगति</h2>
-        <p class="nepali-widget-description">नेपालको स्थानीय समय, विक्रम संवत् मिति र चालु वर्षको प्रगति एकै ठाउँमा।</p>
+        <h2 id="nepali-widget-title" data-en="Nepal time, calendar and year progress" data-ne="नेपालको समय, पात्रो र वार्षिक प्रगति">Nepal time, calendar and year progress</h2>
+        <p class="nepali-widget-description" data-en="Nepal local time, Bikram Sambat date and current-year progress in one place." data-ne="नेपालको स्थानीय समय, विक्रम संवत् मिति र चालु वर्षको प्रगति एकै ठाउँमा।">Nepal local time, Bikram Sambat date and current-year progress in one place.</p>
       </div>
       <div class="nepali-zone-badge"><Icon name="globe" size={17} /> <span>Asia/Kathmandu</span><strong>UTC +05:45</strong></div>
     </div>
@@ -16,7 +16,7 @@ import Icon from '@components/Icon.astro';
       <section class="nepali-calendar-panel" aria-label="Nepali date and calendar">
         <div class="nepali-clock-panel">
           <div>
-            <span class="nepali-clock-label">नेपाल समय</span>
+            <span class="nepali-clock-label" data-en="Nepal time" data-ne="नेपाल समय">Nepal time</span>
             <time class="nepali-clock-time" data-nepal-time aria-live="off">--:--:--</time>
             <p class="nepali-clock-date" data-nepali-full-date>मिति लोड हुँदैछ…</p>
           </div>
@@ -25,25 +25,26 @@ import Icon from '@components/Icon.astro';
 
         <div class="nepali-calendar-head">
           <div>
-            <p class="nepali-calendar-overline">विक्रम संवत् पात्रो</p>
+            <p class="nepali-calendar-overline" data-en="Bikram Sambat calendar" data-ne="विक्रम संवत् पात्रो">Bikram Sambat calendar</p>
             <h3 data-calendar-title>पात्रो लोड हुँदैछ…</h3>
             <p class="nepali-calendar-today" data-calendar-today-label></p>
           </div>
           <div class="nepali-calendar-controls" aria-label="Calendar navigation">
             <button type="button" data-calendar-prev aria-label="अघिल्लो महिना"><span aria-hidden="true">‹</span></button>
-            <button type="button" data-calendar-reset aria-label="आजको महिना">आज</button>
+            <button type="button" data-calendar-reset aria-label="Today">Today</button>
             <button type="button" data-calendar-next aria-label="अर्को महिना"><span aria-hidden="true">›</span></button>
           </div>
         </div>
 
         <div class="nepali-calendar-weekdays" aria-hidden="true">
-          <span>आइत</span><span>सोम</span><span>मंगल</span><span>बुध</span><span>बिहि</span><span>शुक्र</span><span>शनि</span>
+          <span data-en="Sun" data-ne="आइत">Sun</span><span data-en="Mon" data-ne="सोम">Mon</span><span data-en="Tue" data-ne="मंगल">Tue</span><span data-en="Wed" data-ne="बुध">Wed</span><span data-en="Thu" data-ne="बिहि">Thu</span><span data-en="Fri" data-ne="शुक्र">Fri</span><span data-en="Sat" data-ne="शनि">Sat</span>
         </div>
         <div class="nepali-calendar-grid" data-calendar-grid aria-label="महिनाको दिनहरू">
           <span class="nepali-calendar-loading">पात्रो तयार हुँदैछ…</span>
         </div>
         <div class="nepali-calendar-foot">
-          <span><i aria-hidden="true"></i> आजको मिति</span>
+          <span><i aria-hidden="true"></i> <span data-en="Today" data-ne="आजको मिति">Today</span></span>
+          <span class="nepali-holiday-legend"><i aria-hidden="true"></i> <span data-en="Public holiday" data-ne="सार्वजनिक बिदा">Public holiday</span></span>
           <span data-gregorian-date></span>
         </div>
       </section>
@@ -52,8 +53,8 @@ import Icon from '@components/Icon.astro';
         <div class="nepali-year-panel-head">
           <div>
             <p class="eyebrow">Annual overview</p>
-            <h3>वर्ष प्रगति</h3>
-            <p class="nepali-year-subtitle">चालु विक्रम संवत् वर्षको पूर्णता</p>
+            <h3 data-en="Year progress" data-ne="वर्ष प्रगति">Year progress</h3>
+            <p class="nepali-year-subtitle" data-en="Current Bikram Sambat year completion" data-ne="चालु विक्रम संवत् वर्षको पूर्णता">Current Bikram Sambat year completion</p>
           </div>
           <span class="nepali-year-badge" data-year-badge>वि.सं.</span>
         </div>
@@ -64,11 +65,11 @@ import Icon from '@components/Icon.astro';
               <circle class="nepali-progress-ring-track" cx="56" cy="56" r="47"></circle>
               <circle class="nepali-progress-ring-value" cx="56" cy="56" r="47" data-progress-ring></circle>
             </svg>
-            <div class="nepali-progress-ring-copy"><strong data-year-percent>--%</strong><span>पूरा</span></div>
+            <div class="nepali-progress-ring-copy"><strong data-year-percent>--%</strong><span data-en="complete" data-ne="पूरा">complete</span></div>
           </div>
           <div class="nepali-year-stats">
             <strong data-year-title>२०८३</strong>
-            <span>विक्रम संवत्</span>
+            <span data-en="Bikram Sambat" data-ne="विक्रम संवत्">Bikram Sambat</span>
             <p data-year-summary>वार्षिक प्रगति गणना हुँदैछ…</p>
           </div>
         </div>
@@ -79,9 +80,9 @@ import Icon from '@components/Icon.astro';
           <span data-days-remaining>-- दिन बाँकी</span>
         </div>
 
-        <div class="nepali-month-chart-heading"><span>महिनाअनुसार प्रगति</span><span>बैशाख – चैत्र</span></div>
+        <div class="nepali-month-chart-heading"><span data-en="Progress by month" data-ne="महिनाअनुसार प्रगति">Progress by month</span><span data-en="Baisakh – Chaitra" data-ne="बैशाख – चैत्र">Baisakh – Chaitra</span></div>
         <div class="nepali-month-chart" data-year-chart role="img" aria-label="विक्रम संवत् वर्षको महिनाअनुसार प्रगति"></div>
-        <p class="nepali-year-footnote">वर्षको वास्तविक सुरु र अन्त्य मितिका आधारमा गणना गरिएको।</p>
+        <p class="nepali-year-footnote" data-en="Calculated from the actual start and end dates of the BS year." data-ne="वर्षको वास्तविक सुरु र अन्त्य मितिका आधारमा गणना गरिएको।">Calculated from the actual start and end dates of the BS year.</p>
       </aside>
     </div>
   </div>
@@ -89,12 +90,18 @@ import Icon from '@components/Icon.astro';
 
 <script>
   import NepaliDate from 'nepali-date-converter';
+  import { holidays2083 } from '@data/holidays-2083';
 
   type BsDateParts = { year: number; month: number; day: number };
   type MonthDay = { date: Date; day: number };
 
   const MONTHS_NP = ['बैशाख', 'जेठ', 'असार', 'श्रावण', 'भदौ', 'असोज', 'कार्तिक', 'मंसिर', 'पुष', 'माघ', 'फाल्गुन', 'चैत्र'];
   const MONTHS_SHORT = ['बै', 'जे', 'असा', 'श्रा', 'भा', 'असो', 'का', 'मंसि', 'पौ', 'मा', 'फा', 'चै'];
+  const MONTHS_EN = ['Baisakh', 'Jestha', 'Asar', 'Shrawan', 'Bhadra', 'Ashwin', 'Kartik', 'Mangsir', 'Poush', 'Magh', 'Falgun', 'Chaitra'];
+  const MONTHS_SHORT_EN = ['Bai', 'Jes', 'Asa', 'Shr', 'Bha', 'Ash', 'Kar', 'Man', 'Pou', 'Mag', 'Fal', 'Cha'];
+  const WEEKDAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const isEnglish = (): boolean => document.documentElement.lang !== 'ne';
+  const formatDigits = (value: number | string): string => isEnglish() ? String(value) : toNepaliDigits(value);
   const WEEKDAYS_NP = ['आइतबार', 'सोमबार', 'मंगलबार', 'बुधबार', 'बिहीबार', 'शुक्रबार', 'शनिबार'];
   const NEPALI_DIGITS = '०१२३४५६७८९';
   const DAY_MS = 86_400_000;
@@ -132,7 +139,7 @@ import Icon from '@components/Icon.astro';
 
   const formatNepalDate = (date: Date): string => {
     const parts = getBsParts(date);
-    return `${WEEKDAYS_NP[date.getDay()]}, ${toNepaliDigits(parts.day)} ${MONTHS_NP[parts.month - 1]} ${toNepaliDigits(parts.year)}`;
+    return isEnglish() ? `${WEEKDAYS_EN[date.getDay()]}, ${parts.day} ${MONTHS_EN[parts.month - 1]} ${parts.year} BS` : `${WEEKDAYS_NP[date.getDay()]}, ${toNepaliDigits(parts.day)} ${MONTHS_NP[parts.month - 1]} ${toNepaliDigits(parts.year)}`;
   };
 
   const findMonthStart = (date: Date, parts: BsDateParts): Date => {
@@ -197,12 +204,12 @@ import Icon from '@components/Icon.astro';
     const nextButton = widget.querySelector<HTMLButtonElement>('[data-calendar-next]');
     const todayButton = widget.querySelector<HTMLButtonElement>('[data-calendar-reset]');
 
-    const timeFormatter = new Intl.DateTimeFormat('ne-NP', {
+    const formatTime = (date: Date): string => new Intl.DateTimeFormat(isEnglish() ? 'en-NP' : 'ne-NP', {
       timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true,
-    });
-    const gregorianFormatter = new Intl.DateTimeFormat('en-GB', {
+    }).format(date);
+    const formatGregorian = (date: Date): string => new Intl.DateTimeFormat(isEnglish() ? 'en-GB' : 'ne-NP', {
       timeZone: 'Asia/Kathmandu', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    });
+    }).format(date);
 
     let today = getNepalToday();
     let todayParts = getBsParts(today);
@@ -211,7 +218,7 @@ import Icon from '@components/Icon.astro';
     const updateClock = (): void => {
       const now = new Date();
       if (timeNode) {
-        timeNode.textContent = timeFormatter.format(now);
+        timeNode.textContent = formatTime(now);
         timeNode.dateTime = now.toISOString();
       }
     };
@@ -219,10 +226,10 @@ import Icon from '@components/Icon.astro';
     const renderCalendar = (): void => {
       if (!calendarGrid) return;
       const firstParts = getBsParts(viewStart);
-      if (calendarTitle) calendarTitle.textContent = `${MONTHS_NP[firstParts.month - 1]} ${toNepaliDigits(firstParts.year)}`;
+      if (calendarTitle) calendarTitle.textContent = isEnglish() ? `${MONTHS_EN[firstParts.month - 1]} ${firstParts.year}` : `${MONTHS_NP[firstParts.month - 1]} ${toNepaliDigits(firstParts.year)}`;
       if (calendarToday) calendarToday.textContent = firstParts.year === todayParts.year && firstParts.month === todayParts.month
-        ? `आज ${toNepaliDigits(todayParts.day)} गते`
-        : 'विक्रम संवत्';
+        ? (isEnglish() ? `Today: ${todayParts.day}` : `आज ${toNepaliDigits(todayParts.day)} गते`)
+        : (isEnglish() ? 'Bikram Sambat' : 'विक्रम संवत्');
 
       const days = getMonthDays(viewStart, firstParts.year, firstParts.month);
       const cells: (MonthDay | null)[] = Array.from({ length: viewStart.getDay() }, () => null);
@@ -243,10 +250,12 @@ import Icon from '@components/Icon.astro';
         day.textContent = toNepaliDigits(cell.day);
         const parts = getBsParts(cell.date);
         const isToday = parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day;
+        const holiday = parts.year === 2083 ? holidays2083[`${parts.month}-${parts.day}`] : undefined;
+        if (holiday) { day.classList.add('is-holiday'); day.title = `${holiday.name} · ${holiday.scope}`; day.setAttribute('aria-label', `${toNepaliDigits(cell.day)} ${MONTHS_NP[parts.month - 1]}: ${holiday.name}`); }
         if (isToday) {
           day.classList.add('is-today');
           day.setAttribute('aria-current', 'date');
-          day.title = 'आजको मिति';
+          day.title = isEnglish() ? 'Today' : 'आजको मिति';
         }
         fragment.append(day);
       });
@@ -259,14 +268,14 @@ import Icon from '@components/Icon.astro';
       const elapsed = Math.min(total, Math.max(1, daysBetween(start, today) + 1));
       const remaining = Math.max(0, total - elapsed);
       const percent = Math.min(100, (elapsed / total) * 100);
-      const percentText = `${toNepaliDigits(percent.toFixed(1))}%`;
+      const percentText = `${formatDigits(percent.toFixed(1))}%`;
 
-      if (yearBadge) yearBadge.textContent = `वि.सं. ${toNepaliDigits(todayParts.year)}`;
-      if (yearTitle) yearTitle.textContent = toNepaliDigits(todayParts.year);
+      if (yearBadge) yearBadge.textContent = isEnglish() ? `BS ${todayParts.year}` : `वि.सं. ${toNepaliDigits(todayParts.year)}`;
+      if (yearTitle) yearTitle.textContent = formatDigits(todayParts.year);
       if (yearPercent) yearPercent.textContent = percentText;
-      if (yearSummary) yearSummary.textContent = `${toNepaliDigits(total)} दिनको वर्षमध्ये ${toNepaliDigits(elapsed)} दिन पूरा।`;
-      if (daysElapsed) daysElapsed.textContent = `${toNepaliDigits(elapsed)} दिन पूरा`;
-      if (daysRemaining) daysRemaining.textContent = `${toNepaliDigits(remaining)} दिन बाँकी`;
+      if (yearSummary) yearSummary.textContent = isEnglish() ? `${elapsed} of ${total} days completed.` : `${toNepaliDigits(total)} दिनको वर्षमध्ये ${toNepaliDigits(elapsed)} दिन पूरा।`;
+      if (daysElapsed) daysElapsed.textContent = isEnglish() ? `${elapsed} days elapsed` : `${toNepaliDigits(elapsed)} दिन पूरा`;
+      if (daysRemaining) daysRemaining.textContent = isEnglish() ? `${remaining} days remaining` : `${toNepaliDigits(remaining)} दिन बाँकी`;
       if (yearBar) yearBar.style.width = `${percent}%`;
       if (yearRing) yearRing.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - percent / 100));
       if (yearProgress) yearProgress.setAttribute('aria-valuenow', percent.toFixed(1));
@@ -287,7 +296,7 @@ import Icon from '@components/Icon.astro';
           const column = document.createElement('div');
           column.className = 'nepali-month-column';
           const fraction = data.total ? (data.elapsed / data.total) * 100 : 0;
-          const label = `${MONTHS_NP[index]}: ${toNepaliDigits(data.elapsed)} / ${toNepaliDigits(data.total)} दिन`;
+          const label = isEnglish() ? `${MONTHS_EN[index]}: ${data.elapsed} / ${data.total} days` : `${MONTHS_NP[index]}: ${toNepaliDigits(data.elapsed)} / ${toNepaliDigits(data.total)} दिन`;
           column.title = label;
           column.setAttribute('aria-label', label);
           const track = document.createElement('span');
@@ -299,7 +308,7 @@ import Icon from '@components/Icon.astro';
           track.append(fill);
           const monthLabel = document.createElement('span');
           monthLabel.className = 'nepali-month-label';
-          monthLabel.textContent = MONTHS_SHORT[index];
+          monthLabel.textContent = isEnglish() ? MONTHS_SHORT_EN[index] : MONTHS_SHORT[index];
           column.append(track, monthLabel);
           fragment.append(column);
         });
@@ -311,7 +320,7 @@ import Icon from '@components/Icon.astro';
       today = getNepalToday();
       todayParts = getBsParts(today);
       if (fullDateNode) fullDateNode.textContent = formatNepalDate(today);
-      if (gregorianNode) gregorianNode.textContent = gregorianFormatter.format(new Date());
+      if (gregorianNode) gregorianNode.textContent = formatGregorian(new Date());
       renderCalendar();
       renderYearProgress();
     };
@@ -349,6 +358,12 @@ import Icon from '@components/Icon.astro';
       renderCalendar();
     });
 
+    document.addEventListener('bkj-language-change', () => {
+      if (fullDateNode) fullDateNode.textContent = formatNepalDate(today);
+      renderCalendar();
+      renderYearProgress();
+      updateClock();
+    });
     updateClock();
     refreshNepalDate();
     window.setInterval(updateClock, 1000);
@@ -365,7 +380,7 @@ import Icon from '@components/Icon.astro';
         if (wasViewingCurrentMonth) viewStart = findMonthStart(today, todayParts);
         refreshNepalDate();
       } else {
-        if (gregorianNode) gregorianNode.textContent = gregorianFormatter.format(new Date());
+        if (gregorianNode) gregorianNode.textContent = formatGregorian(new Date());
       }
     }, 30_000);
   }

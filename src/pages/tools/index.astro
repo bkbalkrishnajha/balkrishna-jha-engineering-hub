@@ -6,9 +6,13 @@ import Icon from '@components/Icon.astro';
 import NepaliLandConverter from '@components/NepaliLandConverter.astro';
 ---
 <BaseLayout title="Engineering Tools" description="Engineering calculators, standard unit conversions and a Nepal land-area converter for hill and Terai measurement systems.">
-  <PageIntro eyebrow="Practical utilities" title="Engineering tools" description="Small browser-based utilities for common calculations. Results are illustrative and should be checked against project requirements and applicable standards." />
+  <PageIntro eyebrow="Practical utilities" title="Engineering tools" description="Small browser-based utilities for common calculations. Results are illustrative and should be checked against project requirements and applicable standards." nepaliEyebrow="व्यावहारिक उपकरण" nepaliTitle="इन्जिनियरिङ उपकरण" nepaliDescription="सामान्य गणनाका लागि ब्राउजरमा चल्ने उपकरणहरू। नतिजा उदाहरणका लागि हुन् र परियोजना आवश्यकता तथा लागू मापदण्डसँग जाँच गर्नुपर्छ।" />
   <section class="content-wrap">
     <Container>
+      <div class="tool-directory-links">
+        <a href="/tools/calculator/">Scientific calculator <span>Open tool →</span></a>
+        <a href="/tools/linear-regression/">Linear regression <span>Open tool →</span></a>
+      </div>
       <div class="tool-grid">
         <section class="tool-panel" aria-labelledby="converter-title">
           <div class="tool-panel__header">

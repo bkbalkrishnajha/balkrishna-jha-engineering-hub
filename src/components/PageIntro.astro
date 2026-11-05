@@ -3,13 +3,16 @@ interface Props {
   eyebrow: string;
   title: string;
   description: string;
+  nepaliEyebrow?: string;
+  nepaliTitle?: string;
+  nepaliDescription?: string;
 }
-const { eyebrow, title, description } = Astro.props;
+const { eyebrow, title, description, nepaliEyebrow, nepaliTitle, nepaliDescription } = Astro.props;
 ---
 <section class="page-intro">
   <div class="site-container">
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{title}</h1>
-    <p class="page-intro__description">{description}</p>
+    <p class="eyebrow" data-en={eyebrow} data-ne={nepaliEyebrow ?? eyebrow}>{eyebrow}</p>
+    <h1 data-en={title} data-ne={nepaliTitle ?? title}>{title}</h1>
+    <p class="page-intro__description" data-en={description} data-ne={nepaliDescription ?? description}>{description}</p>
   </div>
 </section>

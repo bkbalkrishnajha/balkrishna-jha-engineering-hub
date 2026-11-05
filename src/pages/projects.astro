@@ -7,7 +7,7 @@ import Icon from '@components/Icon.astro';
 import { geotechnicalAward, publication } from '@data/profile';
 ---
 <BaseLayout title="Projects" description="Civil engineering project portfolio and verified project recognition of Balkrishna Jha.">
-  <PageIntro eyebrow="Portfolio" title="Engineering projects" description="A curated record of civil engineering project work, technical responsibilities and lessons from practice." />
+  <PageIntro eyebrow="Portfolio" title="Engineering projects" description="A curated record of civil engineering project work, technical responsibilities and lessons from practice." nepaliEyebrow="पोर्टफोलियो" nepaliTitle="इन्जिनियरिङ परियोजनाहरू" nepaliDescription="सिभिल इन्जिनियरिङ परियोजना कार्य, प्राविधिक जिम्मेवारी र व्यावहारिक सिकाइको अभिलेख।" />
   <section class="content-wrap">
     <Container>
       <article class="project-case-study">
@@ -41,11 +41,6 @@ import { geotechnicalAward, publication } from '@data/profile';
           <a href={publication.doi} target="_blank" rel="noopener noreferrer" class="button button--secondary">Read related publication <Icon name="arrow-up-right" size={15} /></a>
         </div>
       </article>
-      <div class="empty-state empty-state--compact" style="margin-top: 22px">
-        <p class="eyebrow">Additional project documentation</p>
-        <h2>Further civil engineering case studies are being prepared.</h2>
-        <p>Other project case studies will be added when the project scope, your specific responsibilities and shareable technical details are confirmed.</p>
-      </div>
       <div style="margin-top: 42px">
         <SectionHeading eyebrow="Project documentation" title="A consistent project record" description="Each published case study will distinguish personal responsibilities from the work of the wider project team." />
         <div class="detail-list">

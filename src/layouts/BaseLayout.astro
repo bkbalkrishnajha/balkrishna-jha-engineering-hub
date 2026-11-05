@@ -70,6 +70,7 @@ const socialImage = new URL(image, site.url).toString();
       const menuButton = document.querySelector('[data-menu-toggle]');
       const navigation = document.querySelector('[data-navigation]');
       const themeButton = document.querySelector('[data-theme-toggle]');
+      const languageButtons = document.querySelectorAll<HTMLButtonElement>('[data-language]');
 
       type Theme = 'light' | 'dark';
       const applyTheme = (theme: Theme): void => {
@@ -81,8 +82,24 @@ const socialImage = new URL(image, site.url).toString();
           : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>';
       };
 
+
+      const applyLanguage = (language: 'en' | 'ne'): void => {
+        root.lang = language;
+        document.documentElement.dataset.language = language;
+        document.querySelectorAll<HTMLElement>('[data-en][data-ne]').forEach((element) => {
+          element.textContent = language === 'ne' ? element.dataset.ne ?? element.dataset.en ?? '' : element.dataset.en ?? '';
+        });
+        languageButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+        document.dispatchEvent(new CustomEvent('bkj-language-change', { detail: { language } }));
+        try { localStorage.setItem('bkj-language', language); } catch { /* Language still works for this page. */ }
+      };
+      let initialLanguage: 'en' | 'ne' = 'en';
+      try { initialLanguage = localStorage.getItem('bkj-language') === 'ne' ? 'ne' : 'en'; } catch { /* English is the default. */ }
+      applyLanguage(initialLanguage);
+      languageButtons.forEach((button) => button.addEventListener('click', () => applyLanguage(button.dataset.language === 'ne' ? 'ne' : 'en')));
+
       try {
-        const savedTheme = localStorage.getItem('bj-theme');
+        const savedTheme = localStorage.getItem('bkj-theme');
         const preferredTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         const initialTheme: Theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : preferredTheme;
         applyTheme(initialTheme);
@@ -93,7 +110,7 @@ const socialImage = new URL(image, site.url).toString();
       themeButton?.addEventListener('click', () => {
         const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
         applyTheme(nextTheme);
-        try { localStorage.setItem('bj-theme', nextTheme); } catch { /* Theme still works for this page. */ }
+        try { localStorage.setItem('bkj-theme', nextTheme); } catch { /* Theme still works for this page. */ }
       });
 
       menuButton?.addEventListener('click', () => {
@@ -122,9 +139,7 @@ const socialImage = new URL(image, site.url).toString();
           navigation.classList.remove('is-open');
           menuButton?.setAttribute('aria-expanded', 'false');
           menuButton?.setAttribute('aria-label', 'Open navigation');
-          if (menuButton instanceof HTMLElement) {
-            menuButton.focus();
-          }  
+          if (menuButton instanceof HTMLElement) menuButton.focus();
         }
       });
     </script>

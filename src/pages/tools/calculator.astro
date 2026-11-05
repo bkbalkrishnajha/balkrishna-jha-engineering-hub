@@ -1,0 +1,35 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Container from '@components/Container.astro';
+---
+<BaseLayout title="Engineering Calculator" description="A browser-based calculator for common arithmetic and engineering checks.">
+  <PageIntro eyebrow="Engineering tools" title="Scientific calculator" description="A compact calculator for arithmetic, powers, roots and common trigonometric functions." nepaliEyebrow="इन्जिनियरिङ उपकरण" nepaliTitle="वैज्ञानिक क्याल्कुलेटर" nepaliDescription="सामान्य गणित, घात, वर्गमूल र त्रिकोणमितीय गणनाका लागि क्याल्कुलेटर।" />
+  <section class="content-wrap"><Container>
+    <div class="calculator-shell tool-panel" data-calculator>
+      <label class="calculator-label" for="calculator-expression">Expression</label>
+      <input id="calculator-expression" class="calculator-display" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. (12.5 * 3) / 2" />
+      <output class="calculator-answer" id="calculator-answer" aria-live="polite">0</output>
+      <div class="calculator-keys">
+        {['7','8','9','÷','4','5','6','×','1','2','3','−','0','.','(',')','π','√','^','+','AC','⌫','%','='].map((key) => <button type="button" data-calc-key={key} class:list={['calculator-key', ['=','AC'].includes(key) && 'calculator-key--action']}>{key}</button>)}
+      </div>
+      <p class="tool-footnote">Trigonometric functions and advanced expressions can be entered using sin(), cos(), tan(), sqrt(), log(), ln() and pi. Angles are in radians.</p>
+    </div>
+  </Container></section>
+  <script>
+    const display = document.querySelector<HTMLInputElement>('#calculator-expression');
+    const answer = document.querySelector<HTMLOutputElement>('#calculator-answer');
+    const tokenize = (input: string): string[] => input.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/gi,'pi').match(/(?:\d+(?:\.\d*)?|\.\d+)|(?:[a-z]+)|[()+\-*/%^]/gi) ?? [];
+    const calculate = (input: string): number => {
+      const tokens=tokenize(input); let i=0;
+      const primary=():number=>{ const t=tokens[i++]; if(t==='+'||t==='-'){const v=primary();return t==='-'?-v:v;} if(t==='('){const v=expression();if(tokens[i++]!==')')throw Error('Missing closing parenthesis');return v;} if(t==='pi')return Math.PI; if(t==='e')return Math.E; if(t && /^[a-z]+$/i.test(t)){if(tokens[i++]!=='(')throw Error(`Use ${t}(...)`);const v=expression();if(tokens[i++]!==')')throw Error('Missing closing parenthesis');const fn:Record<string,(n:number)=>number>={sqrt:Math.sqrt,sin:Math.sin,cos:Math.cos,tan:Math.tan,log:Math.log10,ln:Math.log,abs:Math.abs};if(!fn[t])throw Error(`Unknown function: ${t}`);return fn[t](v);} const n=Number(t);if(!Number.isFinite(n))throw Error('Invalid expression');return n;};
+      const power=():number=>{let v=primary();if(tokens[i]==='^'){i++;v=Math.pow(v,power());}return v;};
+      const term=():number=>{let v=power();while(['*','/','%'].includes(tokens[i]??'')){const op=tokens[i++],r=power();if(op==='*')v*=r;else if(op==='/')v/=r;else v%=r;}return v;};
+      const expression=():number=>{let v=term();while(['+','-'].includes(tokens[i]??'')){const op=tokens[i++],r=term();v=op==='+'?v+r:v-r;}return v;};
+      if(!tokens.length)throw Error('Enter an expression');const value=expression();if(i!==tokens.length)throw Error('Check the expression');if(!Number.isFinite(value))throw Error('Result is not finite');return value;
+    };
+    const run=()=>{if(!display||!answer)return;try{const value=calculate(display.value);answer.textContent=value.toLocaleString('en',{maximumSignificantDigits:12});}catch(e){answer.textContent=e instanceof Error?e.message:'Invalid expression';}};
+    document.querySelectorAll<HTMLButtonElement>('[data-calc-key]').forEach((button)=>button.addEventListener('click',()=>{if(!display||!answer)return;const key=button.dataset.calcKey??'';if(key==='AC'){display.value='';answer.textContent='0';return;}if(key==='⌫'){display.value=display.value.slice(0,-1);return;}if(key==='='){run();return;}const value:Record<string,string>={'×':'*','÷':'/','−':'-','π':'pi','√':'sqrt('};display.value+=(value[key]??key);}));
+    display?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();run();}});
+  </script>
+</BaseLayout>

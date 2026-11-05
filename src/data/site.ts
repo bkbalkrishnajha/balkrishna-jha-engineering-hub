@@ -5,7 +5,7 @@ export const site = {
   description:
     'The professional portfolio of Balkrishna Jha, Civil Engineer — featuring verified experience, infrastructure projects, civil engineering knowledge, technical resources and practical tools.',
   url: 'https://balkrishnajha.com.np',
-  email: 'bkbalkrishnajha@gmail.com',
+  email: 'contact@balkrishnajha.com.np',
   phone: '+977 9844994437',
   location: 'Ramnagar–6, Sarlahi',
   linkedin: 'https://www.linkedin.com/in/bkbalkrishnajha/',
@@ -22,6 +22,7 @@ export const navigation = [
   { label: 'Engineering Tools', href: '/tools/' },
   { label: 'CV', href: '/cv/' },
   { label: 'Contact', href: '/contact/' },
+  { label: 'Nepali Calendar', href: '/calendar/' },
 ] as const;
 
 export const featuredAreas = [

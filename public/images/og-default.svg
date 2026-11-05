@@ -9,7 +9,7 @@
   <rect width="1200" height="630" fill="url(#grid)"/>
   <circle cx="1040" cy="90" r="300" fill="#2e78a8" opacity=".16"/>
   <rect x="78" y="78" width="82" height="82" rx="16" fill="#ffffff" fill-opacity=".09" stroke="#ffffff" stroke-opacity=".24"/>
-  <text x="119" y="133" text-anchor="middle" font-family="Arial,sans-serif" font-size="33" font-weight="700" fill="#fff">BJ</text>
+  <text x="119" y="133" text-anchor="middle" font-family="Arial,sans-serif" font-size="33" font-weight="700" fill="#fff">BKJ</text>
   <text x="78" y="260" font-family="Arial,sans-serif" font-size="57" font-weight="700" fill="#fff">Balkrishna Jha</text>
   <text x="78" y="326" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#efc66e">Civil Engineer</text>
   <text x="78" y="400" font-family="Arial,sans-serif" font-size="25" fill="#d3e2ed">Engineering knowledge. Building infrastructure.</text>

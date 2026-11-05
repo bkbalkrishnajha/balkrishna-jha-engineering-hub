@@ -1,0 +1,51 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Container from '@components/Container.astro';
+---
+<BaseLayout title="Linear Regression Calculator" description="Calculate a least-squares linear regression equation, correlation coefficient, R-squared and predicted X or Y values.">
+  <PageIntro eyebrow="Statistics and data analysis" title="Linear regression calculator" description="Enter paired X and Y observations to calculate the least-squares line, assess fit and estimate values." nepaliEyebrow="तथ्याङ्क विश्लेषण" nepaliTitle="रेखीय प्रतिगमन क्याल्कुलेटर" nepaliDescription="X र Y का जोडी तथ्याङ्क प्रविष्ट गरी न्यूनतम वर्ग रेखा, सम्बन्ध र अनुमानित मान गणना गर्नुहोस्।" />
+  <section class="content-wrap"><Container>
+    <div class="tool-panel regression-panel">
+      <div class="field"><label for="regression-data">Observation pairs (one X,Y pair per line)</label><textarea id="regression-data" rows="8" spellcheck="false" placeholder="1, 2\n2, 3.5\n3, 5\n4, 6.5\n5, 8">1, 2
+2, 3.5
+3, 5
+4, 6.5
+5, 8</textarea><small>Use comma, space or tab between X and Y. At least two distinct X values are required.</small></div>
+      <div class="form-grid regression-predict-grid"><div class="field"><label for="predict-x">Predict Y for X</label><input id="predict-x" type="number" step="any" value="6" /></div><div class="field"><label for="predict-y">Predict X for Y</label><input id="predict-y" type="number" step="any" value="9.5" /></div></div>
+      <button class="button button--primary" id="calculate-regression" type="button">Calculate regression</button>
+      <p class="tool-error" id="regression-error" role="alert"></p>
+      <div class="regression-results" id="regression-results" aria-live="polite" hidden>
+        <div class="regression-equation"><span>Least-squares equation</span><strong id="regression-equation">y = a + bx</strong></div>
+        <div class="regression-metrics"><div><span>Slope (b)</span><strong id="regression-slope">—</strong></div><div><span>Intercept (a)</span><strong id="regression-intercept">—</strong></div><div><span>R²</span><strong id="regression-r2">—</strong></div><div><span>Correlation (r)</span><strong id="regression-r">—</strong></div></div>
+        <div class="regression-predictions"><p id="prediction-y">Predicted Y: —</p><p id="prediction-x">Predicted X: —</p></div>
+        <div class="table-scroll"><table class="data-table"><thead><tr><th>X</th><th>Observed Y</th><th>Predicted Y</th><th>Residual</th></tr></thead><tbody id="regression-table"></tbody></table></div>
+        <svg id="regression-chart" class="regression-chart" viewBox="0 0 640 300" role="img" aria-label="Scatter plot and least squares regression line"></svg>
+      </div>
+    </div>
+    <p class="tool-footnote">Ordinary least squares with an intercept. Assumes paired observations and a linear relationship. Regression is descriptive and does not establish causation.</p>
+  </Container></section>
+  <script>
+    const dataInput = document.querySelector<HTMLTextAreaElement>('#regression-data');
+    const calcButton = document.querySelector<HTMLButtonElement>('#calculate-regression');
+    const errorNode = document.querySelector<HTMLElement>('#regression-error');
+    const results = document.querySelector<HTMLElement>('#regression-results');
+    const fmt = (n: number) => Number.isFinite(n) ? n.toLocaleString('en', { maximumFractionDigits: 6 }) : '—';
+    calcButton?.addEventListener('click', () => {
+      if (!dataInput || !errorNode || !results) return;
+      const pairs = dataInput.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => line.split(/[\s,;]+/).map(Number));
+      if (pairs.length < 2 || pairs.some((p) => p.length !== 2 || !p.every(Number.isFinite))) { errorNode.textContent = 'Enter at least two valid X,Y pairs. Check each row for exactly two numbers.'; results.hidden = true; return; }
+      const n = pairs.length, meanX = pairs.reduce((s,p)=>s+p[0],0)/n, meanY = pairs.reduce((s,p)=>s+p[1],0)/n;
+      const sxx = pairs.reduce((s,p)=>s+(p[0]-meanX)**2,0), syy = pairs.reduce((s,p)=>s+(p[1]-meanY)**2,0), sxy = pairs.reduce((s,p)=>s+(p[0]-meanX)*(p[1]-meanY),0);
+      if (sxx === 0) { errorNode.textContent = 'All X values are identical. A regression slope cannot be calculated.'; results.hidden = true; return; }
+      const slope = sxy/sxx, intercept = meanY-slope*meanX, r = syy === 0 ? 0 : sxy/Math.sqrt(sxx*syy), r2 = r*r;
+      errorNode.textContent = ''; results.hidden = false;
+      const set = (id: string, value: string) => { const node=document.getElementById(id); if(node) node.textContent=value; };
+      set('regression-equation', `ŷ = ${fmt(intercept)} ${slope < 0 ? '−' : '+'} ${fmt(Math.abs(slope))}x`); set('regression-slope',fmt(slope)); set('regression-intercept',fmt(intercept)); set('regression-r2',fmt(r2)); set('regression-r',fmt(r));
+      const px = Number((document.querySelector<HTMLInputElement>('#predict-x'))?.value); set('prediction-y', `Predicted Y at X = ${fmt(px)}: ${fmt(intercept+slope*px)}`);
+      const py = Number((document.querySelector<HTMLInputElement>('#predict-y'))?.value); set('prediction-x', slope === 0 ? 'Predicted X: undefined because slope is zero.' : `Predicted X at Y = ${fmt(py)}: ${fmt((py-intercept)/slope)}`);
+      const tbody=document.querySelector<HTMLElement>('#regression-table'); if(tbody) tbody.innerHTML=pairs.map(([x,y])=>`<tr><td>${fmt(x)}</td><td>${fmt(y)}</td><td>${fmt(intercept+slope*x)}</td><td>${fmt(y-(intercept+slope*x))}</td></tr>`).join('');
+      const svg=document.querySelector<SVGSVGElement>('#regression-chart'); if(svg){ const xs=pairs.map(p=>p[0]), ys=pairs.map(p=>p[1]); const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys,intercept+slope*minX), maxY=Math.max(...ys,intercept+slope*maxX); const pad=(v:number)=>v===0?1:Math.abs(v)*.08; const x0=minX-pad(maxX-minX), x1=maxX+pad(maxX-minX), y0=minY-pad(maxY-minY), y1=maxY+pad(maxY-minY); const X=(v:number)=>40+(v-x0)/(x1-x0)*570, Y=(v:number)=>260-(v-y0)/(y1-y0)*220; svg.innerHTML=`<line x1="40" y1="260" x2="610" y2="260" stroke="currentColor" opacity=".3"/><line x1="40" y1="40" x2="40" y2="260" stroke="currentColor" opacity=".3"/><line x1="${X(minX)}" y1="${Y(intercept+slope*minX)}" x2="${X(maxX)}" y2="${Y(intercept+slope*maxX)}" stroke="currentColor" stroke-width="2.5"/><g fill="currentColor">${pairs.map(([x,y])=>`<circle cx="${X(x)}" cy="${Y(y)}" r="5"/>`).join('')}</g>`; }
+    });
+  </script>
+</BaseLayout>

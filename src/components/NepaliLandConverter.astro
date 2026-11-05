@@ -1,10 +1,8 @@
-
 ---
 import Container from '@components/Container.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Icon from '@components/Icon.astro';
 ---
-
 <section class="section nepali-land-section" aria-labelledby="nepali-land-heading">
   <Container>
     <SectionHeading
@@ -16,29 +14,17 @@ import Icon from '@components/Icon.astro';
     <div class="nepali-land-layout">
       <article class="nepali-land-input-card" aria-labelledby="nepali-land-input-title">
         <div class="tool-panel__header">
-          <span class="tool-panel__icon">
-            <Icon name="map-pin" size={21} />
-          </span>
+          <span class="tool-panel__icon"><Icon name="map-pin" size={21} /></span>
           <div>
             <h3 id="nepali-land-input-title">Enter an area</h3>
             <p>Choose any supported unit as the starting value.</p>
           </div>
         </div>
-
         <div class="nepali-land-fields">
           <div class="field">
             <label for="nepali-land-value">Area value</label>
-            <input
-              id="nepali-land-value"
-              type="number"
-              min="0"
-              step="any"
-              inputmode="decimal"
-              value="1"
-              aria-describedby="nepali-land-note"
-            />
+            <input id="nepali-land-value" type="number" min="0" step="any" inputmode="decimal" value="1" aria-describedby="nepali-land-note" />
           </div>
-
           <div class="field">
             <label for="nepali-land-unit">Starting unit</label>
             <select id="nepali-land-unit">
@@ -60,18 +46,11 @@ import Icon from '@components/Icon.astro';
             </select>
           </div>
         </div>
-
         <div class="nepali-land-reference" id="nepali-land-note">
           <p><strong>Hill system:</strong> 1 ropani = 16 anna = 64 paisa = 256 daam.</p>
           <p><strong>Terai system:</strong> 1 bigha = 20 kattha = 400 dhur.</p>
         </div>
-
-        <p class="tool-footnote">
-          Uses conventional Nepal land-area conversion factors. For deeds,
-          cadastral work or legal transactions, verify the applicable measurement
-          against the official land record.
-        </p>
-
+        <p class="tool-footnote">Uses conventional Nepal land-area conversion factors. For deeds, cadastral work or legal transactions, verify the applicable measurement against the official land record.</p>
         <p class="nepali-land-error" data-land-error role="status" aria-live="polite"></p>
       </article>
 
@@ -79,12 +58,8 @@ import Icon from '@components/Icon.astro';
         <article class="nepali-land-result-card">
           <div class="nepali-land-result-heading">
             <span class="nepali-land-result-index">01</span>
-            <div>
-              <p class="eyebrow">Hill system · पहाडी मापन</p>
-              <h3>Ropani – Anna – Paisa – Daam</h3>
-            </div>
+            <div><p class="eyebrow">Hill system · पहाडी मापन</p><h3>Ropani – Anna – Paisa – Daam</h3></div>
           </div>
-
           <dl class="nepali-land-result-grid">
             <div><dt>Ropani · रोपनी</dt><dd data-land-result="ropani">1</dd></div>
             <div><dt>Anna · आना</dt><dd data-land-result="anna">16</dd></div>
@@ -96,12 +71,8 @@ import Icon from '@components/Icon.astro';
         <article class="nepali-land-result-card">
           <div class="nepali-land-result-heading">
             <span class="nepali-land-result-index">02</span>
-            <div>
-              <p class="eyebrow">Terai system · तराई मापन</p>
-              <h3>Bigha – Kattha – Dhur</h3>
-            </div>
+            <div><p class="eyebrow">Terai system · तराई मापन</p><h3>Bigha – Kattha – Dhur</h3></div>
           </div>
-
           <dl class="nepali-land-result-grid nepali-land-result-grid--three">
             <div><dt>Bigha · बिघा</dt><dd data-land-result="bigha">0.0751</dd></div>
             <div><dt>Kattha · कठ्ठा</dt><dd data-land-result="kattha">1.502</dd></div>
@@ -112,12 +83,8 @@ import Icon from '@components/Icon.astro';
         <article class="nepali-land-result-card nepali-land-result-card--compact">
           <div class="nepali-land-result-heading">
             <span class="nepali-land-result-index">03</span>
-            <div>
-              <p class="eyebrow">Common area units</p>
-              <h3>Square area</h3>
-            </div>
+            <div><p class="eyebrow">Common area units</p><h3>Square area</h3></div>
           </div>
-
           <dl class="nepali-land-result-grid nepali-land-result-grid--two">
             <div><dt>Square feet · ft²</dt><dd data-land-result="sqft">5,476</dd></div>
             <div><dt>Square metres · m²</dt><dd data-land-result="sqm">508.737</dd></div>
@@ -133,7 +100,8 @@ import Icon from '@components/Icon.astro';
   const landUnitSelect = document.querySelector<HTMLSelectElement>('#nepali-land-unit');
   const landError = document.querySelector<HTMLElement>('[data-land-error]');
 
-  // Conventional Nepal land-area factors in square feet per unit.
+  // Conventional Nepal land-area factors, expressed as square feet per unit.
+  // 1 ropani = 5,476 ft²; 1 bigha = 72,900 ft².
   const squareFeetPerUnit = {
     ropani: 5476,
     anna: 342.25,
@@ -147,9 +115,7 @@ import Icon from '@components/Icon.astro';
   } as const;
 
   type LandUnit = keyof typeof squareFeetPerUnit;
-
   const landUnits = Object.keys(squareFeetPerUnit) as LandUnit[];
-
   const numberFormat = new Intl.NumberFormat('en-IN', {
     maximumFractionDigits: 6,
     minimumFractionDigits: 0,
@@ -163,37 +129,20 @@ import Icon from '@components/Icon.astro';
     const unit = landUnitSelect.value as LandUnit;
     const isValidUnit = landUnits.includes(unit);
 
-    if (
-      rawValue === '' ||
-      !Number.isFinite(value) ||
-      value < 0 ||
-      !isValidUnit
-    ) {
-      if (landError) {
-        landError.textContent = 'Enter a valid area value of zero or greater.';
-      }
+    if (rawValue === '' || !Number.isFinite(value) || value < 0 || !isValidUnit) {
+      if (landError) landError.textContent = 'Enter a valid area value of zero or greater.';
       return;
     }
 
     const squareFeet = value * squareFeetPerUnit[unit];
-
     if (!Number.isFinite(squareFeet)) {
-      if (landError) {
-        landError.textContent = 'The entered value is too large to convert.';
-      }
+      if (landError) landError.textContent = 'The entered value is too large to convert.';
       return;
     }
 
     landUnits.forEach((targetUnit) => {
-      const output = document.querySelector<HTMLElement>(
-        `[data-land-result="${targetUnit}"]`
-      );
-
-      if (output) {
-        output.textContent = numberFormat.format(
-          squareFeet / squareFeetPerUnit[targetUnit]
-        );
-      }
+      const output = document.querySelector<HTMLElement>(`[data-land-result="${targetUnit}"]`);
+      if (output) output.textContent = numberFormat.format(squareFeet / squareFeetPerUnit[targetUnit]);
     });
 
     if (landError) landError.textContent = '';
@@ -201,212 +150,38 @@ import Icon from '@components/Icon.astro';
 
   landValueInput?.addEventListener('input', updateLandConversion);
   landUnitSelect?.addEventListener('change', updateLandConversion);
-
   updateLandConversion();
 </script>
 
 <style>
-  .nepali-land-section {
-    background: var(--page);
-  }
-
-  .nepali-land-layout {
-    display: grid;
-    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
-    align-items: start;
-    gap: 18px;
-  }
-
-  .nepali-land-input-card,
-  .nepali-land-result-card {
-    min-width: 0;
-    padding: 23px;
-    border: 1px solid var(--line);
-    border-radius: 11px;
-    background: var(--surface);
-    box-shadow: var(--shadow);
-  }
-
-  .nepali-land-input-card .tool-panel__header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 21px;
-  }
-
-  .nepali-land-input-card .tool-panel__header h3 {
-    margin: 0;
-    color: var(--ink);
-    font: 750 18px/1.3 var(--font-display);
-  }
-
-  .nepali-land-input-card .tool-panel__header p {
-    margin: 4px 0 0;
-    color: var(--muted);
-    font-size: 11px;
-  }
-
-  .nepali-land-fields {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 13px;
-  }
-
-  .nepali-land-fields .field {
-    display: grid;
-    gap: 6px;
-  }
-
-  .nepali-land-fields label {
-    color: var(--ink-soft);
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .nepali-land-fields input,
-  .nepali-land-fields select {
-    width: 100%;
-    min-height: 44px;
-    padding: 0 12px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--surface-soft);
-    color: var(--ink);
-    font: 600 13px var(--font-body);
-  }
-
-  .nepali-land-fields input:focus,
-  .nepali-land-fields select:focus {
-    outline: 2px solid color-mix(in srgb, var(--blue) 22%, transparent);
-    border-color: var(--blue);
-    outline-offset: 1px;
-  }
-
-  .nepali-land-reference {
-    margin-top: 17px;
-    padding: 12px 13px;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    background: var(--surface-soft);
-  }
-
-  .nepali-land-reference p {
-    margin: 4px 0;
-    color: var(--ink-soft);
-    font-size: 10px;
-    line-height: 1.6;
-  }
-
-  .nepali-land-reference strong {
-    color: var(--ink);
-  }
-
-  .nepali-land-input-card .tool-footnote {
-    margin-top: 14px;
-  }
-
-  .nepali-land-error {
-    min-height: 15px;
-    margin: 8px 0 0;
-    color: var(--muted);
-    font-size: 10px;
-  }
-
-  .nepali-land-results {
-    display: grid;
-    gap: 12px;
-  }
-
-  .nepali-land-result-card {
-    padding: 19px 20px;
-    box-shadow: none;
-  }
-
-  .nepali-land-result-heading {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
-  }
-
-  .nepali-land-result-index {
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    flex: 0 0 auto;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--surface-soft);
-    color: var(--muted);
-    font: 750 10px var(--font-display);
-  }
-
-  .nepali-land-result-heading .eyebrow {
-    margin: 0;
-    font-size: 8px;
-  }
-
-  .nepali-land-result-heading h3 {
-    margin: 3px 0 0;
-    color: var(--ink);
-    font: 750 15px/1.3 var(--font-display);
-  }
-
-  .nepali-land-result-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    margin: 0;
-  }
-
-  .nepali-land-result-grid--three {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .nepali-land-result-grid--two {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .nepali-land-result-grid div {
-    min-width: 0;
-    padding: 11px;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    background: var(--surface-soft);
-  }
-
-  .nepali-land-result-grid dt {
-    color: var(--muted);
-    font-size: 9px;
-    line-height: 1.45;
-  }
-
-  .nepali-land-result-grid dd {
-    overflow-wrap: anywhere;
-    margin: 6px 0 0;
-    color: var(--ink);
-    font: 750 clamp(14px, 1.5vw, 19px)/1.25 var(--font-display);
-    font-variant-numeric: tabular-nums;
-  }
-
-  @media (max-width: 850px) {
-    .nepali-land-layout {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .nepali-land-input-card {
-      padding: 17px;
-    }
-
-    .nepali-land-result-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .nepali-land-result-card {
-      padding: 16px;
-    }
-  }
+  .nepali-land-section { background: var(--page); }
+  .nepali-land-layout { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr); align-items: start; gap: 18px; }
+  .nepali-land-input-card, .nepali-land-result-card { min-width: 0; padding: 23px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); box-shadow: var(--shadow); }
+  .nepali-land-input-card .tool-panel__header { margin-bottom: 21px; }
+  .nepali-land-input-card .tool-panel__header h3 { margin: 0; color: var(--ink); font: 750 18px/1.3 var(--font-display); }
+  .nepali-land-input-card .tool-panel__header p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+  .nepali-land-fields { display: grid; grid-template-columns: 1fr; gap: 13px; }
+  .nepali-land-fields .field { display: grid; gap: 6px; }
+  .nepali-land-fields label { color: var(--ink-soft); font-size: 11px; font-weight: 700; }
+  .nepali-land-fields input, .nepali-land-fields select { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-soft); color: var(--ink); font: 600 13px var(--font-body); }
+  .nepali-land-fields input:focus, .nepali-land-fields select:focus { outline: 2px solid color-mix(in srgb, var(--blue) 22%, transparent); border-color: var(--blue); outline-offset: 1px; }
+  .nepali-land-reference { margin-top: 17px; padding: 12px 13px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-soft); }
+  .nepali-land-reference p { margin: 4px 0; color: var(--ink-soft); font-size: 10px; line-height: 1.6; }
+  .nepali-land-reference strong { color: var(--ink); }
+  .nepali-land-input-card .tool-footnote { margin-top: 14px; }
+  .nepali-land-error { min-height: 15px; margin: 8px 0 0; color: var(--muted); font-size: 10px; }
+  .nepali-land-results { display: grid; gap: 12px; }
+  .nepali-land-result-card { padding: 19px 20px; box-shadow: none; }
+  .nepali-land-result-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+  .nepali-land-result-index { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); color: var(--muted); font: 750 10px var(--font-display); }
+  .nepali-land-result-heading .eyebrow { margin: 0; font-size: 8px; }
+  .nepali-land-result-heading h3 { margin: 3px 0 0; color: var(--ink); font: 750 15px/1.3 var(--font-display); }
+  .nepali-land-result-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; }
+  .nepali-land-result-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nepali-land-result-grid--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nepali-land-result-grid div { min-width: 0; padding: 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-soft); }
+  .nepali-land-result-grid dt { color: var(--muted); font-size: 9px; line-height: 1.45; }
+  .nepali-land-result-grid dd { overflow-wrap: anywhere; margin: 6px 0 0; color: var(--ink); font: 750 clamp(14px, 1.5vw, 19px)/1.25 var(--font-display); font-variant-numeric: tabular-nums; }
+  @media (max-width: 850px) { .nepali-land-layout { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .nepali-land-input-card { padding: 17px; } .nepali-land-result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nepali-land-result-card { padding: 16px; } }
 </style>

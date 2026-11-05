@@ -1,0 +1,140 @@
+---
+---
+<section class="section calendar-enhancements" data-calendar-enhancements>
+  <div class="site-container">
+    <div class="calendar-tools-grid">
+      <article class="calendar-tool-card analog-clock-card">
+        <p class="eyebrow">Nepal Standard Time · UTC +05:45</p>
+        <h2 data-en="Analog clock" data-ne="एनालग घडी">Analog clock</h2>
+        <div class="analog-clock" aria-label="Live analog clock for Nepal time">
+          {Array.from({ length: 12 }, (_, i) => <span class="clock-mark" style={`--i:${i}`} aria-hidden="true"></span>)}
+          <span class="clock-hand clock-hand--hour" data-hour-hand></span>
+          <span class="clock-hand clock-hand--minute" data-minute-hand></span>
+          <span class="clock-hand clock-hand--second" data-second-hand></span>
+          <span class="clock-pin"></span>
+        </div>
+        <p class="analog-clock-caption" data-analog-time>Loading Nepal time…</p>
+      </article>
+
+      <article class="calendar-tool-card date-converter-card">
+        <p class="eyebrow">Bikram Sambat ↔ Gregorian</p>
+        <h2 data-en="Date converter" data-ne="मिति रूपान्तरण">Date converter</h2>
+        <div class="converter-tabs" role="group" aria-label="Conversion direction">
+          <button type="button" class="is-active" data-convert-mode="ad-bs">AD → BS</button>
+          <button type="button" data-convert-mode="bs-ad">BS → AD</button>
+        </div>
+        <div data-ad-bs-panel>
+          <label for="ad-date">Gregorian date (AD)</label>
+          <input id="ad-date" type="date" />
+        </div>
+        <div data-bs-ad-panel hidden>
+          <div class="bs-input-grid">
+            <label>BS year<input id="bs-year" type="number" min="1970" max="2100" value="2083" /></label>
+            <label>BS month<input id="bs-month" type="number" min="1" max="12" value="7" /></label>
+            <label>BS day<input id="bs-day" type="number" min="1" max="32" value="20" /></label>
+          </div>
+        </div>
+        <button type="button" class="button button--primary converter-submit" data-convert-submit>Convert date</button>
+        <output class="date-converter-result" data-convert-result aria-live="polite">Choose a date to convert.</output>
+        <p class="calendar-data-note">Conversion uses the installed Nepali date conversion library. Check official records for legal or administrative use.</p>
+      </article>
+    </div>
+
+    <div class="panchang-card">
+      <div class="panchang-card-heading">
+        <div><p class="eyebrow">Daily lunar almanac</p><h2 data-en="Panchang for Kathmandu" data-ne="काठमाडौंको पञ्चाङ्ग">Panchang for Kathmandu</h2><p>Daily Tithi, Paksha, Nakshatra, Yoga, Karana and solar timings.</p></div>
+        <span class="panchang-location">27.7172° N · 85.3240° E</span>
+      </div>
+      <div class="panchang-results" data-panchang-results aria-live="polite">
+        <p>Loading today's Panchang data…</p>
+      </div>
+      <p class="calendar-data-note">Panchang values are requested from the NepDate public daily endpoint. Results depend on that service's availability and calculation settings. This is a reference calendar, not a substitute for a local priest's or official observance notice.</p>
+      <a href="https://api.khumnath.com.np/" target="_blank" rel="noopener noreferrer">Panchang data provider and API documentation ↗</a>
+    </div>
+
+    <div class="holiday-source-card">
+      <div><p class="eyebrow">Official holiday reference</p><h2>Government and public holidays</h2><p>Use the Ministry of Home Affairs' annual notice for official government holiday dates and scope.</p></div>
+      <a class="button button--secondary" href="https://moha.gov.np/en/page/government-and-public-holidays-in-2083" target="_blank" rel="noopener noreferrer">View official 2083 notice <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import NepaliDate from 'nepali-date-converter';
+  const root = document.querySelector<HTMLElement>('[data-calendar-enhancements]');
+  if (root) {
+    const hour = root.querySelector<HTMLElement>('[data-hour-hand]');
+    const minute = root.querySelector<HTMLElement>('[data-minute-hand]');
+    const second = root.querySelector<HTMLElement>('[data-second-hand]');
+    const clockText = root.querySelector<HTMLElement>('[data-analog-time]');
+    const updateClock = () => {
+      const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+      const values = Object.fromEntries(parts.map((part) => [part.type, Number(part.value)]));
+      const h = values.hour % 12, m = values.minute, s = values.second;
+      if (hour) hour.style.transform = `translateX(-50%) rotate(${h * 30 + m * .5}deg)`;
+      if (minute) minute.style.transform = `translateX(-50%) rotate(${m * 6 + s * .1}deg)`;
+      if (second) second.style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+      if (clockText) clockText.textContent = new Intl.DateTimeFormat('en-NP', { timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).format(new Date()) + ' NPT';
+    };
+    updateClock(); window.setInterval(updateClock, 1000);
+
+    const adPanel = root.querySelector<HTMLElement>('[data-ad-bs-panel]');
+    const bsPanel = root.querySelector<HTMLElement>('[data-bs-ad-panel]');
+    const modeButtons = root.querySelectorAll<HTMLButtonElement>('[data-convert-mode]');
+    const result = root.querySelector<HTMLOutputElement>('[data-convert-result]');
+    const adInput = root.querySelector<HTMLInputElement>('#ad-date');
+    const yearInput = root.querySelector<HTMLInputElement>('#bs-year');
+    const monthInput = root.querySelector<HTMLInputElement>('#bs-month');
+    const dayInput = root.querySelector<HTMLInputElement>('#bs-day');
+    const submit = root.querySelector<HTMLButtonElement>('[data-convert-submit]');
+    let mode: 'ad-bs' | 'bs-ad' = 'ad-bs';
+    const setMode = (next: 'ad-bs' | 'bs-ad') => {
+      mode = next; if (adPanel) adPanel.hidden = next !== 'ad-bs'; if (bsPanel) bsPanel.hidden = next !== 'bs-ad';
+      modeButtons.forEach((button) => button.classList.toggle('is-active', button.dataset.convertMode === next));
+      if (result) result.textContent = 'Choose a date to convert.';
+    };
+    modeButtons.forEach((button) => button.addEventListener('click', () => setMode(button.dataset.convertMode === 'bs-ad' ? 'bs-ad' : 'ad-bs')));
+    const convert = () => {
+      if (!result) return;
+      try {
+        if (mode === 'ad-bs') {
+          if (!adInput?.value) { result.textContent = 'Select a Gregorian date.'; return; }
+          const [y, m, d] = adInput.value.split('-').map(Number);
+          const converted = new NepaliDate(new Date(y, m - 1, d, 12));
+          result.textContent = `${converted.format('YYYY MMMM DD')} BS`;
+        } else {
+          const y = Number(yearInput?.value), m = Number(monthInput?.value), d = Number(dayInput?.value);
+          if (!Number.isInteger(y) || !Number.isInteger(m) || !Number.isInteger(d) || y < 1970 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 32) { result.textContent = 'Enter a valid BS date (supported years 1970–2100).'; return; }
+          const converted = new NepaliDate(y, m - 1, d);
+          const bs = converted.getBS();
+          if (bs.year !== y || bs.month !== m - 1 || bs.date !== d) throw new Error('That day does not exist in the selected BS month.');
+          const ad = converted.getAD();
+          const adDate = new Date(Date.UTC(ad.year, ad.month, ad.date, 12));
+          if (Number.isNaN(adDate.getTime())) throw new Error('Date is outside the supported conversion range.');
+          const dateText = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'long', year: 'numeric' }).format(adDate);
+          result.textContent = `${dateText} AD`;
+        }
+      } catch (error) { result.textContent = error instanceof Error ? error.message : 'Unable to convert this date.'; }
+    };
+    submit?.addEventListener('click', convert);
+
+    const panchang = root.querySelector<HTMLElement>('[data-panchang-results]');
+    const loadPanchang = async () => {
+      if (!panchang) return;
+      try {
+        const language = document.documentElement.lang === 'ne' ? 'ne' : 'en';
+        const url = `https://api.khumnath.com.np/today?format=text&lang=${language}&lat=27.7172&lon=85.3240&tz=5.75&elev=1400`;
+        const response = await fetch(url, { headers: { Accept: 'text/plain' } });
+        if (!response.ok) throw new Error(`Panchang service returned ${response.status}.`);
+        const body = await response.text();
+        if (!body.trim()) throw new Error('No Panchang data was returned.');
+        const pre = document.createElement('pre'); pre.className = 'panchang-raw-output'; pre.textContent = body.slice(0, 6000);
+        panchang.replaceChildren(pre);
+      } catch {
+        panchang.innerHTML = '<p class="panchang-unavailable">Live Panchang data is temporarily unavailable. Please use the provider link to check the current calculation.</p>';
+      }
+    };
+    loadPanchang();
+    document.addEventListener('bkj-language-change', () => loadPanchang());
+  }
+</script>

@@ -77,3 +77,21 @@ Potential future services: Python FastAPI, PostgreSQL through Supabase, Supabase
 ## Runtime requirement
 
 Use Node.js **22.23.4 or newer** (or a newer supported LTS release) before running `npm install`, `npm run check`, and `npm run build`. The `engines` field in `package.json` documents this minimum.
+
+## Recent portfolio upgrade
+
+- BKJ logo placeholder and public profile-photo placeholder.
+- English-first language switch with Nepali translations for navigation, page introductions and key calendar labels.
+- Nepal analog clock, BS–AD and AD–BS converter, Panchang data panel and BS 2083 holiday markers.
+- Official annual holiday notice link to the Ministry of Home Affairs.
+- Latest published engineering blog entries on the homepage.
+- Scientific calculator and linear-regression calculator subpages.
+- Structured resource directories for Bachelor Civil Engineering, Lok Sewa, Codes and Laws, and engineering references.
+
+### Calendar data sources
+
+- Bikram Sambat conversion: `nepali-date-converter` package (MIT-licensed).
+- Daily Panchang panel: NepDate public daily endpoint (`https://api.khumnath.com.np/`). The panel handles provider/network unavailability and links to provider documentation.
+- Public holidays: 2083 BS notice published by the Ministry of Home Affairs (`https://moha.gov.np/en/page/government-and-public-holidays-in-2083`). Conditional and regional holidays are labelled in the calendar. Verify scope against the official notice.
+
+The Panchang API is a third-party service and should be reviewed for its service terms, availability and calculation convention before treating its output as authoritative. The website currently uses its public plain-text daily endpoint; structured monthly calendar data is a separate paid API tier.
