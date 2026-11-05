@@ -1,0 +1,103 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageIntro from '@components/PageIntro.astro';
+import Container from '@components/Container.astro';
+---
+<BaseLayout title="Nepali Date Converter" description="Convert Gregorian dates to Bikram Sambat and Bikram Sambat dates to Gregorian dates.">
+  <PageIntro eyebrow="Bikram Sambat ↔ Gregorian" title="Nepali date converter" description="Convert dates between the Gregorian calendar (AD) and Bikram Sambat (BS), with validation for unsupported or invalid dates." nepaliEyebrow="विक्रम संवत् ↔ इस्वी संवत्" nepaliTitle="नेपाली मिति रूपान्तरण" nepaliDescription="इस्वी संवत् (AD) र विक्रम संवत् (BS) बीच मिति रूपान्तरण गर्नुहोस्।">
+  </PageIntro>
+  <section class="section calendar-converter-page">
+    <Container>
+      <article class="calendar-tool-card date-converter-card" data-date-converter>
+        <p class="eyebrow">Date conversion</p>
+        <h2 data-en="Convert a date" data-ne="मिति रूपान्तरण गर्नुहोस्">Convert a date</h2>
+        <div class="converter-tabs" role="group" aria-label="Conversion direction">
+          <button type="button" class="is-active" data-convert-mode="ad-bs" aria-pressed="true">AD → BS</button>
+          <button type="button" data-convert-mode="bs-ad" aria-pressed="false">BS → AD</button>
+        </div>
+        <div data-ad-bs-panel>
+          <label for="ad-date" data-en="Gregorian date (AD)" data-ne="इस्वी मिति (AD)">Gregorian date (AD)</label>
+          <input id="ad-date" type="date" />
+        </div>
+        <div data-bs-ad-panel hidden>
+          <div class="bs-input-grid">
+            <label for="bs-year"><span data-en="BS year" data-ne="वर्ष">BS year</span><input id="bs-year" type="number" min="1970" max="2100" value="2083" /></label>
+            <label for="bs-month"><span data-en="BS month" data-ne="महिना">BS month</span><input id="bs-month" type="number" min="1" max="12" value="7" /></label>
+            <label for="bs-day"><span data-en="BS day" data-ne="गते">BS day</span><input id="bs-day" type="number" min="1" max="32" value="20" /></label>
+          </div>
+        </div>
+        <button type="button" class="button button--primary converter-submit" data-convert-submit data-en="Convert date" data-ne="मिति रूपान्तरण">Convert date</button>
+        <output class="date-converter-result" data-convert-result aria-live="polite">Choose a date to convert.</output>
+        <p class="calendar-data-note" data-en="Conversion uses the installed Nepali date conversion library. For legal or administrative use, verify dates against official records." data-ne="रूपान्तरणका लागि स्थापित नेपाली मिति रूपान्तरण पुस्तकालय प्रयोग गरिएको छ। कानुनी वा प्रशासनिक प्रयोजनका लागि आधिकारिक अभिलेखबाट मिति रुजु गर्नुहोस्।">Conversion uses the installed Nepali date conversion library. For legal or administrative use, verify dates against official records.</p>
+      </article>
+    </Container>
+  </section>
+</BaseLayout>
+<script>
+  import NepaliDate from 'nepali-date-converter';
+
+  const root = document.querySelector<HTMLElement>('[data-date-converter]');
+  if (root) {
+    const adPanel = root.querySelector<HTMLElement>('[data-ad-bs-panel]');
+    const bsPanel = root.querySelector<HTMLElement>('[data-bs-ad-panel]');
+    const modeButtons = root.querySelectorAll<HTMLButtonElement>('[data-convert-mode]');
+    const result = root.querySelector<HTMLOutputElement>('[data-convert-result]');
+    const adInput = root.querySelector<HTMLInputElement>('#ad-date');
+    const yearInput = root.querySelector<HTMLInputElement>('#bs-year');
+    const monthInput = root.querySelector<HTMLInputElement>('#bs-month');
+    const dayInput = root.querySelector<HTMLInputElement>('#bs-day');
+    const submit = root.querySelector<HTMLButtonElement>('[data-convert-submit]');
+    let mode: 'ad-bs' | 'bs-ad' = 'ad-bs';
+
+    const isEnglish = (): boolean => document.documentElement.lang !== 'ne';
+    const message = (english: string, nepali: string): string => isEnglish() ? english : nepali;
+    const setMode = (next: 'ad-bs' | 'bs-ad'): void => {
+      mode = next;
+      if (adPanel) adPanel.hidden = next !== 'ad-bs';
+      if (bsPanel) bsPanel.hidden = next !== 'bs-ad';
+      modeButtons.forEach((button) => {
+        const active = button.dataset.convertMode === next;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      if (result) result.textContent = message('Choose a date to convert.', 'रूपान्तरण गर्न मिति छान्नुहोस्।');
+    };
+    modeButtons.forEach((button) => button.addEventListener('click', () => setMode(button.dataset.convertMode === 'bs-ad' ? 'bs-ad' : 'ad-bs')));
+
+    const convert = (): void => {
+      if (!result) return;
+      try {
+        if (mode === 'ad-bs') {
+          if (!adInput?.value) { result.textContent = message('Select a Gregorian date.', 'इस्वी मिति छान्नुहोस्।'); return; }
+          const [year, month, day] = adInput.value.split('-').map(Number);
+          const adDate = new Date(year, month - 1, day, 12);
+          if (adDate.getFullYear() !== year || adDate.getMonth() !== month - 1 || adDate.getDate() !== day) throw new Error('Invalid Gregorian date.');
+          const converted = new NepaliDate(adDate);
+          result.textContent = `${converted.format('YYYY MMMM DD')} BS`;
+          return;
+        }
+
+        const year = Number(yearInput?.value);
+        const month = Number(monthInput?.value);
+        const day = Number(dayInput?.value);
+        if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day) || year < 1970 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 32) {
+          result.textContent = message('Enter a valid BS date (supported years 1970–2100).', 'मान्य BS मिति प्रविष्ट गर्नुहोस् (समर्थित वर्ष १९७०–२१००)।');
+          return;
+        }
+        const converted = new NepaliDate(year, month - 1, day);
+        const bs = converted.getBS();
+        if (bs.year !== year || bs.month !== month - 1 || bs.date !== day) {
+          result.textContent = message('That day does not exist in the selected BS month.', 'छानिएको BS महिनामा उक्त गते उपलब्ध छैन।');
+          return;
+        }
+        const ad = converted.getAD();
+        const adDate = new Date(Date.UTC(ad.year, ad.month, ad.date, 12));
+        if (Number.isNaN(adDate.getTime())) throw new Error('Date is outside the supported conversion range.');
+        result.textContent = `${new Intl.DateTimeFormat(isEnglish() ? 'en-GB' : 'ne-NP', { timeZone: 'UTC', day: '2-digit', month: 'long', year: 'numeric' }).format(adDate)} AD`;
+      } catch (error) {
+        result.textContent = error instanceof Error ? error.message : message('Unable to convert this date.', 'मिति रूपान्तरण गर्न सकिएन।');
+      }
+    };
+    submit?.addEventListener('click', convert);
+  }
+</script>

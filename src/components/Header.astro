@@ -20,11 +20,32 @@ const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.st
     </button>
 
     <nav class="primary-nav" id="primary-navigation" aria-label="Main navigation" data-navigation>
-      {navigation.map((item) => { const nepali: Record<string, string> = { Home: 'गृहपृष्ठ', About: 'परिचय', Experience: 'अनुभव', Projects: 'परियोजनाहरू', 'Engineering Blog': 'इन्जिनियरिङ लेख', Resources: 'स्रोत सामग्री', 'Engineering Tools': 'इन्जिनियरिङ उपकरण', CV: 'जीवनवृत्त', Contact: 'सम्पर्क', 'Nepali Calendar': 'नेपाली पात्रो' }; return (
-        <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
-          <span data-en={item.label} data-ne={nepali[item.label] ?? item.label}>{item.label}</span>
-        </a>
-      ); })}
+      {navigation.map((item) => {
+        const nepali: Record<string, string> = { Home: 'गृहपृष्ठ', About: 'परिचय', Experience: 'अनुभव', Projects: 'परियोजनाहरू', 'Engineering Blog': 'इन्जिनियरिङ लेख', Resources: 'स्रोत सामग्री', 'Engineering Tools': 'इन्जिनियरिङ उपकरण', CV: 'जीवनवृत्त', Contact: 'सम्पर्क', 'Nepali Calendar': 'नेपाली पात्रो' };
+        if (item.label === 'Nepali Calendar') {
+          const active = isActive('/calendar/');
+          return (
+            <details class:list={['nav-dropdown', active && 'is-active']} data-nav-dropdown>
+              <summary class="nav-link" aria-haspopup="true">
+                <span data-en="Nepali Calendar" data-ne="नेपाली पात्रो">Nepali Calendar</span><span class="nav-dropdown-caret" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="nav-dropdown-menu">
+                <a href="/calendar/" class:list={['nav-dropdown-link', pathname === '/calendar/' && 'is-active']} aria-current={pathname === '/calendar/' ? 'page' : undefined}>
+                  <span data-en="Calendar & Panchang" data-ne="पात्रो र पञ्चाङ्ग">Calendar & Panchang</span>
+                </a>
+                <a href="/calendar/date-converter/" class:list={['nav-dropdown-link', pathname.startsWith('/calendar/date-converter') && 'is-active']} aria-current={pathname.startsWith('/calendar/date-converter') ? 'page' : undefined}>
+                  <span data-en="Date Converter" data-ne="मिति रूपान्तरण">Date Converter</span>
+                </a>
+              </div>
+            </details>
+          );
+        }
+        return (
+          <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <span data-en={item.label} data-ne={nepali[item.label] ?? item.label}>{item.label}</span>
+          </a>
+        );
+      })}
     </nav>
 
     <div class="header-actions">

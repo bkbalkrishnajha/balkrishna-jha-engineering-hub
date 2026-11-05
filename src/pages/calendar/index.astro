@@ -3,11 +3,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import PageIntro from '@components/PageIntro.astro';
 import Container from '@components/Container.astro';
 import NepaliTimeCalendar from '@components/NepaliTimeCalendar.astro';
-import CalendarEnhancements from '@components/CalendarEnhancements.astro';
 ---
-<BaseLayout title="Nepali Calendar & Panchang" description="Nepal time, Bikram Sambat calendar, date conversion, Panchang reference and official public holiday sources.">
-  <PageIntro eyebrow="Nepal time and calendar" title="Nepali calendar, Panchang and date converter" description="A practical reference for Bikram Sambat dates, Gregorian conversion, Nepal time and daily lunar calendar information." nepaliEyebrow="नेपाल समय र पात्रो" nepaliTitle="नेपाली पात्रो, पञ्चाङ्ग र मिति रूपान्तरण" nepaliDescription="विक्रम संवत् मिति, इस्वी संवत् रूपान्तरण, नेपालको समय र दैनिक चन्द्र पात्रो जानकारीका लागि उपयोगी सन्दर्भ।" />
+<BaseLayout title="Nepali Calendar & Panchang" description="Nepal time, Bikram Sambat calendar, daily Panchang reference and official public holiday sources.">
+  <PageIntro eyebrow="Nepal time and calendar" title="Nepali calendar and Panchang" description="A practical reference for Bikram Sambat dates, Nepal time, daily Panchang information and public holiday references." nepaliEyebrow="नेपाल समय र पात्रो" nepaliTitle="नेपाली पात्रो र पञ्चाङ्ग" nepaliDescription="विक्रम संवत् मिति, नेपालको समय र दैनिक पञ्चाङ्ग जानकारीका लागि उपयोगी सन्दर्भ।" />
   <NepaliTimeCalendar />
-  <CalendarEnhancements />
-  <section class="section"><Container><p class="calendar-data-note">Calendar conversion and astronomical Panchang data are provided by separate sources. Public holiday dates should always be checked against the relevant Government of Nepal notice. The existing calendar month grid is based on the installed Nepali date converter.</p></Container></section>
+  <section class="section calendar-more-links"><Container><a class="button button--secondary" href="/calendar/date-converter/">Open AD ↔ BS date converter</a><p class="calendar-data-note">Calendar conversion and astronomical Panchang data are provided by separate sources. Public holiday dates should always be checked against the relevant Government of Nepal notice.</p></Container></section>
 </BaseLayout>

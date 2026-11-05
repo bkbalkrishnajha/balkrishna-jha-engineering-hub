@@ -1,5 +1,7 @@
 ---
 import Icon from '@components/Icon.astro';
+interface Props { showPanchang?: boolean }
+const { showPanchang = true } = Astro.props;
 ---
 <section class="section nepali-time-section" data-nepali-widget aria-labelledby="nepali-widget-title">
   <div class="site-container">
@@ -20,7 +22,13 @@ import Icon from '@components/Icon.astro';
             <time class="nepali-clock-time" data-nepal-time aria-live="off">--:--:--</time>
             <p class="nepali-clock-date" data-nepali-full-date>मिति लोड हुँदैछ…</p>
           </div>
-          <span class="nepali-clock-icon"><Icon name="clock" size={25} /></span>
+          <div class="nepali-clock-analog" role="img" aria-label="Live analog clock showing Nepal Standard Time">
+            {Array.from({ length: 12 }, (_, i) => <span class="clock-mark" style={`--i:${i}`} aria-hidden="true"></span>)}
+            <span class="clock-hand clock-hand--hour" data-nepal-hour-hand></span>
+            <span class="clock-hand clock-hand--minute" data-nepal-minute-hand></span>
+            <span class="clock-hand clock-hand--second" data-nepal-second-hand></span>
+            <span class="clock-pin"></span>
+          </div>
         </div>
 
         <div class="nepali-calendar-head">
@@ -47,6 +55,36 @@ import Icon from '@components/Icon.astro';
           <span class="nepali-holiday-legend"><i aria-hidden="true"></i> <span data-en="Public holiday" data-ne="सार्वजनिक बिदा">Public holiday</span></span>
           <span data-gregorian-date></span>
         </div>
+
+        {showPanchang && <section class="panchang-inline" aria-labelledby="panchang-title" data-panchang-panel>
+          <div class="panchang-inline-heading">
+            <div>
+              <p class="eyebrow" data-en="Daily lunar almanac" data-ne="दैनिक पञ्चाङ्ग">Daily lunar almanac</p>
+              <h3 id="panchang-title" data-en="Panchang · Kathmandu" data-ne="पञ्चाङ्ग · काठमाडौं">Panchang · Kathmandu</h3>
+            </div>
+            <span class="panchang-location">27.7172° N · 85.3240° E</span>
+          </div>
+          <div class="panchang-values" data-panchang-values aria-live="polite">
+            {['Tithi', 'Paksha', 'Nakshatra', 'Yoga', 'Karana', 'Sunrise', 'Sunset'].map((label) => <div class="panchang-value"><span>{label}</span><strong>Loading…</strong></div>)}
+          </div>
+          <details class="panchang-debug">
+            <summary data-en="Provider response / troubleshooting" data-ne="प्रदायकको प्रतिक्रिया / समस्या पहिचान">Provider response / troubleshooting</summary>
+            <pre class="panchang-raw-output" data-panchang-raw>Waiting for provider response…</pre>
+          </details>
+          <p class="calendar-data-note" data-en="Daily values are supplied by the external Panchang provider. Missing fields are shown as unavailable; no values are estimated." data-ne="दैनिक विवरण बाह्य पञ्चाङ्ग प्रदायकबाट प्राप्त हुन्छ। उपलब्ध नभएका विवरणलाई अनुपलब्ध देखाइन्छ; अनुमानित मान राखिँदैन।">Daily values are supplied by the external Panchang provider. Missing fields are shown as unavailable; no values are estimated.</p>
+          <a href="https://api.khumnath.com.np/" target="_blank" rel="noopener noreferrer">Panchang API provider</a>
+        </section>}
+
+        <dialog class="holiday-detail-dialog" data-holiday-dialog aria-labelledby="holiday-dialog-title">
+          <form method="dialog" class="holiday-dialog-form">
+            <button class="holiday-dialog-close" aria-label="Close holiday details">×</button>
+            <p class="eyebrow" data-en="Public holiday details" data-ne="सार्वजनिक बिदाको विवरण">Public holiday details</p>
+            <h3 id="holiday-dialog-title" data-holiday-name></h3>
+            <p data-holiday-date></p>
+            <p><strong data-en="Scope:" data-ne="लागू हुने क्षेत्र:">Scope:</strong> <span data-holiday-scope></span></p>
+            <a href="https://moha.gov.np/en/page/government-and-public-holidays-in-2083" target="_blank" rel="noopener noreferrer" data-en="Government of Nepal · MOHA source" data-ne="नेपाल सरकार · गृह मन्त्रालयको स्रोत">Government of Nepal · MOHA source</a>
+          </form>
+        </dialog>
       </section>
 
       <aside class="nepali-year-panel" aria-label="Bikram Sambat year completion">
@@ -203,6 +241,10 @@ import Icon from '@components/Icon.astro';
     const previousButton = widget.querySelector<HTMLButtonElement>('[data-calendar-prev]');
     const nextButton = widget.querySelector<HTMLButtonElement>('[data-calendar-next]');
     const todayButton = widget.querySelector<HTMLButtonElement>('[data-calendar-reset]');
+    const hourHand = widget.querySelector<HTMLElement>('[data-nepal-hour-hand]');
+    const minuteHand = widget.querySelector<HTMLElement>('[data-nepal-minute-hand]');
+    const secondHand = widget.querySelector<HTMLElement>('[data-nepal-second-hand]');
+    const holidayDialog = widget.querySelector<HTMLDialogElement>('[data-holiday-dialog]');
 
     const formatTime = (date: Date): string => new Intl.DateTimeFormat(isEnglish() ? 'en-NP' : 'ne-NP', {
       timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true,
@@ -221,6 +263,13 @@ import Icon from '@components/Icon.astro';
         timeNode.textContent = formatTime(now);
         timeNode.dateTime = now.toISOString();
       }
+      const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kathmandu', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).formatToParts(now);
+      const clock = Object.fromEntries(parts.map((part) => [part.type, Number(part.value)]));
+      const hour = (clock.hour % 12) * 30 + clock.minute * 0.5;
+      const minute = clock.minute * 6 + clock.second * 0.1;
+      if (hourHand) hourHand.style.transform = `translateX(-50%) rotate(${hour}deg)`;
+      if (minuteHand) minuteHand.style.transform = `translateX(-50%) rotate(${minute}deg)`;
+      if (secondHand) secondHand.style.transform = `translateX(-50%) rotate(${clock.second * 6}deg)`;
     };
 
     const renderCalendar = (): void => {
@@ -245,12 +294,17 @@ import Icon from '@components/Icon.astro';
           fragment.append(blank);
           return;
         }
-        const day = document.createElement('span');
+        const parts = getBsParts(cell.date);
+        const holiday = parts.year === 2083 ? holidays2083[`${parts.month}-${parts.day}`] : undefined;
+        const day: HTMLButtonElement | HTMLSpanElement = holiday ? document.createElement('button') : document.createElement('span');
         day.className = 'nepali-calendar-day';
         day.textContent = toNepaliDigits(cell.day);
-        const parts = getBsParts(cell.date);
+        if (day instanceof HTMLButtonElement) {
+          day.type = 'button';
+          day.dataset.holidayKey = `${parts.month}-${parts.day}`;
+          day.setAttribute('aria-haspopup', 'dialog');
+        }
         const isToday = parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day;
-        const holiday = parts.year === 2083 ? holidays2083[`${parts.month}-${parts.day}`] : undefined;
         if (holiday) { day.classList.add('is-holiday'); day.title = `${holiday.name} · ${holiday.scope}`; day.setAttribute('aria-label', `${toNepaliDigits(cell.day)} ${MONTHS_NP[parts.month - 1]}: ${holiday.name}`); }
         if (isToday) {
           day.classList.add('is-today');
@@ -261,6 +315,29 @@ import Icon from '@components/Icon.astro';
       });
       calendarGrid.replaceChildren(fragment);
     };
+
+    const openHolidayDetails = (button: HTMLButtonElement): void => {
+      const key = button.dataset.holidayKey;
+      const holiday = key ? holidays2083[key] : undefined;
+      if (!holiday || !holidayDialog) return;
+      const [month, day] = key!.split('-').map(Number);
+      const name = holidayDialog.querySelector<HTMLElement>('[data-holiday-name]');
+      const date = holidayDialog.querySelector<HTMLElement>('[data-holiday-date]');
+      const scope = holidayDialog.querySelector<HTMLElement>('[data-holiday-scope]');
+      if (name) name.textContent = holiday.name;
+      if (date) date.textContent = isEnglish() ? `${day} ${MONTHS_EN[month - 1]} 2083 BS` : `${toNepaliDigits(day)} ${MONTHS_NP[month - 1]} ${toNepaliDigits(2083)} वि.सं.`;
+      if (scope) scope.textContent = isEnglish()
+        ? ({ national: 'National', regional: 'Regional', conditional: 'Conditional / applicable to specified groups' } as const)[holiday.scope]
+        : ({ national: 'राष्ट्रिय', regional: 'क्षेत्रीय', conditional: 'सर्तसहित / तोकिएका समुदायमा लागू' } as const)[holiday.scope];
+      if (!holidayDialog.open) holidayDialog.showModal();
+    };
+    calendarGrid?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target instanceof Element) {
+        const button = target.closest<HTMLButtonElement>('button[data-holiday-key]');
+        if (button) openHolidayDetails(button);
+      }
+    });
 
     const renderYearProgress = (): void => {
       const { start, end } = getYearBounds(today, todayParts.year);
@@ -358,14 +435,72 @@ import Icon from '@components/Icon.astro';
       renderCalendar();
     });
 
+    const panchangValues = widget.querySelector<HTMLElement>('[data-panchang-values]');
+    const panchangRaw = widget.querySelector<HTMLElement>('[data-panchang-raw]');
+    const panchangLabels = [
+      { key: 'tithi', en: 'Tithi', ne: 'तिथि', aliases: ['tithi', 'तिथि'] },
+      { key: 'paksha', en: 'Paksha', ne: 'पक्ष', aliases: ['paksha', 'fortnight', 'पक्ष'] },
+      { key: 'nakshatra', en: 'Nakshatra', ne: 'नक्षत्र', aliases: ['nakshatra', 'नक्षत्र'] },
+      { key: 'yoga', en: 'Yoga', ne: 'योग', aliases: ['yoga', 'योग'] },
+      { key: 'karana', en: 'Karana', ne: 'करण', aliases: ['karana', 'करण'] },
+      { key: 'sunrise', en: 'Sunrise', ne: 'सूर्योदय', aliases: ['sunrise', 'sun rise', 'सूर्योदय'] },
+      { key: 'sunset', en: 'Sunset', ne: 'सूर्यास्त', aliases: ['sunset', 'sun set', 'सूर्यास्त'] },
+    ];
+    const extractPanchangFields = (body: string): Record<string, string> => {
+      const found: Record<string, string> = {};
+      const lines = body.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      for (const item of panchangLabels) {
+        const aliases = item.aliases.map((alias) => alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const labelPattern = new RegExp(`^(?:[-*•]\\s*)?(?:${aliases.join('|')})\\s*(?::|=|–|—|-)\\s*(.+)$`, 'i');
+        const match = lines.map((line) => line.match(labelPattern)).find(Boolean);
+        if (match?.[1]) found[item.key] = match[1].trim();
+      }
+      return found;
+    };
+    const renderPanchang = (values: Record<string, string>): void => {
+      if (!panchangValues) return;
+      const fragment = document.createDocumentFragment();
+      panchangLabels.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'panchang-value';
+        const label = document.createElement('span');
+        label.textContent = isEnglish() ? item.en : item.ne;
+        const value = document.createElement('strong');
+        value.textContent = values[item.key] || (isEnglish() ? 'Unavailable' : 'उपलब्ध छैन');
+        card.append(label, value);
+        fragment.append(card);
+      });
+      panchangValues.replaceChildren(fragment);
+    };
+    const loadPanchang = async (): Promise<void> => {
+      if (!panchangValues || !panchangRaw) return;
+      const language = isEnglish() ? 'en' : 'ne';
+      renderPanchang({});
+      panchangRaw.textContent = isEnglish() ? 'Loading provider response…' : 'प्रदायकको प्रतिक्रिया लोड हुँदैछ…';
+      try {
+        const url = `https://api.khumnath.com.np/today?format=text&lang=${language}&lat=27.7172&lon=85.3240&tz=5.75&elev=1400`;
+        const response = await fetch(url, { headers: { Accept: 'text/plain' } });
+        if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        const body = await response.text();
+        if (!body.trim()) throw new Error('The provider returned an empty response.');
+        panchangRaw.textContent = body.slice(0, 8000);
+        renderPanchang(extractPanchangFields(body));
+      } catch (error) {
+        panchangRaw.textContent = error instanceof Error ? error.message : 'Unknown Panchang request error.';
+        renderPanchang({});
+      }
+    };
+
     document.addEventListener('bkj-language-change', () => {
       if (fullDateNode) fullDateNode.textContent = formatNepalDate(today);
       renderCalendar();
       renderYearProgress();
       updateClock();
+      loadPanchang();
     });
     updateClock();
     refreshNepalDate();
+    loadPanchang();
     window.setInterval(updateClock, 1000);
     window.setInterval(() => {
       const currentNepalDay = getNepalToday();
