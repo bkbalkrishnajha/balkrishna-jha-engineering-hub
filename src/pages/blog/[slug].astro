@@ -18,6 +18,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeri
     <Container>
       <a href="/blog/" class="article-back"><Icon name="arrow-right" size={15} /> All articles</a>
       <header class="article-header">
+        {post.data.coverImage && <img src={post.data.coverImage} alt={post.data.title} style="width:100%;max-height:420px;aspect-ratio:16/9;object-fit:cover;border-radius:14px;margin-bottom:24px" />}
         <div class="listing-meta"><span class="listing-category">{post.data.category}</span><span>{formatDate(post.data.publishDate)}</span></div>
         <h1>{post.data.title}</h1>
         <p class="article-description">{post.data.description}</p>

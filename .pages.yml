@@ -1,0 +1,158 @@
+media:
+  - name: images
+    label: Images
+    input: public/images
+    output: /images
+  - name: resource-files
+    label: Resource files
+    input: public/resources
+    output: /resources
+
+content:
+  - name: blog
+    label: Engineering Blog
+    type: collection
+    path: src/content/blog
+    filename: "{primary}.md"
+    view:
+      fields: [title, publishDate, category, draft]
+      primary: title
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Short description
+        type: text
+        required: true
+      - name: publishDate
+        label: Publication date
+        type: date
+        required: true
+      - name: updatedDate
+        label: Updated date
+        type: date
+      - name: category
+        label: Category
+        type: string
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: coverImage
+        label: Cover image
+        type: image
+      - name: draft
+        label: Keep as draft
+        type: boolean
+        default: true
+      - name: featured
+        label: Featured article
+        type: boolean
+        default: false
+      - name: body
+        label: Article content
+        type: rich-text
+
+  - name: projects
+    label: Engineering Projects
+    type: collection
+    path: src/content/projects
+    filename: "{primary}.md"
+    view:
+      fields: [title, category, draft]
+      primary: title
+    fields:
+      - name: title
+        label: Project title
+        type: string
+        required: true
+      - name: description
+        label: Project summary
+        type: text
+        required: true
+      - name: publishDate
+        label: Publication date (optional)
+        type: date
+      - name: category
+        label: Project category
+        type: string
+      - name: tectonicZones
+        label: Tectonic zones
+        type: string
+        list: true
+      - name: approach
+        label: Study approach
+        type: string
+      - name: awardTitle
+        label: Award title
+        type: string
+      - name: awardOrganization
+        label: Awarding organization
+        type: string
+      - name: awardYear
+        label: Award year
+        type: string
+      - name: relatedPublication
+        label: Related publication URL
+        type: string
+      - name: coverImage
+        label: Project image
+        type: image
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: draft
+        label: Keep as draft
+        type: boolean
+        default: true
+      - name: body
+        label: Project details
+        type: rich-text
+
+  - name: resources
+    label: Engineering Resources
+    type: collection
+    path: src/content/resources
+    filename: "{primary}.md"
+    view:
+      fields: [title, category, publishDate, draft]
+      primary: title
+    fields:
+      - name: title
+        label: Resource title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+        required: true
+      - name: category
+        label: Resource category
+        type: string
+        required: true
+      - name: publishDate
+        label: Publication date
+        type: date
+      - name: sourceName
+        label: Source / publisher
+        type: string
+      - name: sourceUrl
+        label: External source URL
+        type: string
+      - name: file
+        label: Uploaded document
+        type: file
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: draft
+        label: Keep as draft
+        type: boolean
+        default: true
+      - name: body
+        label: Resource notes / article
+        type: rich-text

@@ -1,46 +1,65 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import PageIntro from '@components/PageIntro.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Icon from '@components/Icon.astro';
-import { geotechnicalAward, publication } from '@data/profile';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => (b.data.publishDate?.valueOf() ?? 0) - (a.data.publishDate?.valueOf() ?? 0));
+const projectEntries = await Promise.all(projects.map(async (project) => ({
+  project,
+  Content: (await render(project)).Content,
+})));
+const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'short' });
 ---
 <BaseLayout title="Projects" description="Civil engineering project portfolio and verified project recognition of Balkrishna Jha.">
   <PageIntro eyebrow="Portfolio" title="Engineering projects" description="A curated record of civil engineering project work, technical responsibilities and lessons from practice." nepaliEyebrow="पोर्टफोलियो" nepaliTitle="इन्जिनियरिङ परियोजनाहरू" nepaliDescription="सिभिल इन्जिनियरिङ परियोजना कार्य, प्राविधिक जिम्मेवारी र व्यावहारिक सिकाइको अभिलेख।" />
   <section class="content-wrap">
     <Container>
-      <article class="project-case-study">
-        <div class="project-case-study__top">
-          <div>
-            <p class="eyebrow">Undergraduate geotechnical project · {geotechnicalAward.year}</p>
-            <h2>{geotechnicalAward.projectTitle}</h2>
-          </div>
-          <span class="project-award-mark"><Icon name="award" size={19} /> Award-winning project</span>
+      {projectEntries.length > 0 ? (
+        <div class="project-listing">
+          {projectEntries.map(({ project, Content }) => (
+            <article class="project-case-study">
+              <div class="project-case-study__top">
+                <div>
+                  <p class="eyebrow">{project.data.category} · {project.data.awardYear || (project.data.publishDate ? formatDate(project.data.publishDate) : 'Project case study')}</p>
+                  <h2>{project.data.title}</h2>
+                </div>
+                {project.data.awardTitle && <span class="project-award-mark"><Icon name="award" size={19} /> Award-winning project</span>}
+              </div>
+              <p class="project-case-study__summary">{project.data.description}</p>
+              {(project.data.tectonicZones.length > 0 || project.data.approach) && (
+                <div class="project-case-study__detail-grid">
+                  {project.data.tectonicZones.length > 0 && <div>
+                    <p class="eyebrow">Tectonic zones considered</p>
+                    <div class="project-zone-list">
+                      {project.data.tectonicZones.map((zone, index) => <span><b>{String(index + 1).padStart(2, '0')}</b>{zone}</span>)}
+                    </div>
+                  </div>}
+                  {project.data.approach && <div class="project-method-card">
+                    <p class="eyebrow">Study approach</p>
+                    <strong>{project.data.approach}</strong>
+                    <p>See the project notes for further details.</p>
+                  </div>}
+                </div>
+              )}
+              <div class="prose project-content"><Content /></div>
+              {project.data.awardTitle && <div class="project-case-study__recognition">
+                <div>
+                  <p class="eyebrow">Recognition · {project.data.awardYear}</p>
+                  <h3>{project.data.awardTitle}</h3>
+                  {project.data.awardOrganization && <p>Recognised by {project.data.awardOrganization}.</p>}
+                </div>
+                {project.data.relatedPublication && <a href={project.data.relatedPublication} target="_blank" rel="noopener noreferrer" class="button button--secondary">Read related publication <Icon name="arrow-up-right" size={15} /></a>}
+              </div>}
+            </article>
+          ))}
         </div>
-        <p class="project-case-study__summary">{geotechnicalAward.description} The study title identifies an empirical and numerical approach to the analysis.</p>
-        <div class="project-case-study__detail-grid">
-          <div>
-            <p class="eyebrow">Tectonic zones considered</p>
-            <div class="project-zone-list">
-              {geotechnicalAward.tectonicZones.map((zone, index) => <span><b>0{index + 1}</b>{zone}</span>)}
-            </div>
-          </div>
-          <div class="project-method-card">
-            <p class="eyebrow">Study approach</p>
-            <strong>{geotechnicalAward.approach}</strong>
-            <p>Focus: deformation and support analysis of headrace tunnels.</p>
-          </div>
-        </div>
-        <div class="project-case-study__recognition">
-          <div>
-            <p class="eyebrow">Recognition · {geotechnicalAward.year}</p>
-            <h3>{geotechnicalAward.title}</h3>
-            <p>Recognised by {geotechnicalAward.organisation}.</p>
-          </div>
-          <a href={publication.doi} target="_blank" rel="noopener noreferrer" class="button button--secondary">Read related publication <Icon name="arrow-up-right" size={15} /></a>
-        </div>
-      </article>
+      ) : (
+        <div class="empty-state"><p class="eyebrow">Project portfolio</p><h2>Project case studies are being prepared.</h2><p>Published project entries will appear here after review.</p></div>
+      )}
       <div style="margin-top: 42px">
         <SectionHeading eyebrow="Project documentation" title="A consistent project record" description="Each published case study will distinguish personal responsibilities from the work of the wider project team." />
         <div class="detail-list">

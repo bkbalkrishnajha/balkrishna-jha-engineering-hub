@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Icon from '@components/Icon.astro';
+
+export async function getStaticPaths() {
+  const resources = await getCollection('resources', ({ data }) => !data.draft);
+  return resources.map((resource) => ({ params: { slug: resource.id }, props: { resource } }));
+}
+
+const { resource } = Astro.props;
+const { Content } = await render(resource);
+const externalUrl = resource.data.sourceUrl;
+const uploadedFile = resource.data.file;
+---
+<BaseLayout title={resource.data.title} description={resource.data.description}>
+  <section class="content-wrap"><Container>
+    <a href="/resources/" class="article-back"><Icon name="arrow-right" size={15}/> All resources</a>
+    <header class="article-header">
+      <div class="listing-meta"><span class="listing-category">{resource.data.category}</span>{resource.data.publishDate && <span>{resource.data.publishDate.toLocaleDateString('en', {year:'numeric',month:'long',day:'numeric'})}</span>}</div>
+      <h1>{resource.data.title}</h1>
+      <p class="article-description">{resource.data.description}</p>
+      {resource.data.tags.length > 0 && <div class="tag-list">{resource.data.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+      {resource.data.sourceName && <p class="resource-source">Source: {resource.data.sourceName}</p>}
+      <div class="resource-actions">
+        {externalUrl && <a class="button button--secondary" href={externalUrl} target="_blank" rel="noopener noreferrer">Open source <Icon name="arrow-up-right" size={15}/></a>}
+        {uploadedFile && <a class="button button--secondary" href={uploadedFile} target="_blank" rel="noopener noreferrer">View attached file <Icon name="arrow-up-right" size={15}/></a>}
+      </div>
+    </header>
+    <article class="prose"><Content /></article>
+  </Container></section>
+</BaseLayout>

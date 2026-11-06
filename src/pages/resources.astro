@@ -1,8 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
+
+const resources = (await getCollection('resources', ({ data }) => !data.draft))
+  .sort((a, b) => (b.data.publishDate?.valueOf() ?? 0) - (a.data.publishDate?.valueOf() ?? 0));
 const sections = [
   {number:'01',icon:'notebook',title:'Bachelor Civil Engineering',description:'Subject-wise notes, formulas, solved problems and undergraduate references.',href:'/resources/bachelor-civil-engineering/'},
   {number:'02',icon:'library',title:'Lok Sewa Resources',description:'Civil Engineering, Hydrology sub-group, past questions and general knowledge.',href:'/resources/loksewa/'},
@@ -16,6 +20,16 @@ const sections = [
     <div class="resource-directory-grid">
       {sections.map((section) => <a class="resource-directory-card" href={section.href}><span class="feature-card__number">{section.number} / LIBRARY</span><span class="resource-directory-icon"><Icon name={section.icon} size={24}/></span><h2>{section.title}</h2><p>{section.description}</p><span class="feature-card__link">Browse resources <Icon name="arrow-right" size={15}/></span></a>)}
     </div>
+    {resources.length > 0 && <div class="resource-managed-list" style="margin-top: 48px">
+      <div class="section-heading"><p class="eyebrow">Recently added</p><h2>Published resources</h2><p>Notes, references and documents added through the content manager.</p></div>
+      <div class="listing-grid">
+        {resources.map((resource) => <article class="listing-card">
+          <div class="listing-meta"><span class="listing-category">{resource.data.category}</span>{resource.data.publishDate && <span>{resource.data.publishDate.toLocaleDateString('en', {year:'numeric',month:'short',day:'numeric'})}</span>}</div>
+          <h2>{resource.data.title}</h2><p>{resource.data.description}</p>
+          <a href={`/resources/${resource.id}/`} class="listing-read">Open resource <Icon name="arrow-right" size={15}/></a>
+        </article>)}
+      </div>
+    </div>}
     <div class="notice resource-notice"><strong>Quality and copyright:</strong> Resource entries will include their source, edition or publication date where available. Only public, licensed or authorised material will be shared; otherwise the site will link to the publisher.</div>
   </Container></section>
 </BaseLayout>
