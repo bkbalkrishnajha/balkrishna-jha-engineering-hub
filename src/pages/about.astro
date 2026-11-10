@@ -32,7 +32,15 @@ import { education, professionalSummary, technicalSkills } from '@data/profile';
             {technicalSkills.map((skill) => <span class="tag">{skill}</span>)}
           </div>
         </div>
-        <aside>
+        <aside class="about-sidebar">
+          <div class="sidebar-card about-profile-card">
+            <div class="about-profile-photo" role="img" aria-label="Profile photograph placeholder">
+              <span class="about-profile-photo__monogram">BJ</span>
+              <span class="about-profile-photo__caption">Profile photo</span>
+            </div>
+            <p class="eyebrow">Profile photograph</p>
+            <p class="about-profile-note">A photograph will be added here.</p>
+          </div>
           <div class="sidebar-card">
             <h2>Professional focus</h2>
             <ul>
@@ -42,11 +50,11 @@ import { education, professionalSummary, technicalSkills } from '@data/profile';
               <li>Surveying, teaching and technical learning</li>
             </ul>
           </div>
-          <div class="sidebar-card" style="margin-top: 14px">
-            <h2>Explore my profile</h2>
-            <p>See the roles, responsibilities, education, publication and recognitions recorded in my CV.</p>
-            <a href="/experience/" class="feature-card__link">View experience <Icon name="arrow-right" size={15} /></a>
-            <a href="/cv/" class="feature-card__link">View CV details <Icon name="arrow-right" size={15} /></a>
+          <div class="sidebar-card about-cv-placeholder">
+            <p class="eyebrow">Curriculum vitae</p>
+            <div class="about-cv-placeholder__mark" aria-hidden="true"><Icon name="file-text" size={25} /></div>
+            <h2>CV placeholder</h2>
+            <p>My CV will be added here.</p>
           </div>
         </aside>
       </div>

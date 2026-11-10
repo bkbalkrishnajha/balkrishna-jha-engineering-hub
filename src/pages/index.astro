@@ -2,8 +2,6 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import EngineeringVisual from '@components/EngineeringVisual.astro';
-import NepaliTimeCalendar from '@components/NepaliTimeCalendar.astro';
-import CivilFunDesk from '@components/CivilFunDesk.astro';
 import Icon from '@components/Icon.astro';
 import { featuredAreas, site } from '@data/site';
 import { professionalSummary, technicalSkills } from '@data/profile';
@@ -23,7 +21,6 @@ import { professionalSummary, technicalSkills } from '@data/profile';
           <p class="hero-lead" data-en="A professional portfolio of civil engineering experience, infrastructure interests, technical knowledge and practical resources." data-ne="सिभिल इन्जिनियरिङ अनुभव, पूर्वाधारसम्बन्धी रुचि, प्राविधिक ज्ञान र उपयोगी स्रोतहरूको व्यावसायिक पोर्टफोलियो।">A professional portfolio of civil engineering experience, infrastructure interests, technical knowledge and practical resources.</p>
           <div class="hero-actions">
             <a href="/projects/" class="button button--primary"><span data-en="Explore projects" data-ne="परियोजना हेर्नुहोस्">Explore projects</span> <Icon name="arrow-up-right" size={16} /></a>
-            <a href="/cv/" class="button button--hero-outline"><span data-en="View online CV" data-ne="अनलाइन जीवनवृत्त हेर्नुहोस्">View online CV</span> <Icon name="file-text" size={16} /></a>
           </div>
           <div class="hero-meta" aria-label="Professional areas">
             <span>Engineering practice</span>
@@ -70,8 +67,6 @@ import { professionalSummary, technicalSkills } from '@data/profile';
     </Container>
   </section>
 
-  <NepaliTimeCalendar showPanchang={false} />
-  <CivilFunDesk />
 
   <section class="section home-about-section">
     <Container>
