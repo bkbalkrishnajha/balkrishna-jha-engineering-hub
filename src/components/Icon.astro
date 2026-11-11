@@ -1,6 +1,6 @@
 ---
 interface Props {
-  name: 'arrow-up-right' | 'arrow-right' | 'menu' | 'x' | 'sun' | 'moon' | 'layers' | 'notebook' | 'library' | 'calculator' | 'map-pin' | 'mail' | 'file-text' | 'external-link' | 'chevron-right' | 'download' | 'droplets' | 'building-2' | 'phone' | 'github' | 'linkedin' | 'globe' | 'check' | 'clock' | 'ruler' | 'activity' | 'award';
+  name: 'arrow-up-right' | 'arrow-right' | 'menu' | 'x' | 'sun' | 'moon' | 'layers' | 'notebook' | 'library' | 'calculator' | 'map-pin' | 'mail' | 'file-text' | 'external-link' | 'chevron-right' | 'download' | 'droplets' | 'building-2' | 'phone' | 'github' | 'linkedin' | 'globe' | 'check' | 'clock' | 'ruler' | 'activity' | 'award' | 'copy';
   size?: number;
   strokeWidth?: number;
   class?: string;
@@ -34,6 +34,7 @@ const paths: Record<Props['name'], string[]> = {
   ruler: ['M21.3 8.7 15.3 2.7a1 1 0 0 0-1.4 0L2.7 13.9a1 1 0 0 0 0 1.4l6 6a1 1 0 0 0 1.4 0L21.3 10.1a1 1 0 0 0 0-1.4Z', 'm7.5 10.5 2 2', 'm10.5 7.5 2 2', 'm13.5 4.5 2 2'],
   activity: ['M22 12h-4l-3 9L9 3l-3 9H2'],
   award: ['M18 8a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z', 'm15.5 13.2 1.5 8.8-5-3-5 3 1.5-8.8'],
+  copy: ['M9 9h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z', 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1'],
 };
 ---
 <svg

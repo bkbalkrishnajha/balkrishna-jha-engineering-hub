@@ -18,7 +18,7 @@ const footerLinks = navigation.filter((item) => !['CV', 'Nepali Calendar'].inclu
         <div class="footer-socials">
           <a href={site.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Icon name="linkedin" size={17} /></a>
           <a href={site.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Icon name="github" size={17} /></a>
-          <a href={`mailto:${site.email}`} aria-label="Email"><Icon name="mail" size={17} /></a>
+          <a href={`mailto:${site.email}`} aria-label="Email" data-social-email data-email={site.email}><Icon name="mail" size={17} /></a>
         </div>
       </div>
       <div class="footer-nav-block">
@@ -29,7 +29,32 @@ const footerLinks = navigation.filter((item) => !['CV', 'Nepali Calendar'].inclu
       </div>
       <div class="footer-contact-block">
         <p class="footer-label" data-en="Get in touch" data-ne="सम्पर्क">Get in touch</p>
-        <a href={`mailto:${site.email}`} class="footer-contact-link">{site.email} <Icon name="arrow-up-right" size={15} /></a>
+        <div class="footer-email-box">
+          <a
+            href={`mailto:${site.email}`}
+            class="footer-contact-link"
+            data-email-link
+            data-email={site.email}
+            aria-label={`Send email to ${site.email}`}
+            title="Click to compose email in your email app"
+          >
+            <span>{site.email}</span>
+            <Icon name="arrow-up-right" size={14} />
+          </a>
+          <button
+            type="button"
+            class="footer-email-copy"
+            data-copy-btn
+            data-email={site.email}
+            aria-label="Copy email address"
+            title="Copy email to clipboard"
+          >
+            <span class="copy-icon" data-copy-icon>
+              <Icon name="copy" size={12} />
+            </span>
+            <span class="copy-text" data-copy-text data-en="Copy" data-ne="कपि">Copy</span>
+          </button>
+        </div>
         <p class="footer-note">{site.phone}</p>
         <p class="footer-note">{site.location}</p>
       </div>
@@ -41,3 +66,75 @@ const footerLinks = navigation.filter((item) => !['CV', 'Nepali Calendar'].inclu
     </div>
   </div>
 </footer>
+
+<script>
+  const copyBtn = document.querySelector<HTMLButtonElement>('[data-copy-btn]');
+  const copyText = document.querySelector<HTMLElement>('[data-copy-text]');
+  const copyIcon = document.querySelector<HTMLElement>('[data-copy-icon]');
+  const emailLink = document.querySelector<HTMLAnchorElement>('[data-email-link]');
+  const socialEmail = document.querySelector<HTMLAnchorElement>('[data-social-email]');
+
+  let resetTimeout: number | undefined;
+
+  const triggerCopy = async (email: string): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(email);
+      if (copyBtn && copyText) {
+        copyBtn.classList.add('is-copied');
+        const isNepali = document.documentElement.lang === 'ne';
+        copyText.textContent = isNepali ? 'कपि भयो!' : 'Copied!';
+        if (copyIcon) {
+          copyIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+        }
+        if (resetTimeout) window.clearTimeout(resetTimeout);
+        resetTimeout = window.setTimeout(() => {
+          copyBtn.classList.remove('is-copied');
+          copyText.textContent = isNepali ? (copyText.dataset.ne ?? 'कपि') : (copyText.dataset.en ?? 'Copy');
+          if (copyIcon) {
+            copyIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 9h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/></svg>';
+          }
+        }, 2200);
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const openMailto = (email: string) => {
+    window.location.href = `mailto:${email}`;
+  };
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = copyBtn.dataset.email || 'contact@balkrishnajha.com.np';
+      triggerCopy(email);
+    });
+  }
+
+  if (emailLink) {
+    emailLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = emailLink.dataset.email || 'contact@balkrishnajha.com.np';
+      triggerCopy(email);
+      openMailto(email);
+    });
+  }
+
+  if (socialEmail) {
+    socialEmail.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = socialEmail.dataset.email || 'contact@balkrishnajha.com.np';
+      triggerCopy(email);
+      openMailto(email);
+    });
+  }
+
+  document.addEventListener('bkj-language-change', () => {
+    if (copyText && !copyBtn?.classList.contains('is-copied')) {
+      const isNepali = document.documentElement.lang === 'ne';
+      copyText.textContent = isNepali ? (copyText.dataset.ne ?? 'कपि') : (copyText.dataset.en ?? 'Copy');
+    }
+  });
+</script>

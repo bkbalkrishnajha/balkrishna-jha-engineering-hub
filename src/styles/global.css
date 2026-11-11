@@ -226,6 +226,37 @@ img, svg { max-width: 100%; }
 .footer-nav a, .footer-contact-link { color: var(--muted); font-size: 11px; }
 .footer-nav a:hover, .footer-contact-link:hover { color: var(--blue); }
 .footer-contact-link { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); font-weight: 700; }
+.footer-email-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+.footer-email-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: all .18s ease;
+}
+.footer-email-copy:hover {
+  border-color: var(--muted);
+  color: var(--ink);
+  background: var(--surface);
+}
+.footer-email-copy.is-copied {
+  border-color: #10b981;
+  background: #10b981;
+  color: #fff;
+}
+:root[data-theme='dark'] .footer-email-copy.is-copied {
+  border-color: #059669;
+  background: #059669;
+  color: #fff;
+}
 .footer-note { margin: 9px 0 0; color: var(--muted); font-size: 10px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
 .back-to-top { color: var(--blue); font-weight: 700; }
