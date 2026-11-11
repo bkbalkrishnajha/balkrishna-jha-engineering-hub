@@ -31,11 +31,34 @@ import { site } from '@data/site';
         </div>
 
         <div class="contact-options">
-          <a class="contact-option contact-option--link" href={`mailto:${site.email}`}>
+          <div class="contact-option contact-option--email">
             <span class="contact-option__icon"><Icon name="mail" size={20} /></span>
             <span><h2>Email</h2><p>{site.email}</p></span>
-            <Icon name="arrow-up-right" size={16} />
-          </a>
+            <div class="contact-option-actions">
+              <button
+                type="button"
+                class="contact-action-btn"
+                data-contact-copy-btn
+                data-email={site.email}
+                title="Copy email to clipboard"
+                aria-label="Copy email address"
+              >
+                <span data-contact-copy-icon><Icon name="copy" size={13} /></span>
+                <span data-contact-copy-text data-en="Copy" data-ne="कपि">Copy</span>
+              </button>
+              <a
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${site.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="contact-action-btn"
+                title="Compose message in Gmail"
+                aria-label="Open in Gmail"
+              >
+                <span>Gmail</span>
+                <Icon name="arrow-up-right" size={12} />
+              </a>
+            </div>
+          </div>
 
           <a class="contact-option contact-option--link" href={`tel:${site.phone.replace(/\s/g, '')}`}>
             <span class="contact-option__icon"><Icon name="phone" size={20} /></span>
@@ -224,3 +247,44 @@ import { site } from '@data/site';
   }
 
 </style>
+
+<script>
+  const contactCopyBtn = document.querySelector<HTMLButtonElement>('[data-contact-copy-btn]');
+  const contactCopyText = document.querySelector<HTMLElement>('[data-contact-copy-text]');
+  const contactCopyIcon = document.querySelector<HTMLElement>('[data-contact-copy-icon]');
+
+  let resetTimeout: number | undefined;
+
+  contactCopyBtn?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = contactCopyBtn.dataset.email || 'contact@balkrishnajha.com.np';
+    try {
+      await navigator.clipboard.writeText(email);
+      contactCopyBtn.classList.add('is-copied');
+      const isNepali = document.documentElement.lang === 'ne';
+      if (contactCopyText) contactCopyText.textContent = isNepali ? 'कपि भयो!' : 'Copied!';
+      if (contactCopyIcon) {
+        contactCopyIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+      }
+      if (resetTimeout) window.clearTimeout(resetTimeout);
+      resetTimeout = window.setTimeout(() => {
+        contactCopyBtn.classList.remove('is-copied');
+        if (contactCopyText) {
+          contactCopyText.textContent = isNepali ? (contactCopyText.dataset.ne ?? 'कपि') : (contactCopyText.dataset.en ?? 'Copy');
+        }
+        if (contactCopyIcon) {
+          contactCopyIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 9h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/></svg>';
+        }
+      }, 2200);
+    } catch {
+      window.prompt('Copy email address:', email);
+    }
+  });
+
+  document.addEventListener('bkj-language-change', () => {
+    if (contactCopyText && !contactCopyBtn?.classList.contains('is-copied')) {
+      const isNepali = document.documentElement.lang === 'ne';
+      contactCopyText.textContent = isNepali ? (contactCopyText.dataset.ne ?? 'कपि') : (contactCopyText.dataset.en ?? 'Copy');
+    }
+  });
+</script>

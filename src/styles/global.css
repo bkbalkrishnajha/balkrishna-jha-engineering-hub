@@ -226,8 +226,22 @@ img, svg { max-width: 100%; }
 .footer-nav a, .footer-contact-link { color: var(--muted); font-size: 11px; }
 .footer-nav a:hover, .footer-contact-link:hover { color: var(--blue); }
 .footer-contact-link { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); font-weight: 700; }
+.footer-contact-link--btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  color: var(--blue);
+  font-weight: 700;
+  text-align: left;
+}
+.footer-contact-link--btn:hover {
+  color: var(--ink);
+}
 .footer-email-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
-.footer-email-copy {
+.footer-copy-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -242,20 +256,91 @@ img, svg { max-width: 100%; }
   line-height: 1.4;
   transition: all .18s ease;
 }
-.footer-email-copy:hover {
+.footer-contact-link--btn:hover .footer-copy-badge {
   border-color: var(--muted);
   color: var(--ink);
   background: var(--surface);
 }
-.footer-email-copy.is-copied {
+.footer-copy-badge.is-copied {
   border-color: #10b981;
   background: #10b981;
-  color: #fff;
+  color: #fff !important;
 }
-:root[data-theme='dark'] .footer-email-copy.is-copied {
+:root[data-theme='dark'] .footer-copy-badge.is-copied {
   border-color: #059669;
   background: #059669;
-  color: #fff;
+  color: #fff !important;
+}
+.footer-gmail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: all .18s ease;
+}
+.footer-gmail-link:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.contact-option-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.contact-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.contact-action-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.contact-action-btn.is-copied {
+  border-color: #10b981;
+  background: #10b981;
+  color: #fff !important;
+}
+:root[data-theme='dark'] .contact-action-btn.is-copied {
+  border-color: #059669;
+  background: #059669;
+  color: #fff !important;
+}
+.footer-socials button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: color .18s ease, border-color .18s ease;
+}
+.footer-socials button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
 }
 .footer-note { margin: 9px 0 0; color: var(--muted); font-size: 10px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
