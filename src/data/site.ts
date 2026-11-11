@@ -3,7 +3,7 @@ export const site = {
   title: 'Civil Engineering Portfolio',
   profession: 'Civil Engineer',
   description:
-    'The personal website of Balkrishna Jha, Civil Engineer, featuring articles, engineering resources and practical tools.',
+    'The personal website of Balkrishna Jha, Civil Engineer, showcasing professional works, technical insights, and engineering resources.',
   url: 'https://balkrishnajha.com.np',
   email: 'contact@balkrishnajha.com.np',
   phone: '+977 9844994437',
