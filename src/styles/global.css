@@ -1323,17 +1323,22 @@ body { font-size: 15px; line-height: 1.72; }
 .about-sidebar { display: grid; gap: 14px; }
 .about-profile-card { display: flex; flex-direction: column; align-items: flex-start; }
 .about-profile-photo {
-  display: flex; width: 100%; max-width: 190px; aspect-ratio: 4 / 5;
-  flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-  margin: 0 auto 18px; border: 1px dashed var(--muted); border-radius: 8px;
-  background:
-    linear-gradient(135deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
-    linear-gradient(45deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
-    var(--surface-soft);
-  color: var(--muted);
+  width: 100%;
+  max-width: 190px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  margin: 0 auto 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
 }
-.about-profile-photo__monogram { color: var(--ink-soft); font: 800 34px/1 var(--font-display); letter-spacing: 2px; }
-.about-profile-photo__caption { font-size: 9px; font-weight: 700; letter-spacing: 1.1px; text-transform: uppercase; }
+.about-profile-photo__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 .about-profile-card .eyebrow { margin: 0; }
 .about-profile-note { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
 .about-cv-placeholder { min-height: 190px; }

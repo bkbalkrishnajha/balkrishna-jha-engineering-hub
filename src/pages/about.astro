@@ -3,60 +3,63 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
-import { education, professionalSummary, technicalSkills } from '@data/profile';
 ---
-<BaseLayout title="About" description="About Balkrishna Jha, Civil Engineer, including education, technical skills and professional background.">
-  <PageIntro eyebrow="About" title="A Civil Engineer focused on practice and continuous learning." description="A professional profile shaped by civil engineering education, public-sector engineering work and field-survey experience." nepaliEyebrow="परिचय" nepaliTitle="व्यावहारिक काम र निरन्तर सिकाइमा केन्द्रित सिभिल इन्जिनियर।" nepaliDescription="सिभिल इन्जिनियरिङ शिक्षा, सार्वजनिक क्षेत्रको इन्जिनियरिङ कार्य र स्थलगत सर्वेक्षण अनुभवमा आधारित व्यावसायिक परिचय।" />
+
+<BaseLayout
+  title="About"
+  description="A simple profile page for Balkrishna Jha, Civil Engineer, with a downloadable curriculum vitae."
+>
+  <PageIntro
+    eyebrow="About"
+    title="About"
+    description="This page is being updated. Please use the link below to view or download my curriculum vitae."
+    nepaliEyebrow="परिचय"
+    nepaliTitle="परिचय"
+    nepaliDescription="यो पृष्ठ परिमार्जन हुँदैछ। मेरो विस्तृत विवरणका लागि तलको जीवनवृत्त हेर्न वा डाउनलोड गर्न सक्नुहुन्छ।"
+  />
+
   <section class="content-wrap">
     <Container>
-      <div class="content-grid">
-        <div class="prose">
-          <p class="eyebrow">Professional profile</p>
-          <h2>About Balkrishna Jha</h2>
-          <p>{professionalSummary}</p>
-          <p>My professional background includes engineering responsibilities with the Department of Roads and the Infrastructure Development Office, Sarlahi, as well as a part-time survey-camp teaching assignment at Khwopa College of Engineering.</p>
-          <p>This website brings together my professional background, civil engineering interests, technical notes, project documentation and practical engineering tools. Content is presented with an emphasis on clear assumptions, verifiable information and responsible engineering practice.</p>
-          <h2>Education</h2>
-          <div class="profile-education-list">
-            {education.map((item) => (
-              <article class="profile-education-item">
-                <div class="profile-education-item__top"><strong>{item.qualification}</strong><span>{item.period}</span></div>
-                <p>{item.institution}{item.affiliation ? ` | ${item.affiliation}` : ''}</p>
-                <span class="profile-result">{item.result}</span>
-              </article>
-            ))}
+      <div class="about-sidebar">
+        <div class="sidebar-card about-profile-card">
+          <div class="about-profile-photo">
+            <img
+              src="/images/profile.jpg"
+              alt="Balkrishna Jha – Civil Engineer"
+              class="about-profile-photo__image"
+              loading="eager"
+            />
           </div>
-          <h2>Technical skills</h2>
-          <p>Tools and software listed in my CV:</p>
-          <div class="tag-list" aria-label="Technical skills">
-            {technicalSkills.map((skill) => <span class="tag">{skill}</span>)}
-          </div>
+          <p class="eyebrow">Balkrishna Jha</p>
+          <h2>Civil Engineer</h2>
+          <p>This section will be expanded in a future update.</p>
         </div>
-        <aside class="about-sidebar">
-          <div class="sidebar-card about-profile-card">
-            <div class="about-profile-photo" role="img" aria-label="Profile photograph placeholder">
-              <span class="about-profile-photo__monogram">BJ</span>
-              <span class="about-profile-photo__caption">Profile photo</span>
-            </div>
-            <p class="eyebrow">Profile photograph</p>
-            <p class="about-profile-note">A photograph will be added here.</p>
+
+        <div class="sidebar-card about-cv-placeholder">
+          <p class="eyebrow">Curriculum vitae</p>
+          <div class="about-cv-placeholder__mark" aria-hidden="true">
+            <Icon name="file-text" size={25} />
           </div>
-          <div class="sidebar-card">
-            <h2>Professional focus</h2>
-            <ul>
-              <li>Civil engineering practice</li>
-              <li>Roads, bridges and infrastructure</li>
-              <li>Technical verification and documentation</li>
-              <li>Surveying, teaching and technical learning</li>
-            </ul>
-          </div>
-          <div class="sidebar-card about-cv-placeholder">
-            <p class="eyebrow">Curriculum vitae</p>
-            <div class="about-cv-placeholder__mark" aria-hidden="true"><Icon name="file-text" size={25} /></div>
-            <h2>CV placeholder</h2>
-            <p>My CV will be added here.</p>
-          </div>
-        </aside>
+          <h2>Curriculum Vitae</h2>
+          <p>For my education, qualifications and professional background, please view or download my CV.</p>
+
+          <a
+            href="/documents/Balkrishna-Jha-CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="feature-card__link"
+          >
+            View CV <Icon name="arrow-right" size={15} />
+          </a>
+
+          <a
+            href="/documents/Balkrishna-Jha-CV.pdf"
+            download="Balkrishna-Jha-CV.pdf"
+            class="feature-card__link"
+          >
+            Download CV (PDF) <Icon name="download" size={15} />
+          </a>
+        </div>
       </div>
     </Container>
   </section>
