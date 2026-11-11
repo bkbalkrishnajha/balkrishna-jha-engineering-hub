@@ -5,8 +5,8 @@ import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
 import NepaliLandConverter from '@components/NepaliLandConverter.astro';
 ---
-<BaseLayout title="Engineering Tools" description="Engineering calculators, standard unit conversions and a Nepal land-area converter for hill and Terai measurement systems.">
-  <PageIntro eyebrow="Practical utilities" title="Engineering tools" description="Small browser-based utilities for common calculations. Results are illustrative and should be checked against project requirements and applicable standards." nepaliEyebrow="व्यावहारिक उपकरण" nepaliTitle="इन्जिनियरिङ उपकरण" nepaliDescription="सामान्य गणनाका लागि ब्राउजरमा चल्ने उपकरणहरू। नतिजा उदाहरणका लागि हुन् र परियोजना आवश्यकता तथा लागू मापदण्डसँग जाँच गर्नुपर्छ।" />
+<BaseLayout title="Tools" description="Engineering calculators, standard unit conversions and a Nepal land-area converter for hill and Terai measurement systems.">
+  <PageIntro eyebrow="Practical utilities" title="Tools" description="Small browser-based utilities for common calculations. Results are illustrative and should be checked against project requirements and applicable standards." nepaliEyebrow="व्यावहारिक उपकरण" nepaliTitle="उपकरणहरू" nepaliDescription="सामान्य गणनाका लागि ब्राउजरमा चल्ने उपकरणहरू। नतिजा उदाहरणका लागि हुन् र परियोजना आवश्यकता तथा लागू मापदण्डसँग जाँच गर्नुपर्छ।" />
   <section class="content-wrap">
     <Container>
       <div class="tool-directory-links">
@@ -58,22 +58,21 @@ import NepaliLandConverter from '@components/NepaliLandConverter.astro';
       'mi-km': { factor: 1.609344, unit: 'km' },
       'cms-lps': { factor: 1000, unit: 'L/s' },
       'lps-cms': { factor: 0.001, unit: 'm³/s' },
-      'mm-in': { factor: 0.03937007874, unit: 'in' },
+      'mm-in': { factor: 0.0393700787, unit: 'in' },
       'in-mm': { factor: 25.4, unit: 'mm' },
     } as const;
 
     const updateConversion = (): void => {
       if (!valueInput || !conversionType || !conversionResult) return;
-
-      const value = Number(valueInput.value);
-      const conversion = conversions[conversionType.value as keyof typeof conversions];
-      if (valueInput.value.trim() === '' || !Number.isFinite(value) || !conversion) {
+      const rawValue = Number(valueInput.value);
+      if (!Number.isFinite(rawValue)) {
         conversionResult.textContent = 'Enter a valid number';
         return;
       }
-
-      const result = value * conversion.factor;
-      conversionResult.textContent = `${new Intl.NumberFormat('en', { maximumSignificantDigits: 8 }).format(result)} ${conversion.unit}`;
+      const conversion = conversions[conversionType.value as keyof typeof conversions];
+      if (!conversion) return;
+      const converted = rawValue * conversion.factor;
+      conversionResult.textContent = `${converted.toLocaleString('en', { maximumSignificantDigits: 6 })} ${conversion.unit}`;
     };
 
     valueInput?.addEventListener('input', updateConversion);
@@ -85,7 +84,7 @@ import NepaliLandConverter from '@components/NepaliLandConverter.astro';
       document.querySelector<HTMLInputElement>('#flow-depth'),
       document.querySelector<HTMLInputElement>('#manning-n'),
       document.querySelector<HTMLInputElement>('#channel-slope'),
-    ] as const;
+    ];
     const manningResult = document.querySelector<HTMLOutputElement>('#manning-result');
     const manningNote = document.querySelector<HTMLElement>('#manning-note');
 
@@ -93,28 +92,25 @@ import NepaliLandConverter from '@components/NepaliLandConverter.astro';
       const [widthInput, depthInput, roughnessInput, slopeInput] = manningInputs;
       if (!widthInput || !depthInput || !roughnessInput || !slopeInput || !manningResult || !manningNote) return;
 
-      const values = [widthInput.value, depthInput.value, roughnessInput.value, slopeInput.value];
-      if (values.some((value) => value.trim() === '')) {
+      const [b, y, n, S] = [widthInput.value, depthInput.value, roughnessInput.value, slopeInput.value].map(Number);
+      if (![b, y, n, S].every((v) => Number.isFinite(v) && v > 0)) {
         manningResult.textContent = 'Enter channel dimensions';
         manningNote.textContent = 'Discharge and mean velocity will be shown here.';
         return;
       }
 
-      const width = Number(widthInput.value);
-      const depth = Number(depthInput.value);
-      const roughness = Number(roughnessInput.value);
-      const slope = Number(slopeInput.value);
-      if (![width, depth, roughness, slope].every(Number.isFinite) || width <= 0 || depth <= 0 || roughness <= 0 || slope <= 0) {
+      const area = b * y;
+      const wettedPerimeter = b + 2 * y;
+      const hydraulicRadius = area / wettedPerimeter;
+      const velocity = (1 / n) * Math.pow(hydraulicRadius, 2 / 3) * Math.pow(S, 1 / 2);
+      const discharge = area * velocity;
+
+      if (!Number.isFinite(discharge) || discharge <= 0) {
         manningResult.textContent = 'Check input values';
         manningNote.textContent = 'All four values must be positive numbers.';
         return;
       }
 
-      const area = width * depth;
-      const wettedPerimeter = width + (2 * depth);
-      const hydraulicRadius = area / wettedPerimeter;
-      const velocity = (1 / roughness) * Math.pow(hydraulicRadius, 2 / 3) * Math.sqrt(slope);
-      const discharge = area * velocity;
       manningResult.textContent = `${discharge.toLocaleString('en', { maximumSignificantDigits: 6 })} m³/s`;
       manningNote.textContent = `Area ${area.toFixed(3)} m² · Hydraulic radius ${hydraulicRadius.toFixed(3)} m · Mean velocity ${velocity.toFixed(3)} m/s`;
     };

@@ -10,7 +10,7 @@ media:
 
 content:
   - name: blog
-    label: Engineering Blog
+    label: Blog
     type: collection
     path: src/content/blog
     filename: "{primary}.md"

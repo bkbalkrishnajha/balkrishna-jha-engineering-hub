@@ -17,8 +17,7 @@ export const navigation = [
   { label: 'About', href: '/about/' },
   { label: 'Blog', href: '/blog/' },
   { label: 'Resources', href: '/resources/' },
-  { label: 'Engineering Tools', href: '/tools/' },
+  { label: 'Tools', href: '/tools/' },
   { label: 'Contact', href: '/contact/' },
   { label: 'Nepali Calendar', href: '/calendar/' },
 ] as const;
-

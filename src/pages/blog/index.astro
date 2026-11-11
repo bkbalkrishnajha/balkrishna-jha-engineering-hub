@@ -5,22 +5,47 @@ import Container from '@components/Container.astro';
 import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
-const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
-<BaseLayout title="Blog" description="Technical notes and articles on civil engineering, infrastructure, construction and engineering practice.">
-  <PageIntro eyebrow="Knowledge & perspective" title="Blog" description="Technical notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice." nepaliEyebrow="ज्ञान र दृष्टिकोण" nepaliTitle="इन्जिनियरिङ ब्लग" nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी प्राविधिक लेख तथा व्याख्या।" />
+<BaseLayout
+  title="Blog"
+  description="Technical notes and articles on civil engineering, infrastructure, construction and engineering practice."
+>
+  <PageIntro
+    eyebrow="Knowledge & perspective"
+    title="Blog"
+    description="Technical notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice."
+    nepaliEyebrow="ज्ञान र दृष्टिकोण"
+    nepaliTitle="ब्लग"
+    nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी प्राविधिक लेख तथा व्याख्या।"
+  />
   <section class="content-wrap">
     <Container>
       {posts.length > 0 ? (
         <div class="listing-grid">
           {posts.map((post) => (
             <article class="listing-card">
-              {post.data.coverImage && <img src={post.data.coverImage} alt={post.data.title} loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px" />}
-              <div class="listing-meta"><span class="listing-category">{post.data.category}</span><span>{formatDate(post.data.publishDate)}</span></div>
+              {post.data.coverImage && (
+                <img
+                  src={post.data.coverImage}
+                  alt={post.data.title}
+                  loading="lazy"
+                  style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                />
+              )}
+              <div class="listing-meta">
+                <span class="listing-category">{post.data.category}</span>
+                <span>{formatDate(post.data.publishDate)}</span>
+              </div>
               <h2>{post.data.title}</h2>
               <p>{post.data.description}</p>
-              <a href={`/blog/${post.id}/`} class="listing-read">Read article <Icon name="arrow-right" size={15} /></a>
+              <a href={`/blog/${post.id}/`} class="listing-read">
+                Read article <Icon name="arrow-right" size={15} />
+              </a>
             </article>
           ))}
         </div>
@@ -28,7 +53,10 @@ const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeri
         <div class="empty-state">
           <p class="eyebrow">Editorial workspace</p>
           <h2>Articles are being prepared.</h2>
-          <p>Published articles will appear here after technical review. Draft posts are stored in <code>src/content/blog</code> and are not shown publicly.</p>
+          <p>
+            Published articles will appear here after technical review. Draft posts are stored in{' '}
+            <code>src/content/blog</code> and are not shown publicly.
+          </p>
         </div>
       )}
     </Container>

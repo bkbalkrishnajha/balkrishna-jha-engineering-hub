@@ -8,31 +8,54 @@ import { site } from '@data/site';
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
   .slice(0, 3);
+
 const resources = (await getCollection('resources', ({ data }) => !data.draft))
   .sort((a, b) => (b.data.publishDate?.valueOf() ?? 0) - (a.data.publishDate?.valueOf() ?? 0))
   .slice(0, 3);
-const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 <BaseLayout title={site.title} description={site.description}>
   <section class="hero hero--portfolio">
     <Container>
       <div class="hero-grid hero-grid--portfolio">
         <div class="hero-copy hero-copy--portfolio">
-          <p class="hero-kicker"><span data-en="Civil Engineer" data-ne="सिभिल इन्जिनियर">Civil Engineer</span> <span class="hero-kicker__divider">/</span> Nepal</p>
-          <p class="hero-name">Balkrishna Jha</p>
-          <h1><span data-en="Engineering knowledge." data-ne="इन्जिनियरिङ ज्ञान।">Engineering knowledge.</span><br /><span data-en="Building infrastructure." data-ne="पूर्वाधार निर्माण।">Building infrastructure.</span></h1>
-          <p class="hero-lead" data-en="A personal space for civil engineering articles, useful resources and practical tools." data-ne="सिभिल इन्जिनियरिङ लेख, उपयोगी स्रोत सामग्री र व्यावहारिक उपकरणहरूको व्यक्तिगत वेबसाइट।">A personal space for civil engineering articles, useful resources and practical tools.</p>
+          <p class="hero-kicker">
+            <span data-en="Civil Engineer" data-ne="सिभिल इन्जिनियर">Civil Engineer</span>
+            <span class="hero-kicker__divider">/</span> Nepal
+          </p>
+          <h1 class="hero-name">Balkrishna Jha</h1>
+          <p
+            class="hero-lead"
+            data-en="A personal space for civil engineering articles, useful resources and practical tools."
+            data-ne="सिभिल इन्जिनियरिङ लेख, उपयोगी स्रोत सामग्री र व्यावहारिक उपकरणहरूको व्यक्तिगत वेबसाइट।"
+          >
+            A personal space for civil engineering articles, useful resources and practical tools.
+          </p>
           <div class="hero-actions">
-            <a href="/blog/" class="button button--primary"><span data-en="Read the blog" data-ne="ब्लग पढ्नुहोस्">Read the blog</span> <Icon name="arrow-up-right" size={16} /></a>
-            <a href="/resources/" class="button button--secondary"><span data-en="Browse resources" data-ne="स्रोत सामग्री">Browse resources</span> <Icon name="arrow-right" size={16} /></a>
+            <a href="/blog/" class="button button--primary">
+              <span data-en="Read the blog" data-ne="ब्लग पढ्नुहोस्">Read the blog</span>
+              <Icon name="arrow-up-right" size={16} />
+            </a>
+            <a href="/resources/" class="button button--secondary">
+              <span data-en="Browse resources" data-ne="स्रोत सामग्री">Browse resources</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
           </div>
         </div>
         <div class="hero-visual-wrap">
-          <div class="home-quote-card">
+          <div class="home-quote-card" data-quote-card>
             <p class="eyebrow" data-en="A thought to keep" data-ne="मननयोग्य विचार">A thought to keep</p>
             <span class="home-quote-mark" aria-hidden="true">“</span>
-            <blockquote data-en="Good engineering is not only about building structures; it is about building safely, responsibly and for people." data-ne="राम्रो इन्जिनियरिङ संरचना निर्माण मात्र होइन; सुरक्षित, जिम्मेवार र मानिसका लागि निर्माण गर्नु हो।">Good engineering is not only about building structures; it is about building safely, responsibly and for people.</blockquote>
-            <span class="home-quote-attribution">— Engineering principle</span>
+            <blockquote
+              id="home-quote-text"
+              data-en="It does not matter how slowly you go as long as you do not stop."
+              data-ne="तिमी कति बिस्तारै अघि बढ्दैछौ भन्ने कुराले फरक पार्दैन, जबसम्म तिमी रोकिँदैनौ।"
+            >
+              It does not matter how slowly you go as long as you do not stop.
+            </blockquote>
+            <span class="home-quote-attribution" id="home-quote-author">— Confucius</span>
           </div>
         </div>
       </div>
@@ -45,19 +68,45 @@ const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeri
       <div class="section-heading">
         <p class="eyebrow" data-en="From the blog" data-ne="ब्लगबाट">From the blog</p>
         <h2 data-en="Latest blog posts" data-ne="नयाँ ब्लग लेखहरू">Latest blog posts</h2>
-        <p data-en="Notes, explanations and perspectives on civil engineering." data-ne="सिभिल इन्जिनियरिङसम्बन्धी टिपोट, व्याख्या र दृष्टिकोण।">Notes, explanations and perspectives on civil engineering.</p>
+        <p data-en="Notes, explanations and perspectives on civil engineering." data-ne="सिभिल इन्जिनियरिङसम्बन्धी टिपोट, व्याख्या र दृष्टिकोण।">
+          Notes, explanations and perspectives on civil engineering.
+        </p>
       </div>
       {posts.length ? (
         <div class="listing-grid">
-          {posts.map((post) => <article class="listing-card">
-            {post.data.coverImage && <img src={post.data.coverImage} alt={post.data.title} loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px" />}
-            <div class="listing-meta"><span class="listing-category">{post.data.category}</span><span>{formatDate(post.data.publishDate)}</span></div>
-            <h3>{post.data.title}</h3><p>{post.data.description}</p>
-            <a href={`/blog/${post.id}/`} class="listing-read">Read article <Icon name="arrow-right" size={15} /></a>
-          </article>)}
+          {posts.map((post) => (
+            <article class="listing-card">
+              {post.data.coverImage && (
+                <img
+                  src={post.data.coverImage}
+                  alt={post.data.title}
+                  loading="lazy"
+                  style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                />
+              )}
+              <div class="listing-meta">
+                <span class="listing-category">{post.data.category}</span>
+                <span>{formatDate(post.data.publishDate)}</span>
+              </div>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+              <a href={`/blog/${post.id}/`} class="listing-read">
+                Read article <Icon name="arrow-right" size={15} />
+              </a>
+            </article>
+          ))}
         </div>
-      ) : <div class="empty-state"><h3>Articles are coming soon.</h3><p>New technical articles will appear here.</p></div>}
-      <div class="home-section-link"><a href="/blog/" class="text-link">All articles <Icon name="arrow-right" size={16} /></a></div>
+      ) : (
+        <div class="empty-state">
+          <h3>Articles are coming soon.</h3>
+          <p>New technical articles will appear here.</p>
+        </div>
+      )}
+      <div class="home-section-link">
+        <a href="/blog/" class="text-link">
+          All articles <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
     </Container>
   </section>
 
@@ -66,16 +115,89 @@ const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeri
       <div class="section-heading">
         <p class="eyebrow" data-en="Reference library" data-ne="सन्दर्भ पुस्तकालय">Reference library</p>
         <h2 data-en="Latest resources" data-ne="नयाँ स्रोत सामग्री">Latest resources</h2>
-        <p data-en="Useful references for study, engineering practice and continued learning." data-ne="अध्ययन, इन्जिनियरिङ अभ्यास र निरन्तर सिकाइका उपयोगी सन्दर्भहरू।">Useful references for study, engineering practice and continued learning.</p>
+        <p data-en="Useful references for study, engineering practice and continued learning." data-ne="अध्ययन, इन्जिनियरिङ अभ्यास र निरन्तर सिकाइका उपयोगी सन्दर्भहरू।">
+          Useful references for study, engineering practice and continued learning.
+        </p>
       </div>
-      {resources.length ? <div class="listing-grid">
-        {resources.map((resource) => <article class="listing-card">
-          <div class="listing-meta"><span class="listing-category">{resource.data.category}</span>{resource.data.publishDate && <span>{formatDate(resource.data.publishDate)}</span>}</div>
-          <h3>{resource.data.title}</h3><p>{resource.data.description}</p>
-          <a href={`/resources/${resource.id}/`} class="listing-read">Open resource <Icon name="arrow-right" size={15} /></a>
-        </article>)}
-      </div> : <div class="empty-state"><h3>Resources are being organised.</h3><p>New resources will appear here as they are published.</p></div>}
-      <div class="home-section-link"><a href="/resources/" class="text-link">Explore all resources <Icon name="arrow-right" size={16} /></a></div>
+      {resources.length ? (
+        <div class="listing-grid">
+          {resources.map((resource) => (
+            <article class="listing-card">
+              <div class="listing-meta">
+                <span class="listing-category">{resource.data.category}</span>
+                {resource.data.publishDate && <span>{formatDate(resource.data.publishDate)}</span>}
+              </div>
+              <h3>{resource.data.title}</h3>
+              <p>{resource.data.description}</p>
+              <a href={`/resources/${resource.id}/`} class="listing-read">
+                Open resource <Icon name="arrow-right" size={15} />
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <h3>Resources are being organised.</h3>
+          <p>New resources will appear here as they are published.</p>
+        </div>
+      )}
+      <div class="home-section-link">
+        <a href="/resources/" class="text-link">
+          Explore all resources <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
     </Container>
   </section>
+
+  <script>
+    const motivationalQuotes = [
+      {
+        en: 'It does not matter how slowly you go as long as you do not stop.',
+        ne: 'तिमी कति बिस्तारै अघि बढ्दैछौ भन्ने कुराले फरक पार्दैन, जबसम्म तिमी रोकिँदैनौ।',
+        author: 'Confucius',
+      },
+      {
+        en: 'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',
+        ne: 'हामी जे बारम्बार गर्छौं, त्यही बन्छौं। त्यसैले उत्कृष्टता कुनै कार्य होइन, एउटा बानी हो।',
+        author: 'Will Durant',
+      },
+      {
+        en: 'The greatest happiness in life is the conviction that we are loved.',
+        ne: 'जीवनको सबैभन्दा ठूलो खुसी हामी कसैको माया पाइरहेका छौं भन्ने विश्वासमा हुन्छ।',
+        author: 'Victor Hugo',
+      },
+      {
+        en: 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
+        ne: 'सफलता अन्तिम होइन, असफलता घातक होइन: निरन्तर अघि बढ्ने साहस नै मुख्य कुरा हो।',
+        author: 'Winston Churchill',
+      },
+      {
+        en: "In the end, it's not the years in your life that count. It's the life in your years.",
+        ne: 'अन्ततः जीवनमा कति वर्ष बाँचियो भन्ने होइन, ती वर्षहरूमा जीवन कति सार्थक रह्यो भन्ने महत्वपूर्ण हुन्छ।',
+        author: 'Abraham Lincoln',
+      },
+      {
+        en: 'Happiness is not something ready made. It comes from your own actions.',
+        ne: 'खुसी कुनै तयारी अवस्थाको वस्तु होइन। यो तपाईंका आफ्नै कर्महरूबाट प्राप्त हुन्छ।',
+        author: 'Dalai Lama',
+      },
+      {
+        en: 'The only limit to our realization of tomorrow will be our doubts of today.',
+        ne: 'भोलिको हाम्रो उपलब्धिको एकमात्र सीमा आजको हाम्रो संशय मात्र हुनेछ।',
+        author: 'Franklin D. Roosevelt',
+      },
+    ];
+
+    const quoteEl = document.getElementById('home-quote-text');
+    const authorEl = document.getElementById('home-quote-author');
+
+    if (quoteEl && authorEl) {
+      const picked = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+      quoteEl.dataset.en = picked.en;
+      quoteEl.dataset.ne = picked.ne;
+      authorEl.textContent = `— ${picked.author}`;
+      const isNepali = document.documentElement.lang === 'ne';
+      quoteEl.textContent = isNepali ? picked.ne : picked.en;
+    }
+  </script>
 </BaseLayout>
