@@ -1,119 +1,81 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
-import EngineeringVisual from '@components/EngineeringVisual.astro';
 import Icon from '@components/Icon.astro';
-import { featuredAreas, site } from '@data/site';
-import { professionalSummary, technicalSkills } from '@data/profile';
+import { site } from '@data/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
+const resources = (await getCollection('resources', ({ data }) => !data.draft))
+  .sort((a, b) => (b.data.publishDate?.valueOf() ?? 0) - (a.data.publishDate?.valueOf() ?? 0))
+  .slice(0, 3);
+const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 <BaseLayout title={site.title} description={site.description}>
   <section class="hero hero--portfolio">
     <Container>
       <div class="hero-grid hero-grid--portfolio">
         <div class="hero-copy hero-copy--portfolio">
-          <div class="public-profile-photo" role="img" aria-label="Professional portrait placeholder">
-            <span class="public-profile-photo__monogram">BKJ</span>
-            <span class="public-profile-photo__caption" data-en="Profile photo" data-ne="प्रोफाइल तस्बिर">Profile photo</span>
-          </div>
           <p class="hero-kicker"><span data-en="Civil Engineer" data-ne="सिभिल इन्जिनियर">Civil Engineer</span> <span class="hero-kicker__divider">/</span> Nepal</p>
           <p class="hero-name">Balkrishna Jha</p>
           <h1><span data-en="Engineering knowledge." data-ne="इन्जिनियरिङ ज्ञान।">Engineering knowledge.</span><br /><span data-en="Building infrastructure." data-ne="पूर्वाधार निर्माण।">Building infrastructure.</span></h1>
-          <p class="hero-lead" data-en="A professional portfolio of civil engineering experience, infrastructure interests, technical knowledge and practical resources." data-ne="सिभिल इन्जिनियरिङ अनुभव, पूर्वाधारसम्बन्धी रुचि, प्राविधिक ज्ञान र उपयोगी स्रोतहरूको व्यावसायिक पोर्टफोलियो।">A professional portfolio of civil engineering experience, infrastructure interests, technical knowledge and practical resources.</p>
+          <p class="hero-lead" data-en="A personal space for civil engineering articles, useful resources and practical tools." data-ne="सिभिल इन्जिनियरिङ लेख, उपयोगी स्रोत सामग्री र व्यावहारिक उपकरणहरूको व्यक्तिगत वेबसाइट।">A personal space for civil engineering articles, useful resources and practical tools.</p>
           <div class="hero-actions">
-            <a href="/projects/" class="button button--primary"><span data-en="Explore projects" data-ne="परियोजना हेर्नुहोस्">Explore projects</span> <Icon name="arrow-up-right" size={16} /></a>
-          </div>
-          <div class="hero-meta" aria-label="Professional areas">
-            <span>Engineering practice</span>
-            <span>Infrastructure</span>
-            <span>Technical learning</span>
+            <a href="/blog/" class="button button--primary"><span data-en="Read the blog" data-ne="ब्लग पढ्नुहोस्">Read the blog</span> <Icon name="arrow-up-right" size={16} /></a>
+            <a href="/resources/" class="button button--secondary"><span data-en="Browse resources" data-ne="स्रोत सामग्री">Browse resources</span> <Icon name="arrow-right" size={16} /></a>
           </div>
         </div>
         <div class="hero-visual-wrap">
-          <EngineeringVisual />
+          <div class="home-quote-card">
+            <p class="eyebrow" data-en="A thought to keep" data-ne="मननयोग्य विचार">A thought to keep</p>
+            <span class="home-quote-mark" aria-hidden="true">“</span>
+            <blockquote data-en="Good engineering is not only about building structures; it is about building safely, responsibly and for people." data-ne="राम्रो इन्जिनियरिङ संरचना निर्माण मात्र होइन; सुरक्षित, जिम्मेवार र मानिसका लागि निर्माण गर्नु हो।">Good engineering is not only about building structures; it is about building safely, responsibly and for people.</blockquote>
+            <span class="home-quote-attribution">— Engineering principle</span>
+          </div>
         </div>
       </div>
     </Container>
     <div class="hero-bottom-rule" aria-hidden="true"></div>
   </section>
 
-  <section class="section home-blog-placeholder-section" aria-label="Blog placeholder">
+  <section class="section home-content-section">
     <Container>
-      <div class="home-blog-placeholder">
-        <div>
-          <p class="eyebrow">Engineering blog</p>
-          <h2>Articles coming soon.</h2>
-          <p>Technical notes and practical civil engineering insights are being prepared.</p>
-        </div>
-        <span class="home-blog-placeholder__mark" aria-hidden="true">BLOG / SOON</span>
+      <div class="section-heading">
+        <p class="eyebrow" data-en="From the blog" data-ne="ब्लगबाट">From the blog</p>
+        <h2 data-en="Latest blog posts" data-ne="नयाँ ब्लग लेखहरू">Latest blog posts</h2>
+        <p data-en="Notes, explanations and perspectives on civil engineering." data-ne="सिभिल इन्जिनियरिङसम्बन्धी टिपोट, व्याख्या र दृष्टिकोण।">Notes, explanations and perspectives on civil engineering.</p>
       </div>
+      {posts.length ? (
+        <div class="listing-grid">
+          {posts.map((post) => <article class="listing-card">
+            {post.data.coverImage && <img src={post.data.coverImage} alt={post.data.title} loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px" />}
+            <div class="listing-meta"><span class="listing-category">{post.data.category}</span><span>{formatDate(post.data.publishDate)}</span></div>
+            <h3>{post.data.title}</h3><p>{post.data.description}</p>
+            <a href={`/blog/${post.id}/`} class="listing-read">Read article <Icon name="arrow-right" size={15} /></a>
+          </article>)}
+        </div>
+      ) : <div class="empty-state"><h3>Articles are coming soon.</h3><p>New technical articles will appear here.</p></div>}
+      <div class="home-section-link"><a href="/blog/" class="text-link">All articles <Icon name="arrow-right" size={16} /></a></div>
     </Container>
   </section>
 
-  <section class="focus-section" aria-label="Portfolio areas">
+  <section class="section home-content-section home-resources-section">
     <Container>
-      <div class="focus-grid">
-        {featuredAreas.map((area) => (
-          <a class="focus-card" href={area.href}>
-            <span class="focus-card__icon"><Icon name={area.icon} size={23} /></span>
-            <span class="focus-card__copy">
-              <span class="focus-card__number">{area.number} / FOCUS</span>
-              <strong>{area.title}</strong>
-              <span>{area.description}</span>
-            </span>
-            <span class="focus-card__arrow"><Icon name="arrow-up-right" size={17} /></span>
-          </a>
-        ))}
+      <div class="section-heading">
+        <p class="eyebrow" data-en="Reference library" data-ne="सन्दर्भ पुस्तकालय">Reference library</p>
+        <h2 data-en="Latest resources" data-ne="नयाँ स्रोत सामग्री">Latest resources</h2>
+        <p data-en="Useful references for study, engineering practice and continued learning." data-ne="अध्ययन, इन्जिनियरिङ अभ्यास र निरन्तर सिकाइका उपयोगी सन्दर्भहरू।">Useful references for study, engineering practice and continued learning.</p>
       </div>
-    </Container>
-  </section>
-
-
-  <section class="section home-about-section">
-    <Container>
-      <div class="home-about-grid">
-        <div class="home-about-copy">
-          <p class="eyebrow" data-en="About the engineer" data-ne="इन्जिनियरको परिचय">About the engineer</p>
-          <h2 data-en="A civil engineer focused on practical work and continuous learning." data-ne="व्यावहारिक काम र निरन्तर सिकाइमा केन्द्रित सिभिल इन्जिनियर।">A civil engineer focused on practical work and continuous learning.</h2>
-          <p>{professionalSummary}</p>
-          <p>My background includes public-sector engineering responsibilities and a survey-camp teaching assignment at Khwopa College of Engineering. Explore my experience, projects and practical engineering resources.</p>
-          <a href="/about/" class="text-link">More about Balkrishna <Icon name="arrow-right" size={16} /></a>
-        </div>
-        <div class="home-credentials" aria-label="Profile highlights">
-          <article class="credential-card credential-card--featured">
-            <span class="credential-card__label">Bachelor in Civil Engineering</span>
-            <strong>81.07%</strong>
-            <span class="credential-card__detail">Distinction · Khwopa College of Engineering</span>
-          </article>
-          <article class="credential-card">
-            <span class="credential-card__label">Recognition · 2025</span>
-            <strong>Best Undergraduate Geotechnical Project</strong>
-            <span class="credential-card__detail">Nepal Geotechnical Society · 2025</span>
-          </article>
-          <article class="credential-card">
-            <span class="credential-card__label">Public Service Commission</span>
-            <strong>Rank 1</strong>
-            <span class="credential-card__detail">Nepal Engineering Service · Civil Group</span>
-          </article>
-          <article class="credential-card credential-card--wide">
-            <span class="credential-card__label">Technical toolkit</span>
-            <div class="credential-tags">{technicalSkills.map((skill) => <span>{skill}</span>)}</div>
-          </article>
-        </div>
-      </div>
-    </Container>
-  </section>
-
-
-  <section class="section home-final-cta-section">
-    <Container>
-      <div class="home-final-cta">
-        <div>
-          <p class="eyebrow">Connect professionally</p>
-          <h2>Have an engineering question or a professional enquiry?</h2>
-          <p>Use the contact page to find my professional details and profile links.</p>
-        </div>
-        <a href="/contact/" class="button button--primary">Get in touch <Icon name="arrow-up-right" size={16} /></a>
-      </div>
+      {resources.length ? <div class="listing-grid">
+        {resources.map((resource) => <article class="listing-card">
+          <div class="listing-meta"><span class="listing-category">{resource.data.category}</span>{resource.data.publishDate && <span>{formatDate(resource.data.publishDate)}</span>}</div>
+          <h3>{resource.data.title}</h3><p>{resource.data.description}</p>
+          <a href={`/resources/${resource.id}/`} class="listing-read">Open resource <Icon name="arrow-right" size={15} /></a>
+        </article>)}
+      </div> : <div class="empty-state"><h3>Resources are being organised.</h3><p>New resources will appear here as they are published.</p></div>}
+      <div class="home-section-link"><a href="/resources/" class="text-link">Explore all resources <Icon name="arrow-right" size={16} /></a></div>
     </Container>
   </section>
 </BaseLayout>

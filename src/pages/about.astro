@@ -1,65 +1,21 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
-import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
 ---
-
-<BaseLayout
-  title="About"
-  description="A simple profile page for Balkrishna Jha, Civil Engineer, with a downloadable curriculum vitae."
->
-  <PageIntro
-    eyebrow="About"
-    title="About"
-    description="This page is being updated. Please use the link below to view or download my curriculum vitae."
-    nepaliEyebrow="परिचय"
-    nepaliTitle="परिचय"
-    nepaliDescription="यो पृष्ठ परिमार्जन हुँदैछ। मेरो विस्तृत विवरणका लागि तलको जीवनवृत्त हेर्न वा डाउनलोड गर्न सक्नुहुन्छ।"
-  />
-
-  <section class="content-wrap">
+<BaseLayout title="About" description="A brief profile of Balkrishna Jha, Civil Engineer, with a downloadable CV.">
+  <section class="about-minimal">
     <Container>
-      <div class="about-sidebar">
-        <div class="sidebar-card about-profile-card">
-          <div class="about-profile-photo">
-            <img
-              src="/images/profile.jpg"
-              alt="Balkrishna Jha – Civil Engineer"
-              class="about-profile-photo__image"
-              loading="eager"
-            />
-          </div>
-          <p class="eyebrow">Balkrishna Jha</p>
-          <h2>Civil Engineer</h2>
-          <p>This section will be expanded in a future update.</p>
+      <div class="about-minimal__content">
+        <div class="about-minimal__photo">
+          <img src="/images/profile.jpg" alt="Balkrishna Jha – Civil Engineer" loading="eager" />
         </div>
-
-        <div class="sidebar-card about-cv-placeholder">
-          <p class="eyebrow">Curriculum vitae</p>
-          <div class="about-cv-placeholder__mark" aria-hidden="true">
-            <Icon name="file-text" size={25} />
-          </div>
-          <h2>Curriculum Vitae</h2>
-          <p>For my education, qualifications and professional background, please view or download my CV.</p>
-
-          <a
-            href="/documents/Balkrishna-Jha-CV.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="feature-card__link"
-          >
-            View CV <Icon name="arrow-right" size={15} />
-          </a>
-
-          <a
-            href="/documents/Balkrishna-Jha-CV.pdf"
-            download="Balkrishna-Jha-CV.pdf"
-            class="feature-card__link"
-          >
-            Download CV (PDF) <Icon name="download" size={15} />
-          </a>
-        </div>
+        <p class="eyebrow">About</p>
+        <h1>Balkrishna Jha</h1>
+        <p class="about-minimal__profession">Civil Engineer</p>
+        <a href="/documents/Balkrishna-Jha-CV.pdf" download="Balkrishna-Jha-CV.pdf" class="button button--primary about-minimal__download">
+          Download CV (PDF) <Icon name="download" size={17} />
+        </a>
       </div>
     </Container>
   </section>

@@ -8,8 +8,8 @@ import Icon from '@components/Icon.astro';
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 const formatDate = (date: Date) => date.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
-<BaseLayout title="Engineering Blog" description="Technical notes and articles on civil engineering, infrastructure, construction and engineering practice.">
-  <PageIntro eyebrow="Knowledge & perspective" title="Engineering blog" description="Technical notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice." nepaliEyebrow="ज्ञान र दृष्टिकोण" nepaliTitle="इन्जिनियरिङ ब्लग" nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी प्राविधिक लेख तथा व्याख्या।" />
+<BaseLayout title="Blog" description="Technical notes and articles on civil engineering, infrastructure, construction and engineering practice.">
+  <PageIntro eyebrow="Knowledge & perspective" title="Blog" description="Technical notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice." nepaliEyebrow="ज्ञान र दृष्टिकोण" nepaliTitle="इन्जिनियरिङ ब्लग" nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी प्राविधिक लेख तथा व्याख्या।" />
   <section class="content-wrap">
     <Container>
       {posts.length > 0 ? (

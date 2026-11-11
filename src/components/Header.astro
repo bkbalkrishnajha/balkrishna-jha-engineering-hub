@@ -2,7 +2,7 @@
 import { navigation, site } from '@data/site';
 import Icon from './Icon.astro';
 const pathname = Astro.url.pathname;
-const visibleNavigation = navigation.filter((item) => !['CV', 'Nepali Calendar'].includes(item.label));
+const visibleNavigation = navigation.filter((item) => item.label !== 'Nepali Calendar');
 const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
 ---
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -25,9 +25,7 @@ const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.st
         const nepali: Record<string, string> = {
           Home: 'गृहपृष्ठ',
           About: 'परिचय',
-          Experience: 'अनुभव',
-          Projects: 'परियोजनाहरू',
-          'Engineering Blog': 'इन्जिनियरिङ लेख',
+          Blog: 'ब्लग',
           Resources: 'स्रोत सामग्री',
           'Engineering Tools': 'इन्जिनियरिङ उपकरण',
           Contact: 'सम्पर्क',
