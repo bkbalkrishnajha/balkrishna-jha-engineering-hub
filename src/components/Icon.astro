@@ -1,6 +1,6 @@
 ---
 interface Props {
-  name: 'arrow-up-right' | 'arrow-right' | 'menu' | 'x' | 'sun' | 'moon' | 'layers' | 'notebook' | 'library' | 'calculator' | 'map-pin' | 'mail' | 'file-text' | 'external-link' | 'chevron-right' | 'download' | 'droplets' | 'building-2' | 'phone' | 'github' | 'linkedin' | 'globe' | 'check' | 'clock' | 'ruler' | 'activity' | 'award' | 'copy';
+  name: 'arrow-up-right' | 'arrow-right' | 'menu' | 'x' | 'sun' | 'moon' | 'layers' | 'notebook' | 'library' | 'calculator' | 'map-pin' | 'mail' | 'file-text' | 'external-link' | 'chevron-right' | 'download' | 'droplets' | 'building-2' | 'phone' | 'github' | 'linkedin' | 'globe' | 'check' | 'clock' | 'ruler' | 'activity' | 'award' | 'copy' | 'search';
   size?: number;
   strokeWidth?: number;
   class?: string;
@@ -35,6 +35,7 @@ const paths: Record<Props['name'], string[]> = {
   activity: ['M22 12h-4l-3 9L9 3l-3 9H2'],
   award: ['M18 8a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z', 'm15.5 13.2 1.5 8.8-5-3-5 3 1.5-8.8'],
   copy: ['M9 9h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z', 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1'],
+  search: ['M21 21l-4.35-4.35', 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z'],
 };
 ---
 <svg

@@ -40,6 +40,9 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
     </nav>
 
     <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Search resources and blog" title="Search" data-search-toggle>
+        <Icon name="search" size={18} />
+      </button>
       <a class="header-calendar" href="/calendar/" aria-label="Open Nepali calendar">
         <span class="header-calendar__label">NEPAL STANDARD TIME</span>
         <time class="header-calendar__time" data-header-nepal-time aria-live="off">--:--</time>
