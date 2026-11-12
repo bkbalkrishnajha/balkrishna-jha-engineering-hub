@@ -734,7 +734,7 @@ import Container from '@components/Container.astro';
 
   .admin-table td {
     padding: 1.4rem 1.5rem;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
     color: var(--ink);
     vertical-align: top;
     line-height: 1.6;
@@ -745,11 +745,15 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table tbody tr {
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .admin-table tbody tr:nth-child(even) td {
+    background: rgba(100, 116, 139, 0.07);
   }
 
   .admin-table tbody tr:hover td {
-    background: var(--surface-soft);
+    background: rgba(100, 116, 139, 0.15);
   }
 
   .cell-title-wrap {
