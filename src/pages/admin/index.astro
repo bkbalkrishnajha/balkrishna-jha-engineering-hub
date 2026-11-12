@@ -119,7 +119,7 @@ import Container from '@components/Container.astro';
               <input type="hidden" id="resource-id" />
               <div class="form-group">
                 <label for="resource-title">Resource Title *</label>
-                <input type="text" id="resource-title" required placeholder="e.g. Nepal Bridge Standard 2075" class="admin-input" />
+                <input type="text" id="resource-title" required class="admin-input" />
               </div>
               <div class="form-row">
                 <div class="form-group flex-1">
@@ -136,7 +136,7 @@ import Container from '@components/Container.astro';
 
               <div class="form-group">
                 <label for="resource-description">Description / Notes</label>
-                <textarea id="resource-description" rows="4" placeholder="Brief summary or reference details..." class="admin-input"></textarea>
+                <textarea id="resource-description" rows="4" class="admin-input"></textarea>
               </div>
 
               <div class="form-group">
@@ -145,7 +145,7 @@ import Container from '@components/Container.astro';
                   <button type="button" id="add-resource-file-row-btn" class="btn btn-secondary btn-sm">+ Add File / Link</button>
                 </div>
                 <p class="text-muted" style="font-size: 0.8rem; margin-top: 0; margin-bottom: 0.75rem;">
-                  Add multiple files or links to this post (e.g. Lecture Notes, Past Solved Questions, Formula Sheet).
+                  Add multiple files or links to this resource.
                 </p>
                 <div id="resource-files-container" style="display: flex; flex-direction: column; gap: 0.6rem;"></div>
               </div>
@@ -180,23 +180,23 @@ import Container from '@components/Container.astro';
               <input type="hidden" id="project-id" />
               <div class="form-group">
                 <label for="project-title">Project Title *</label>
-                <input type="text" id="project-title" required placeholder="e.g. Slope Stability & Retaining Wall Design" class="admin-input" />
+                <input type="text" id="project-title" required class="admin-input" />
               </div>
               <div class="form-row">
                 <div class="form-group flex-1">
                   <label for="project-slug">Slug (URL path) *</label>
-                  <input type="text" id="project-slug" required placeholder="slope-stability-design" class="admin-input" />
+                  <input type="text" id="project-slug" required class="admin-input" />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group flex-1">
                   <label for="project-location">Location</label>
-                  <input type="text" id="project-location" placeholder="e.g. Sindhupalchok, Nepal" class="admin-input" />
+                  <input type="text" id="project-location" class="admin-input" />
                 </div>
                 <div class="form-group flex-1">
                   <label for="project-year">Year</label>
-                  <input type="text" id="project-year" placeholder="2025" class="admin-input" />
+                  <input type="text" id="project-year" class="admin-input" />
                 </div>
                 <div class="form-group flex-1">
                   <label for="project-status">Status</label>
@@ -210,22 +210,22 @@ import Container from '@components/Container.astro';
 
               <div class="form-group">
                 <label for="project-summary">Summary (Short overview)</label>
-                <textarea id="project-summary" rows="2" placeholder="Summary of engineering scope and challenges..." class="admin-input"></textarea>
+                <textarea id="project-summary" rows="2" class="admin-input"></textarea>
               </div>
 
               <div class="form-group">
                 <label for="project-description">Detailed Description / Methodology</label>
-                <textarea id="project-description" rows="5" placeholder="Detailed engineering approach, calculations, and software used..." class="admin-input"></textarea>
+                <textarea id="project-description" rows="5" class="admin-input"></textarea>
               </div>
 
               <div class="form-row">
                 <div class="form-group flex-1">
                   <label for="project-cover">Cover Image URL</label>
-                  <input type="text" id="project-cover" placeholder="https://..." class="admin-input" />
+                  <input type="text" id="project-cover" class="admin-input" />
                 </div>
                 <div class="form-group flex-1">
                   <label for="project-report">Report / Case Study PDF URL</label>
-                  <input type="text" id="project-report" placeholder="https://..." class="admin-input" />
+                  <input type="text" id="project-report" class="admin-input" />
                 </div>
               </div>
 
@@ -246,32 +246,36 @@ import Container from '@components/Container.astro';
         <section id="tab-posts" class="tab-pane">
           <div class="tab-header">
             <div>
-              <h2>Blog & Technical Articles</h2>
-              <p class="text-muted">Draft and publish civil engineering articles and learning insights.</p>
+              <h2>Blog Posts</h2>
+              <p class="text-muted">Draft and publish articles, learning insights, and notes.</p>
             </div>
             <button type="button" id="toggle-post-form-btn" class="btn btn-primary btn-sm">+ New Post</button>
           </div>
 
           <!-- Add Post Form Drawer -->
           <div id="post-form-card" class="admin-card form-drawer" style="display: none;">
-            <h3 id="post-form-title">Write Technical Post</h3>
+            <h3 id="post-form-title">Write Blog Post</h3>
             <form id="post-form" class="admin-form">
               <input type="hidden" id="post-id" />
               <div class="form-group">
-                <label for="post-title">Article Title *</label>
-                <input type="text" id="post-title" required placeholder="e.g. Design Considerations for RCC Structures in Nepal" class="admin-input" />
+                <label for="post-title">Post Title *</label>
+                <input type="text" id="post-title" required class="admin-input" />
               </div>
               <div class="form-row">
                 <div class="form-group flex-1">
                   <label for="post-slug">Slug (URL) *</label>
-                  <input type="text" id="post-slug" required placeholder="rcc-design-considerations-nepal" class="admin-input" />
+                  <input type="text" id="post-slug" required class="admin-input" />
+                </div>
+                <div class="form-group flex-1">
+                  <label for="post-category">Category</label>
+                  <input type="text" id="post-category" class="admin-input" />
                 </div>
               </div>
 
               <div class="form-row">
-                <div class="form-group flex-1">
-                  <label for="post-category">Category</label>
-                  <input type="text" id="post-category" placeholder="Civil Engineering / Structural" class="admin-input" />
+                <div class="form-group flex-2">
+                  <label for="post-cover">Cover / Featured Image URL</label>
+                  <input type="text" id="post-cover" class="admin-input" />
                 </div>
                 <div class="form-group flex-1">
                   <label for="post-status">Publication Status</label>
@@ -284,16 +288,22 @@ import Container from '@components/Container.astro';
 
               <div class="form-group">
                 <label for="post-excerpt">Excerpt (Brief intro)</label>
-                <textarea id="post-excerpt" rows="2" placeholder="Short intro paragraph..." class="admin-input"></textarea>
+                <textarea id="post-excerpt" rows="2" class="admin-input"></textarea>
               </div>
 
               <div class="form-group">
-                <label for="post-content">Article Content (Markdown supported)</label>
-                <textarea id="post-content" rows="10" placeholder="Write article content here..." class="admin-input font-mono"></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label for="post-content" style="margin: 0;">Post Content (Markdown supported)</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" id="btn-insert-blog-image" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 0.3rem 0.65rem;">🖼️ Insert Image</button>
+                    <button type="button" id="btn-insert-blog-file" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 0.3rem 0.65rem;">📄 Insert File Link</button>
+                  </div>
+                </div>
+                <textarea id="post-content" rows="12" class="admin-input font-mono"></textarea>
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Save Article</button>
+                <button type="submit" class="btn btn-primary">Save Post</button>
                 <button type="button" id="cancel-post-btn" class="btn btn-secondary">Cancel</button>
               </div>
             </form>
@@ -301,7 +311,7 @@ import Container from '@components/Container.astro';
 
           <!-- Posts List -->
           <div id="posts-list-container" class="admin-list-container">
-            <div class="admin-loading-inline">Loading articles...</div>
+            <div class="admin-loading-inline">Loading posts...</div>
           </div>
         </section>
 
@@ -1030,9 +1040,9 @@ import Container from '@components/Container.astro';
     row.className = 'multi-file-row';
     row.style.cssText = 'display: flex; gap: 0.5rem; align-items: center;';
     row.innerHTML = `
-      <input type="text" placeholder="Title/Label (e.g. Chapter 1 Notes)" value="${file.title || ''}" class="admin-input res-file-title" style="flex: 2;" />
-      <input type="text" placeholder="URL (https://... or from Storage)" value="${file.url || ''}" class="admin-input res-file-url" style="flex: 3;" />
-      <input type="text" placeholder="Size (e.g. 2.4 MB)" value="${file.size || ''}" class="admin-input res-file-size" style="flex: 1;" />
+      <input type="text" placeholder="Title / Label" value="${file.title || ''}" class="admin-input res-file-title" style="flex: 2;" />
+      <input type="text" placeholder="URL" value="${file.url || ''}" class="admin-input res-file-url" style="flex: 3;" />
+      <input type="text" placeholder="Size (optional)" value="${file.size || ''}" class="admin-input res-file-size" style="flex: 1;" />
       <button type="button" class="btn btn-danger btn-sm res-remove-file-btn" title="Remove" style="padding: 0.4rem 0.6rem;">✕</button>
     `;
     row.querySelector('.res-remove-file-btn')?.addEventListener('click', () => {
@@ -1359,12 +1369,41 @@ import Container from '@components/Container.astro';
   togglePostFormBtn?.addEventListener('click', () => {
     postForm.reset();
     (document.getElementById('post-id') as HTMLInputElement).value = '';
-    document.getElementById('post-form-title')!.textContent = 'Write Technical Post';
+    (document.getElementById('post-cover') as HTMLInputElement).value = '';
+    document.getElementById('post-form-title')!.textContent = 'Write Blog Post';
     postFormCard.style.display = postFormCard.style.display === 'none' ? 'block' : 'none';
   });
 
   document.getElementById('cancel-post-btn')?.addEventListener('click', () => {
     postFormCard.style.display = 'none';
+  });
+
+  // Blog Image & File insertion helpers
+  const btnInsertBlogImage = document.getElementById('btn-insert-blog-image');
+  const btnInsertBlogFile = document.getElementById('btn-insert-blog-file');
+  const postContentTextarea = document.getElementById('post-content') as HTMLTextAreaElement;
+
+  function insertTextAtCursor(textarea: HTMLTextAreaElement, textToInsert: string) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    textarea.value = text.substring(0, start) + textToInsert + text.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start + textToInsert.length;
+    textarea.focus();
+  }
+
+  btnInsertBlogImage?.addEventListener('click', () => {
+    const url = prompt('Enter Image URL (paste link from Storage tab or web):');
+    if (!url) return;
+    const caption = prompt('Enter image description or caption (optional):') || 'Image';
+    insertTextAtCursor(postContentTextarea, `\n\n![${caption}](${url})\n\n`);
+  });
+
+  btnInsertBlogFile?.addEventListener('click', () => {
+    const url = prompt('Enter File URL (paste link from Storage tab or web):');
+    if (!url) return;
+    const title = prompt('Enter file title or label (e.g. Document PDF):') || 'Download File';
+    insertTextAtCursor(postContentTextarea, `\n\n[📄 ${title}](${url})\n\n`);
   });
 
   postForm?.addEventListener('submit', async (e) => {
@@ -1373,11 +1412,12 @@ import Container from '@components/Container.astro';
     const title = (document.getElementById('post-title') as HTMLInputElement).value;
     const slug = (document.getElementById('post-slug') as HTMLInputElement).value;
     const category = (document.getElementById('post-category') as HTMLInputElement).value || 'Civil Engineering';
+    const cover_image = (document.getElementById('post-cover') as HTMLInputElement).value.trim();
     const status = (document.getElementById('post-status') as HTMLSelectElement).value;
     const excerpt = (document.getElementById('post-excerpt') as HTMLTextAreaElement).value;
     const content = (document.getElementById('post-content') as HTMLTextAreaElement).value;
 
-    const payload = { title, slug, category, is_published: status === 'published', excerpt, content };
+    const payload = { title, slug, category, cover_image, is_published: status === 'published', excerpt, content };
 
     let res;
     if (id) {
@@ -1455,6 +1495,7 @@ import Container from '@components/Container.astro';
       (document.getElementById('post-title') as HTMLInputElement).value = data.title;
       (document.getElementById('post-slug') as HTMLInputElement).value = data.slug;
       (document.getElementById('post-category') as HTMLInputElement).value = data.category || 'Civil Engineering';
+      (document.getElementById('post-cover') as HTMLInputElement).value = data.cover_image || '';
       (document.getElementById('post-status') as HTMLSelectElement).value = data.is_published ? 'published' : 'draft';
       (document.getElementById('post-excerpt') as HTMLTextAreaElement).value = data.excerpt || '';
       (document.getElementById('post-content') as HTMLTextAreaElement).value = data.content || '';

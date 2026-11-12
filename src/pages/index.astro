@@ -72,36 +72,39 @@ const formatDate = (date: Date) =>
           Notes, explanations and perspectives on civil engineering.
         </p>
       </div>
-      {posts.length ? (
-        <div class="listing-grid">
-          {posts.map((post) => (
-            <article class="listing-card">
-              {post.data.coverImage && (
-                <img
-                  src={post.data.coverImage}
-                  alt={post.data.title}
-                  loading="lazy"
-                  style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
-                />
-              )}
-              <div class="listing-meta">
-                <span class="listing-category">{post.data.category}</span>
-                <span>{formatDate(post.data.publishDate)}</span>
-              </div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <a href={`/blog/${post.id}/`} class="listing-read">
-                Read article <Icon name="arrow-right" size={15} />
-              </a>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div class="empty-state">
-          <h3>Articles are coming soon.</h3>
-          <p>New technical articles will appear here.</p>
-        </div>
-      )}
+      <div id="home-posts-grid" class="listing-grid" style="display: none; margin-bottom: 24px;"></div>
+      <div id="home-posts-fallback">
+        {posts.length ? (
+          <div class="listing-grid">
+            {posts.map((post) => (
+              <article class="listing-card">
+                {post.data.coverImage && (
+                  <img
+                    src={post.data.coverImage}
+                    alt={post.data.title}
+                    loading="lazy"
+                    style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                  />
+                )}
+                <div class="listing-meta">
+                  <span class="listing-category">{post.data.category}</span>
+                  <span>{formatDate(post.data.publishDate)}</span>
+                </div>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description}</p>
+                <a href={`/blog/${post.id}/`} class="listing-read">
+                  Read article <Icon name="arrow-right" size={15} />
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">
+            <h3>Articles are coming soon.</h3>
+            <p>New articles will appear here.</p>
+          </div>
+        )}
+      </div>
       <div class="home-section-link">
         <a href="/blog/" class="text-link">
           All articles <Icon name="arrow-right" size={16} />
@@ -174,6 +177,52 @@ const formatDate = (date: Date) =>
         }
       }
       return [];
+    }
+
+    // Live Blog Posts Fetcher
+    const homePostsGrid = document.getElementById('home-posts-grid');
+    const homePostsFallback = document.getElementById('home-posts-fallback');
+
+    if (homePostsGrid) {
+      const loadHomePosts = async () => {
+        const { data, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (!error && data && data.length > 0) {
+          if (homePostsFallback) homePostsFallback.style.display = 'none';
+          homePostsGrid.style.display = 'grid';
+          homePostsGrid.innerHTML = data.map((post: any) => {
+            const date = post.created_at ? new Date(post.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+            return `
+              <article class="listing-card">
+                ${post.cover_image ? `
+                  <img
+                    src="${post.cover_image}"
+                    alt="${post.title}"
+                    loading="lazy"
+                    style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                  />
+                ` : ''}
+                <div class="listing-meta">
+                  <span class="listing-category">${post.category || 'Civil Engineering'}</span>
+                  <span>${date}</span>
+                </div>
+                <h3>${post.title}</h3>
+                ${post.excerpt ? `<p>${post.excerpt}</p>` : ''}
+                <a href="/blog/" class="listing-read">
+                  Read article <span aria-hidden="true">→</span>
+                </a>
+              </article>
+            `;
+          }).join('');
+        }
+      };
+
+      loadHomePosts();
     }
 
     // Live Resources Fetcher

@@ -13,15 +13,15 @@ const formatDate = (date: Date) =>
 ---
 <BaseLayout
   title="Blog"
-  description="Technical notes and articles on civil engineering, infrastructure, construction and engineering practice."
+  description="Notes and articles on civil engineering, infrastructure, construction and engineering practice."
 >
   <PageIntro
     eyebrow="Knowledge & perspective"
     title="Blog"
-    description="Technical notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice."
+    description="Notes, explainers and reflections on civil engineering, infrastructure planning, design, construction and professional practice."
     nepaliEyebrow="ज्ञान र दृष्टिकोण"
     nepaliTitle="ब्लग"
-    nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी प्राविधिक लेख तथा व्याख्या।"
+    nepaliDescription="सिभिल इन्जिनियरिङ, पूर्वाधार योजना, डिजाइन, निर्माण र व्यावसायिक अभ्याससम्बन्धी लेख तथा व्याख्या।"
   />
   <section class="content-wrap">
     <Container>
@@ -82,8 +82,24 @@ const formatDate = (date: Date) =>
         grid.style.display = 'grid';
         grid.innerHTML = data.map((post: any) => {
           const date = post.created_at ? new Date(post.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+          
+          let formattedContent = '';
+          if (post.content) {
+            formattedContent = post.content
+              .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<div style="margin: 16px 0;"><img src="$2" alt="$1" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block;" /><span style="font-size: 0.78rem; color: var(--muted); display: block; margin-top: 4px;">$1</span></div>')
+              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="cell-link" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; margin: 6px 0;">$1 ↗</a>');
+          }
+
           return `
             <article class="listing-card">
+              ${post.cover_image ? `
+                <img
+                  src="${post.cover_image}"
+                  alt="${post.title}"
+                  loading="lazy"
+                  style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                />
+              ` : ''}
               <div class="listing-meta">
                 <span class="listing-category">${post.category || 'Civil Engineering'}</span>
                 <span>${date}</span>
@@ -92,9 +108,9 @@ const formatDate = (date: Date) =>
               ${post.excerpt ? `<p>${post.excerpt}</p>` : ''}
               ${post.content ? `
                 <details style="margin-top: 1rem; cursor: pointer;">
-                  <summary style="font-weight: 600; font-size: 0.9rem; color: var(--ink);">Read Article Preview</summary>
+                  <summary style="font-weight: 600; font-size: 0.9rem; color: var(--ink);">Read Post & Attachments</summary>
                   <div style="margin-top: 0.75rem; white-space: pre-line; font-size: 0.95rem; line-height: 1.7; color: var(--ink);">
-                    ${post.content}
+                    ${formattedContent}
                   </div>
                 </details>
               ` : ''}
