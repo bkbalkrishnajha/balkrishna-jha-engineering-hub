@@ -126,6 +126,31 @@ const sections = [
           const categoryName = categoryLabels[item.category] || item.category;
           const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 
+          const filesList = (item.files && Array.isArray(item.files) && item.files.length > 0)
+            ? item.files
+            : (item.file_url ? [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size }] : []);
+
+          let linksMarkup = '';
+          if (filesList.length > 1) {
+            linksMarkup = `
+              <div class="resource-files-links" style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                ${filesList.map((f: any) => `
+                  <a href="${f.url}" target="_blank" rel="noopener noreferrer" class="listing-read" style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.65rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; font-size: 0.825rem; text-decoration: none;">
+                    <span>📄 ${f.title || 'Download File'}</span>
+                    <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? f.size + ' ↗' : '↗'}</span>
+                  </a>
+                `).join('')}
+              </div>
+            `;
+          } else if (filesList.length === 1) {
+            const f = filesList[0];
+            linksMarkup = `
+              <a href="${f.url}" target="_blank" rel="noopener noreferrer" class="listing-read">
+                ${f.title || 'Download / View Resource'} <span aria-hidden="true">↗</span>
+              </a>
+            `;
+          }
+
           return `
             <article class="listing-card">
               <div class="listing-meta">
@@ -134,11 +159,7 @@ const sections = [
               </div>
               <h2>${item.title}</h2>
               ${item.description ? `<p>${item.description}</p>` : ''}
-              ${item.file_url ? `
-                <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="listing-read">
-                  Download / View Resource <span aria-hidden="true">↗</span>
-                </a>
-              ` : ''}
+              ${linksMarkup}
             </article>
           `;
         }).join('');

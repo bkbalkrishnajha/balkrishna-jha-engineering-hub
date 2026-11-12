@@ -138,15 +138,15 @@ import Container from '@components/Container.astro';
                 <textarea id="resource-description" rows="3" placeholder="Brief summary or reference details..." class="admin-input"></textarea>
               </div>
 
-              <div class="form-row">
-                <div class="form-group flex-2">
-                  <label for="resource-file-url">File or Link URL</label>
-                  <input type="text" id="resource-file-url" placeholder="https://... or upload in File Storage tab" class="admin-input" />
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="margin: 0;">Attached Files & Download Links</label>
+                  <button type="button" id="add-resource-file-row-btn" class="btn btn-secondary btn-sm">+ Add File / Link</button>
                 </div>
-                <div class="form-group flex-1">
-                  <label for="resource-file-size">File Size (optional)</label>
-                  <input type="text" id="resource-file-size" placeholder="e.g. 2.4 MB PDF" class="admin-input" />
-                </div>
+                <p class="text-muted" style="font-size: 0.8rem; margin-top: 0; margin-bottom: 0.75rem;">
+                  Add multiple files or links to this post (e.g. Lecture Notes, Past Solved Questions, Formula Sheet).
+                </p>
+                <div id="resource-files-container" style="display: flex; flex-direction: column; gap: 0.6rem;"></div>
               </div>
 
               <div class="form-actions">
@@ -917,9 +917,36 @@ import Container from '@components/Container.astro';
   const resFormCard = document.getElementById('resource-form-card')!;
   const resForm = document.getElementById('resource-form') as HTMLFormElement;
   const resContainer = document.getElementById('resources-list-container')!;
+  const resFilesContainer = document.getElementById('resource-files-container')!;
+  const addResFileRowBtn = document.getElementById('add-resource-file-row-btn');
+
+  function addResourceFileRow(file: { title?: string; url?: string; size?: string } = {}) {
+    const row = document.createElement('div');
+    row.className = 'multi-file-row';
+    row.style.cssText = 'display: flex; gap: 0.5rem; align-items: center;';
+    row.innerHTML = `
+      <input type="text" placeholder="Title/Label (e.g. Chapter 1 Notes)" value="${file.title || ''}" class="admin-input res-file-title" style="flex: 2;" />
+      <input type="text" placeholder="URL (https://... or from Storage)" value="${file.url || ''}" class="admin-input res-file-url" style="flex: 3;" />
+      <input type="text" placeholder="Size (e.g. 2.4 MB)" value="${file.size || ''}" class="admin-input res-file-size" style="flex: 1;" />
+      <button type="button" class="btn btn-danger btn-sm res-remove-file-btn" title="Remove" style="padding: 0.4rem 0.6rem;">✕</button>
+    `;
+    row.querySelector('.res-remove-file-btn')?.addEventListener('click', () => {
+      row.remove();
+      if (resFilesContainer.children.length === 0) {
+        addResourceFileRow();
+      }
+    });
+    resFilesContainer.appendChild(row);
+  }
+
+  addResFileRowBtn?.addEventListener('click', () => {
+    addResourceFileRow();
+  });
 
   toggleResFormBtn?.addEventListener('click', () => {
     resForm.reset();
+    resFilesContainer.innerHTML = '';
+    addResourceFileRow();
     (document.getElementById('resource-id') as HTMLInputElement).value = '';
     document.getElementById('resource-form-title')!.textContent = 'Add New Resource';
     resFormCard.style.display = resFormCard.style.display === 'none' ? 'block' : 'none';
@@ -935,16 +962,37 @@ import Container from '@components/Container.astro';
     const title = (document.getElementById('resource-title') as HTMLInputElement).value;
     const category = (document.getElementById('resource-category') as HTMLSelectElement).value;
     const description = (document.getElementById('resource-description') as HTMLTextAreaElement).value;
-    const file_url = (document.getElementById('resource-file-url') as HTMLInputElement).value;
-    const file_size = (document.getElementById('resource-file-size') as HTMLInputElement).value;
 
-    const payload = { title, category, description, file_url, file_size, is_published: true };
+    const rows = resFilesContainer.querySelectorAll<HTMLElement>('.multi-file-row');
+    const files: { title: string; url: string; size: string }[] = [];
+    rows.forEach(r => {
+      const fTitle = (r.querySelector('.res-file-title') as HTMLInputElement)?.value.trim();
+      const fUrl = (r.querySelector('.res-file-url') as HTMLInputElement)?.value.trim();
+      const fSize = (r.querySelector('.res-file-size') as HTMLInputElement)?.value.trim();
+      if (fUrl) {
+        files.push({ title: fTitle || 'Download File', url: fUrl, size: fSize });
+      }
+    });
 
-    let res;
-    if (id) {
-      res = await supabase.from('resources').update(payload).eq('id', id);
-    } else {
-      res = await supabase.from('resources').insert([payload]);
+    const payload: any = {
+      title,
+      category,
+      description,
+      file_url: files[0]?.url || '',
+      file_size: files[0]?.size || '',
+      files: files,
+      is_published: true
+    };
+
+    let res = id
+      ? await supabase.from('resources').update(payload).eq('id', id)
+      : await supabase.from('resources').insert([payload]);
+
+    if (res.error && res.error.message?.includes('files')) {
+      delete payload.files;
+      res = id
+        ? await supabase.from('resources').update(payload).eq('id', id)
+        : await supabase.from('resources').insert([payload]);
     }
 
     if (res.error) {
@@ -953,6 +1001,7 @@ import Container from '@components/Container.astro';
       showFeedback(`Resource "${title}" saved successfully!`);
       resFormCard.style.display = 'none';
       resForm.reset();
+      resFilesContainer.innerHTML = '';
       loadResources();
       loadOverviewStats();
     }
@@ -978,7 +1027,7 @@ import Container from '@components/Container.astro';
           <tr>
             <th>Title</th>
             <th>Category</th>
-            <th>File / Link</th>
+            <th>File(s) / Links</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -986,11 +1035,18 @@ import Container from '@components/Container.astro';
     `;
 
     data.forEach((item: any) => {
+      let fileDisplay = '<span class="text-muted">-</span>';
+      if (item.files && Array.isArray(item.files) && item.files.length > 0) {
+        fileDisplay = `<span class="badge badge--published">${item.files.length} file(s) attached</span>`;
+      } else if (item.file_url) {
+        fileDisplay = `<a href="${item.file_url}" target="_blank" class="text-sm">View File ↗</a>`;
+      }
+
       html += `
         <tr>
           <td><strong>${item.title}</strong><br><small class="text-muted">${item.description || ''}</small></td>
           <td><span class="badge badge--category">${item.category}</span></td>
-          <td>${item.file_url ? `<a href="${item.file_url}" target="_blank" class="text-sm">View File ↗</a>` : '<span class="text-muted">-</span>'}</td>
+          <td>${fileDisplay}</td>
           <td>
             <div class="table-actions">
               <button class="btn btn-secondary btn-sm" onclick="window.editResource('${item.id}')">Edit</button>
@@ -1012,8 +1068,16 @@ import Container from '@components/Container.astro';
       (document.getElementById('resource-title') as HTMLInputElement).value = data.title;
       (document.getElementById('resource-category') as HTMLSelectElement).value = data.category;
       (document.getElementById('resource-description') as HTMLTextAreaElement).value = data.description || '';
-      (document.getElementById('resource-file-url') as HTMLInputElement).value = data.file_url || '';
-      (document.getElementById('resource-file-size') as HTMLInputElement).value = data.file_size || '';
+      
+      resFilesContainer.innerHTML = '';
+      if (data.files && Array.isArray(data.files) && data.files.length > 0) {
+        data.files.forEach((f: any) => addResourceFileRow(f));
+      } else if (data.file_url) {
+        addResourceFileRow({ title: 'Download File', url: data.file_url, size: data.file_size || '' });
+      } else {
+        addResourceFileRow();
+      }
+
       document.getElementById('resource-form-title')!.textContent = 'Edit Resource';
       resFormCard.style.display = 'block';
       window.scrollTo({ top: resFormCard.offsetTop - 50, behavior: 'smooth' });

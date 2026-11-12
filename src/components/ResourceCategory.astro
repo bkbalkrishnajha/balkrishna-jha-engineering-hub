@@ -71,22 +71,38 @@ const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDe
       if (!error && data && data.length > 0) {
         container.innerHTML = data.map((item, index) => {
           const number = String(index + 1).padStart(2, '0');
-          const fileLink = item.file_url ? `
-            <a class="feature-card__link" href="${item.file_url}" target="_blank" rel="noopener noreferrer">
-              Download / View Resource <span aria-hidden="true">↗</span>
-            </a>
-          ` : '';
-          const fileSizeBadge = item.file_size ? `
-            <span style="font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; display: block;">${item.file_size}</span>
-          ` : '';
+          const filesList = (item.files && Array.isArray(item.files) && item.files.length > 0)
+            ? item.files
+            : (item.file_url ? [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size }] : []);
+
+          let linksMarkup = '';
+          if (filesList.length > 1) {
+            linksMarkup = `
+              <div class="resource-files-links" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                ${filesList.map((f: any) => `
+                  <a class="feature-card__link" href="${f.url}" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.75rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                    <span>📄 ${f.title || 'Download Document'}</span>
+                    <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? f.size + ' ↗' : '↗'}</span>
+                  </a>
+                `).join('')}
+              </div>
+            `;
+          } else if (filesList.length === 1) {
+            const f = filesList[0];
+            linksMarkup = `
+              ${f.size ? `<span style="font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; display: block;">${f.size}</span>` : ''}
+              <a class="feature-card__link" href="${f.url}" target="_blank" rel="noopener noreferrer">
+                ${f.title || 'Download / View Resource'} <span aria-hidden="true">↗</span>
+              </a>
+            `;
+          }
 
           return `
             <article class="feature-card resource-subcard">
               <span class="feature-card__number">${number} / RESOURCE</span>
               <h2>${item.title}</h2>
               ${item.description ? `<p>${item.description}</p>` : ''}
-              ${fileSizeBadge}
-              ${fileLink}
+              ${linksMarkup}
             </article>
           `;
         }).join('');
