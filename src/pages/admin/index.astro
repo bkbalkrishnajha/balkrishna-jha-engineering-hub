@@ -715,7 +715,8 @@ import Container from '@components/Container.astro';
   .admin-table {
     width: 100%;
     min-width: 860px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 6px;
     font-size: 0.95rem;
     text-align: left;
   }
@@ -723,7 +724,7 @@ import Container from '@components/Container.astro';
   .admin-table th {
     padding: 1.15rem 1.5rem;
     background: var(--surface-soft);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
     color: var(--muted);
     font-size: 0.78rem;
     font-weight: 700;
@@ -733,27 +734,46 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table td {
-    padding: 1.4rem 1.5rem;
-    border-bottom: 2px solid var(--line);
+    padding: 1.2rem 1.5rem;
     color: var(--ink);
     vertical-align: top;
     line-height: 1.6;
+    border-top: 1px solid rgba(100, 116, 139, 0.25);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.25);
+  }
+
+  .admin-table td:first-child {
+    border-left: 3px solid transparent;
+    border-radius: 6px 0 0 6px;
+  }
+
+  .admin-table td:last-child {
+    border-right: 1px solid rgba(100, 116, 139, 0.25);
+    border-radius: 0 6px 6px 0;
   }
 
   .admin-table tbody tr:last-child td {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.25);
   }
 
   .admin-table tbody tr {
     transition: background-color 0.15s ease, box-shadow 0.15s ease;
   }
 
+  .admin-table tbody tr:nth-child(odd) td {
+    background: rgba(100, 116, 139, 0.08);
+  }
+
   .admin-table tbody tr:nth-child(even) td {
-    background: rgba(100, 116, 139, 0.07);
+    background: rgba(56, 189, 248, 0.06);
   }
 
   .admin-table tbody tr:hover td {
-    background: rgba(100, 116, 139, 0.15);
+    background: rgba(56, 189, 248, 0.15);
+  }
+
+  .admin-table tbody tr:hover td:first-child {
+    border-left-color: #38bdf8;
   }
 
   .cell-title-wrap {
