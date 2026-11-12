@@ -920,6 +920,25 @@ import Container from '@components/Container.astro';
   const resFilesContainer = document.getElementById('resource-files-container')!;
   const addResFileRowBtn = document.getElementById('add-resource-file-row-btn');
 
+  function extractFiles(item: any): { title: string; url: string; size: string }[] {
+    if (item.files && Array.isArray(item.files) && item.files.length > 0) {
+      return item.files;
+    }
+    if (item.file_url && typeof item.file_url === 'string') {
+      const trimmed = item.file_url.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
+      }
+      if (item.file_url) {
+        return [{ title: 'Download File', url: item.file_url, size: item.file_size || '' }];
+      }
+    }
+    return [];
+  }
+
   function addResourceFileRow(file: { title?: string; url?: string; size?: string } = {}) {
     const row = document.createElement('div');
     row.className = 'multi-file-row';
@@ -974,12 +993,15 @@ import Container from '@components/Container.astro';
       }
     });
 
+    const serializedUrl = files.length > 1 ? JSON.stringify(files) : (files[0]?.url || '');
+    const serializedSize = files.length > 1 ? `${files.length} files attached` : (files[0]?.size || '');
+
     const payload: any = {
       title,
       category,
       description,
-      file_url: files[0]?.url || '',
-      file_size: files[0]?.size || '',
+      file_url: serializedUrl,
+      file_size: serializedSize,
       files: files,
       is_published: true
     };
@@ -1035,11 +1057,12 @@ import Container from '@components/Container.astro';
     `;
 
     data.forEach((item: any) => {
+      const files = extractFiles(item);
       let fileDisplay = '<span class="text-muted">-</span>';
-      if (item.files && Array.isArray(item.files) && item.files.length > 0) {
-        fileDisplay = `<span class="badge badge--published">${item.files.length} file(s) attached</span>`;
-      } else if (item.file_url) {
-        fileDisplay = `<a href="${item.file_url}" target="_blank" class="text-sm">View File ↗</a>`;
+      if (files.length > 1) {
+        fileDisplay = `<span class="badge badge--published">${files.length} file(s) attached</span>`;
+      } else if (files.length === 1 && files[0].url) {
+        fileDisplay = `<a href="${files[0].url}" target="_blank" class="text-sm">View File ↗</a>`;
       }
 
       html += `
@@ -1070,10 +1093,9 @@ import Container from '@components/Container.astro';
       (document.getElementById('resource-description') as HTMLTextAreaElement).value = data.description || '';
       
       resFilesContainer.innerHTML = '';
-      if (data.files && Array.isArray(data.files) && data.files.length > 0) {
-        data.files.forEach((f: any) => addResourceFileRow(f));
-      } else if (data.file_url) {
-        addResourceFileRow({ title: 'Download File', url: data.file_url, size: data.file_size || '' });
+      const files = extractFiles(data);
+      if (files.length > 0) {
+        files.forEach((f: any) => addResourceFileRow(f));
       } else {
         addResourceFileRow();
       }

@@ -56,6 +56,25 @@ const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDe
 <script>
   import { supabase } from '@lib/supabase';
 
+  function extractFiles(item: any): { title: string; url: string; size?: string }[] {
+    if (item.files && Array.isArray(item.files) && item.files.length > 0) {
+      return item.files;
+    }
+    if (item.file_url && typeof item.file_url === 'string') {
+      const trimmed = item.file_url.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
+      }
+      if (item.file_url) {
+        return [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size || '' }];
+      }
+    }
+    return [];
+  }
+
   const container = document.querySelector<HTMLElement>('[data-resource-category]');
   const category = container?.dataset.resourceCategory;
 
@@ -71,9 +90,7 @@ const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDe
       if (!error && data && data.length > 0) {
         container.innerHTML = data.map((item, index) => {
           const number = String(index + 1).padStart(2, '0');
-          const filesList = (item.files && Array.isArray(item.files) && item.files.length > 0)
-            ? item.files
-            : (item.file_url ? [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size }] : []);
+          const filesList = extractFiles(item);
 
           let linksMarkup = '';
           if (filesList.length > 1) {

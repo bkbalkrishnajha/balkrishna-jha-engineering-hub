@@ -157,6 +157,25 @@ const formatDate = (date: Date) =>
   <script>
     import { supabase } from '@lib/supabase';
 
+    function extractFiles(item: any): { title: string; url: string; size?: string }[] {
+      if (item.files && Array.isArray(item.files) && item.files.length > 0) {
+        return item.files;
+      }
+      if (item.file_url && typeof item.file_url === 'string') {
+        const trimmed = item.file_url.trim();
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          } catch (e) {}
+        }
+        if (item.file_url) {
+          return [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size || '' }];
+        }
+      }
+      return [];
+    }
+
     // Live Resources Fetcher
     const homeResourcesGrid = document.getElementById('home-resources-grid');
     const homeResourcesFallback = document.getElementById('home-resources-fallback');
@@ -185,9 +204,7 @@ const formatDate = (date: Date) =>
               ? new Date(item.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })
               : '';
 
-            const filesList = (item.files && Array.isArray(item.files) && item.files.length > 0)
-              ? item.files
-              : (item.file_url ? [{ title: 'Download / View Resource', url: item.file_url, size: item.file_size }] : []);
+            const filesList = extractFiles(item);
 
             let linksMarkup = '';
             if (filesList.length > 1) {
