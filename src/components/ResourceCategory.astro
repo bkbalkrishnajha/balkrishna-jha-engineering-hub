@@ -18,9 +18,10 @@ interface Props {
   nepaliTitle?: string;
   nepaliEyebrow?: string;
   nepaliDescription?: string;
+  category?: string;
 }
 
-const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDescription } = Astro.props;
+const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDescription, category } = Astro.props;
 ---
 <BaseLayout title={title} description={description}>
   <PageIntro
@@ -33,7 +34,7 @@ const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDe
   />
   <section class="content-wrap">
     <Container>
-      <div class="resource-subgrid">
+      <div class="resource-subgrid" data-resource-category={category}>
         {items.map((item, index) => (
           <article class="feature-card resource-subcard">
             <span class="feature-card__number">{String(index + 1).padStart(2, '0')} / TOPIC</span>
@@ -51,3 +52,47 @@ const { title, eyebrow, description, items, nepaliTitle, nepaliEyebrow, nepaliDe
     </Container>
   </section>
 </BaseLayout>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  const container = document.querySelector<HTMLElement>('[data-resource-category]');
+  const category = container?.dataset.resourceCategory;
+
+  if (container && category) {
+    const fetchResources = async () => {
+      const { data, error } = await supabase
+        .from('resources')
+        .select('*')
+        .eq('category', category)
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        container.innerHTML = data.map((item, index) => {
+          const number = String(index + 1).padStart(2, '0');
+          const fileLink = item.file_url ? `
+            <a class="feature-card__link" href="${item.file_url}" target="_blank" rel="noopener noreferrer">
+              Download / View Resource <span aria-hidden="true">↗</span>
+            </a>
+          ` : '';
+          const fileSizeBadge = item.file_size ? `
+            <span style="font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; display: block;">${item.file_size}</span>
+          ` : '';
+
+          return `
+            <article class="feature-card resource-subcard">
+              <span class="feature-card__number">${number} / RESOURCE</span>
+              <h2>${item.title}</h2>
+              ${item.description ? `<p>${item.description}</p>` : ''}
+              ${fileSizeBadge}
+              ${fileLink}
+            </article>
+          `;
+        }).join('');
+      }
+    };
+
+    fetchResources();
+  }
+</script>

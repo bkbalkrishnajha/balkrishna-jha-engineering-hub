@@ -25,6 +25,8 @@ const formatDate = (date: Date) =>
   />
   <section class="content-wrap">
     <Container>
+      <div id="live-posts-grid" class="listing-grid" style="margin-bottom: 2rem; display: none;"></div>
+
       {posts.length > 0 ? (
         <div class="listing-grid">
           {posts.map((post) => (
@@ -62,3 +64,46 @@ const formatDate = (date: Date) =>
     </Container>
   </section>
 </BaseLayout>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  const grid = document.getElementById('live-posts-grid');
+
+  if (grid) {
+    const loadPosts = async () => {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        grid.style.display = 'grid';
+        grid.innerHTML = data.map((post: any) => {
+          const date = post.created_at ? new Date(post.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+          return `
+            <article class="listing-card">
+              <div class="listing-meta">
+                <span class="listing-category">${post.category || 'Civil Engineering'}</span>
+                <span>${date}</span>
+              </div>
+              <h2>${post.title}</h2>
+              ${post.excerpt ? `<p>${post.excerpt}</p>` : ''}
+              ${post.content ? `
+                <details style="margin-top: 1rem; cursor: pointer;">
+                  <summary style="font-weight: 600; font-size: 0.9rem; color: var(--ink);">Read Article Preview</summary>
+                  <div style="margin-top: 0.75rem; white-space: pre-line; font-size: 0.95rem; line-height: 1.7; color: var(--ink);">
+                    ${post.content}
+                  </div>
+                </details>
+              ` : ''}
+            </article>
+          `;
+        }).join('');
+      }
+    };
+
+    loadPosts();
+  }
+</script>

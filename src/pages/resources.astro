@@ -61,6 +61,15 @@ const sections = [
           </a>
         ))}
       </div>
+      <div id="live-resources-section" class="resource-managed-list" style="margin-top: 48px; display: none;">
+        <div class="section-heading">
+          <p class="eyebrow" data-en="Recently added" data-ne="भर्खरै थपिएका">Recently added</p>
+          <h2 data-en="Published resources" data-ne="प्रकाशित स्रोत सामग्री">Published resources</h2>
+          <p data-en="Engineering notes, official codes and reference materials." data-ne="इन्जिनियरिङ नोटहरू, आधिकारिक संहिता र सन्दर्भ सामग्रीहरू।">Engineering notes, official codes and reference materials.</p>
+        </div>
+        <div class="listing-grid" id="live-resources-grid"></div>
+      </div>
+
       {resources.length > 0 && (
         <div class="resource-managed-list" style="margin-top: 48px">
           <div class="section-heading">
@@ -90,3 +99,52 @@ const sections = [
     </Container>
   </section>
 </BaseLayout>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  const section = document.getElementById('live-resources-section');
+  const grid = document.getElementById('live-resources-grid');
+
+  if (section && grid) {
+    const loadLiveResources = async () => {
+      const { data, error } = await supabase
+        .from('resources')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        section.style.display = 'block';
+        grid.innerHTML = data.map((item: any) => {
+          const categoryLabels: Record<string, string> = {
+            bachelor: 'Bachelor Civil Engineering',
+            loksewa: 'Loksewa',
+            codes: 'Codes and Laws',
+            'engineering-reference': 'Engineering Reference',
+          };
+          const categoryName = categoryLabels[item.category] || item.category;
+          const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+
+          return `
+            <article class="listing-card">
+              <div class="listing-meta">
+                <span class="listing-category">${categoryName}</span>
+                ${item.file_size ? `<span>${item.file_size}</span>` : `<span>${date}</span>`}
+              </div>
+              <h2>${item.title}</h2>
+              ${item.description ? `<p>${item.description}</p>` : ''}
+              ${item.file_url ? `
+                <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="listing-read">
+                  Download / View Resource <span aria-hidden="true">↗</span>
+                </a>
+              ` : ''}
+            </article>
+          `;
+        }).join('');
+      }
+    };
+
+    loadLiveResources();
+  }
+</script>
