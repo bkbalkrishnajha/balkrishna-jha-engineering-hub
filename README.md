@@ -18,7 +18,7 @@ My responsive professional portfolio and civil engineering knowledge platform, b
 
 ## Pages
 
-Home, About, Experience, Projects, Engineering Blog, Resources, Engineering Tools, Calendar, CV, Contact, Admin and 404.
+Home, About, Experience, Engineering Blog, Resources, Engineering Tools, Calendar, CV, Contact, Admin and 404.
 
 ## Admin dashboard
 
