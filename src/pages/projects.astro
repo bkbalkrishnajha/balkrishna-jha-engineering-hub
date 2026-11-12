@@ -1,0 +1,108 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
+---
+<BaseLayout
+  title="Projects"
+  description="Civil engineering project portfolio, field reports, and technical case studies of Balkrishna Jha."
+>
+  <PageIntro
+    eyebrow="Portfolio"
+    title="Engineering projects"
+    description="A curated record of civil engineering project work, technical responsibilities and lessons from practice."
+    nepaliEyebrow="पोर्टफोलियो"
+    nepaliTitle="इन्जिनियरिङ परियोजनाहरू"
+    nepaliDescription="सिभिल इन्जिनियरिङ परियोजना कार्य, प्राविधिक जिम्मेवारी र व्यावहारिक सिकाइको अभिलेख।"
+  />
+  <section class="content-wrap">
+    <Container>
+      <!-- Loading indicator -->
+      <div id="projects-loading-state" class="projects-loading" style="padding: 3rem 0; text-align: center; color: var(--muted);">
+        Loading projects...
+      </div>
+
+      <!-- Live projects container populated from Supabase -->
+      <div id="live-projects-container" class="project-listing" style="display: none;"></div>
+
+      <!-- Empty state placeholder (visible when no projects are published yet) -->
+      <div id="projects-empty-state" class="empty-state" style="display: none;">
+        <p class="eyebrow" data-en="Project portfolio" data-ne="परियोजना पोर्टफोलियो">Project portfolio</p>
+        <h2 data-en="Projects are being prepared." data-ne="परियोजनाहरू व्यवस्थित गरिँदैछ।">Projects are being prepared.</h2>
+        <p data-en="Published civil engineering projects, case studies, and field reports will appear here as they are published from the admin panel." data-ne="नयाँ सिभिल इन्जिनियरिङ परियोजना, केस स्टडी र फिल्ड रिपोर्टहरू यहाँ प्रकाशित हुँदै जानेछन्।">
+          Published civil engineering projects, case studies, and field reports will appear here as they are published from the admin panel.
+        </p>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  const container = document.getElementById('live-projects-container');
+  const loadingNode = document.getElementById('projects-loading-state');
+  const emptyNode = document.getElementById('projects-empty-state');
+
+  async function loadProjects() {
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (loadingNode) loadingNode.style.display = 'none';
+
+      if (!error && data && data.length > 0) {
+        if (emptyNode) emptyNode.style.display = 'none';
+        if (container) {
+          container.style.display = 'grid';
+          container.innerHTML = data.map((p: any) => `
+            <article class="project-case-study">
+              ${p.cover_image ? `
+                <img
+                  src="${escapeHtml(p.cover_image)}"
+                  alt="${escapeHtml(p.title)}"
+                  loading="lazy"
+                  style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; margin-bottom: 1.25rem;"
+                />
+              ` : ''}
+              <div class="project-case-study__top">
+                <div>
+                  <p class="eyebrow">${escapeHtml(p.location || 'Civil Engineering')} · ${escapeHtml(p.year || 'Project')}</p>
+                  <h2>${escapeHtml(p.title)}</h2>
+                </div>
+                ${p.status ? `<span class="project-award-mark">${escapeHtml(p.status)}</span>` : ''}
+              </div>
+              ${p.summary ? `<p class="project-case-study__summary">${escapeHtml(p.summary)}</p>` : ''}
+              ${p.description ? `<div class="prose project-content"><p style="white-space: pre-line;">${escapeHtml(p.description)}</p></div>` : ''}
+              ${p.report_file_url ? `
+                <div style="margin-top: 1.25rem;">
+                  <a href="${escapeHtml(p.report_file_url)}" target="_blank" rel="noopener noreferrer" class="button button--secondary">
+                    View Report / Case Study ↗
+                  </a>
+                </div>
+              ` : ''}
+            </article>
+          `).join('');
+        }
+      } else {
+        if (container) container.style.display = 'none';
+        if (emptyNode) emptyNode.style.display = 'block';
+      }
+    } catch {
+      if (loadingNode) loadingNode.style.display = 'none';
+      if (container) container.style.display = 'none';
+      if (emptyNode) emptyNode.style.display = 'block';
+    }
+  }
+
+  function escapeHtml(text: string): string {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  loadProjects();
+</script>
