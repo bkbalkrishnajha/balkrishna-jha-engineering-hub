@@ -693,44 +693,104 @@ import Container from '@components/Container.astro';
   .admin-list-container {
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
+    border-radius: 10px;
+    overflow-x: auto;
     box-shadow: var(--shadow);
+    margin-top: 1rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-table {
     width: 100%;
+    min-width: 680px;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    text-align: left;
   }
 
   .admin-table th {
-    text-align: left;
-    padding: 0.85rem 1rem;
+    padding: 1rem 1.25rem;
     background: var(--surface-soft);
     border-bottom: 1px solid var(--line);
     color: var(--muted);
+    font-size: 0.75rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
   }
 
   .admin-table td {
-    padding: 0.85rem 1rem;
+    padding: 1.15rem 1.25rem;
     border-bottom: 1px solid var(--line);
     color: var(--ink);
     vertical-align: middle;
+    line-height: 1.5;
   }
 
-  .admin-table tr:hover td {
+  .admin-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .admin-table tbody tr {
+    transition: background-color 0.15s ease;
+  }
+
+  .admin-table tbody tr:hover td {
     background: var(--surface-soft);
   }
 
-  .badge {
-    display: inline-block;
-    padding: 0.2rem 0.55rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
+  .cell-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 420px;
+  }
+
+  .cell-main-title {
+    font-size: 0.95rem;
     font-weight: 600;
-    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .cell-sub-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.45;
+    word-break: break-word;
+  }
+
+  .cell-text {
+    font-size: 0.875rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .cell-link {
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  .cell-link:hover {
+    color: #38bdf8;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.775rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
   }
 
   .badge--category {
@@ -741,17 +801,41 @@ import Container from '@components/Container.astro';
 
   .badge--published {
     background: rgba(34, 197, 94, 0.15);
-    color: #22c55e;
+    color: #16a34a;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+  }
+
+  :root[data-theme='dark'] .badge--published {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.35);
   }
 
   .badge--draft {
     background: rgba(234, 179, 8, 0.15);
-    color: #eab308;
+    color: #ca8a04;
+    border: 1px solid rgba(234, 179, 8, 0.25);
+  }
+
+  :root[data-theme='dark'] .badge--draft {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+    border-color: rgba(234, 179, 8, 0.35);
   }
 
   .table-actions {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .table-actions .btn-sm {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    white-space: nowrap;
   }
 
   .file-picker-row {
@@ -1047,10 +1131,10 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>File(s) / Links</th>
-            <th>Actions</th>
+            <th style="width: 44%;">Title & Description</th>
+            <th style="width: 20%;">Category</th>
+            <th style="width: 20%;">Files / Links</th>
+            <th style="width: 16%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -1058,17 +1142,30 @@ import Container from '@components/Container.astro';
 
     data.forEach((item: any) => {
       const files = extractFiles(item);
-      let fileDisplay = '<span class="text-muted">-</span>';
+      let fileDisplay = '<span class="cell-sub-desc">No files</span>';
       if (files.length > 1) {
-        fileDisplay = `<span class="badge badge--published">${files.length} file(s) attached</span>`;
+        fileDisplay = `<span class="badge badge--published">${files.length} files attached</span>`;
       } else if (files.length === 1 && files[0].url) {
-        fileDisplay = `<a href="${files[0].url}" target="_blank" class="text-sm">View File ↗</a>`;
+        fileDisplay = `<a href="${files[0].url}" target="_blank" rel="noopener noreferrer" class="cell-link">${files[0].title || 'View File'} ↗</a>`;
       }
+
+      const categoryLabels: Record<string, string> = {
+        bachelor: 'Bachelor Civil',
+        loksewa: 'Loksewa Prep',
+        codes: 'Codes & Laws',
+        'engineering-reference': 'Engineering Ref',
+      };
+      const catName = categoryLabels[item.category] || item.category;
 
       html += `
         <tr>
-          <td><strong>${item.title}</strong><br><small class="text-muted">${item.description || ''}</small></td>
-          <td><span class="badge badge--category">${item.category}</span></td>
+          <td>
+            <div class="cell-title-wrap">
+              <span class="cell-main-title">${item.title}</span>
+              ${item.description ? `<span class="cell-sub-desc">${item.description}</span>` : ''}
+            </div>
+          </td>
+          <td><span class="badge badge--category">${catName}</span></td>
           <td>${fileDisplay}</td>
           <td>
             <div class="table-actions">
@@ -1184,11 +1281,11 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Location</th>
-            <th>Year</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th style="width: 42%;">Project Title & Slug</th>
+            <th style="width: 20%;">Location</th>
+            <th style="width: 12%;">Year</th>
+            <th style="width: 12%;">Status</th>
+            <th style="width: 14%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -1197,9 +1294,14 @@ import Container from '@components/Container.astro';
     data.forEach((p: any) => {
       html += `
         <tr>
-          <td><strong>${p.title}</strong><br><small class="text-muted">/${p.slug}</small></td>
-          <td>${p.location || '-'}</td>
-          <td>${p.year || '-'}</td>
+          <td>
+            <div class="cell-title-wrap">
+              <span class="cell-main-title">${p.title}</span>
+              <span class="cell-sub-desc">/${p.slug}</span>
+            </div>
+          </td>
+          <td><span class="cell-text">${p.location || '—'}</span></td>
+          <td><span class="cell-text">${p.year || '—'}</span></td>
           <td><span class="badge badge--published">${p.status}</span></td>
           <td>
             <div class="table-actions">
@@ -1309,10 +1411,10 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Article</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th style="width: 48%;">Article Title & Slug</th>
+            <th style="width: 22%;">Category</th>
+            <th style="width: 15%;">Status</th>
+            <th style="width: 15%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -1321,7 +1423,12 @@ import Container from '@components/Container.astro';
     data.forEach((p: any) => {
       html += `
         <tr>
-          <td><strong>${p.title}</strong><br><small class="text-muted">/${p.slug}</small></td>
+          <td>
+            <div class="cell-title-wrap">
+              <span class="cell-main-title">${p.title}</span>
+              <span class="cell-sub-desc">/${p.slug}</span>
+            </div>
+          </td>
           <td><span class="badge badge--category">${p.category}</span></td>
           <td><span class="badge ${p.is_published ? 'badge--published' : 'badge--draft'}">${p.is_published ? 'Published' : 'Draft'}</span></td>
           <td>
@@ -1417,9 +1524,9 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th>File Name</th>
-            <th>Public URL</th>
-            <th>Actions</th>
+            <th style="width: 48%;">File Name</th>
+            <th style="width: 27%;">Public Download URL</th>
+            <th style="width: 25%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -1431,8 +1538,14 @@ import Container from '@components/Container.astro';
 
       html += `
         <tr>
-          <td><strong>${file.name}</strong></td>
-          <td><a href="${url}" target="_blank" class="text-sm">View File ↗</a></td>
+          <td>
+            <div class="cell-title-wrap">
+              <span class="cell-main-title">📄 ${file.name}</span>
+            </div>
+          </td>
+          <td>
+            <a href="${url}" target="_blank" rel="noopener noreferrer" class="cell-link">Open File ↗</a>
+          </td>
           <td>
             <div class="table-actions">
               <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('${url}'); alert('File URL copied to clipboard!');">Copy Link</button>
