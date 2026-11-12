@@ -117,11 +117,11 @@ import Container from '@components/Container.astro';
             <h3 id="resource-form-title">Add New Resource</h3>
             <form id="resource-form" class="admin-form">
               <input type="hidden" id="resource-id" />
+              <div class="form-group">
+                <label for="resource-title">Resource Title *</label>
+                <input type="text" id="resource-title" required placeholder="e.g. Nepal Bridge Standard 2075" class="admin-input" />
+              </div>
               <div class="form-row">
-                <div class="form-group flex-2">
-                  <label for="resource-title">Title *</label>
-                  <input type="text" id="resource-title" required placeholder="e.g. Nepal Bridge Standard 2075" class="admin-input" />
-                </div>
                 <div class="form-group flex-1">
                   <label for="resource-category">Category *</label>
                   <select id="resource-category" required class="admin-input">
@@ -135,7 +135,7 @@ import Container from '@components/Container.astro';
 
               <div class="form-group">
                 <label for="resource-description">Description / Notes</label>
-                <textarea id="resource-description" rows="3" placeholder="Brief summary or reference details..." class="admin-input"></textarea>
+                <textarea id="resource-description" rows="4" placeholder="Brief summary or reference details..." class="admin-input"></textarea>
               </div>
 
               <div class="form-group">
@@ -177,11 +177,11 @@ import Container from '@components/Container.astro';
             <h3 id="project-form-title">Add New Project</h3>
             <form id="project-form" class="admin-form">
               <input type="hidden" id="project-id" />
+              <div class="form-group">
+                <label for="project-title">Project Title *</label>
+                <input type="text" id="project-title" required placeholder="e.g. Slope Stability & Retaining Wall Design" class="admin-input" />
+              </div>
               <div class="form-row">
-                <div class="form-group flex-2">
-                  <label for="project-title">Project Title *</label>
-                  <input type="text" id="project-title" required placeholder="e.g. Slope Stability & Retaining Wall Design" class="admin-input" />
-                </div>
                 <div class="form-group flex-1">
                   <label for="project-slug">Slug (URL path) *</label>
                   <input type="text" id="project-slug" required placeholder="slope-stability-design" class="admin-input" />
@@ -256,11 +256,11 @@ import Container from '@components/Container.astro';
             <h3 id="post-form-title">Write Technical Post</h3>
             <form id="post-form" class="admin-form">
               <input type="hidden" id="post-id" />
+              <div class="form-group">
+                <label for="post-title">Article Title *</label>
+                <input type="text" id="post-title" required placeholder="e.g. Design Considerations for RCC Structures in Nepal" class="admin-input" />
+              </div>
               <div class="form-row">
-                <div class="form-group flex-2">
-                  <label for="post-title">Article Title *</label>
-                  <input type="text" id="post-title" required placeholder="e.g. Design Considerations for RCC Structures in Nepal" class="admin-input" />
-                </div>
                 <div class="form-group flex-1">
                   <label for="post-slug">Slug (URL) *</label>
                   <input type="text" id="post-slug" required placeholder="rcc-design-considerations-nepal" class="admin-input" />
@@ -433,10 +433,11 @@ import Container from '@components/Container.astro';
 
   .admin-input {
     width: 100%;
-    padding: 0.7rem 0.9rem;
+    padding: 0.85rem 1.1rem;
     border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 0.925rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.5;
     background: var(--surface-soft);
     color: var(--ink);
     transition: border-color 0.15s, box-shadow 0.15s;
@@ -702,18 +703,18 @@ import Container from '@components/Container.astro';
 
   .admin-table {
     width: 100%;
-    min-width: 680px;
+    min-width: 860px;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-align: left;
   }
 
   .admin-table th {
-    padding: 1rem 1.25rem;
+    padding: 1.15rem 1.5rem;
     background: var(--surface-soft);
     border-bottom: 1px solid var(--line);
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -721,11 +722,11 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table td {
-    padding: 1.15rem 1.25rem;
+    padding: 1.4rem 1.5rem;
     border-bottom: 1px solid var(--line);
     color: var(--ink);
-    vertical-align: middle;
-    line-height: 1.5;
+    vertical-align: top;
+    line-height: 1.6;
   }
 
   .admin-table tbody tr:last-child td {
@@ -743,27 +744,27 @@ import Container from '@components/Container.astro';
   .cell-title-wrap {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    max-width: 420px;
+    gap: 0.55rem;
+    width: 100%;
   }
 
   .cell-main-title {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 700;
     color: var(--ink);
-    line-height: 1.4;
-    word-break: break-word;
-  }
-
-  .cell-sub-desc {
-    font-size: 0.8rem;
-    color: var(--muted);
     line-height: 1.45;
     word-break: break-word;
   }
 
+  .cell-sub-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.65;
+    word-break: break-word;
+  }
+
   .cell-text {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     color: var(--ink);
     white-space: nowrap;
   }
@@ -1131,10 +1132,10 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th style="width: 44%;">Title & Description</th>
-            <th style="width: 20%;">Category</th>
-            <th style="width: 20%;">Files / Links</th>
-            <th style="width: 16%; text-align: right;">Actions</th>
+            <th style="width: 50%;">Title & Description</th>
+            <th style="width: 18%;">Category</th>
+            <th style="width: 18%;">Files / Links</th>
+            <th style="width: 14%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -1161,8 +1162,8 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <span class="cell-main-title">${item.title}</span>
-              ${item.description ? `<span class="cell-sub-desc">${item.description}</span>` : ''}
+              <div class="cell-main-title">${item.title}</div>
+              ${item.description ? `<div class="cell-sub-desc">${item.description}</div>` : ''}
             </div>
           </td>
           <td><span class="badge badge--category">${catName}</span></td>
@@ -1281,9 +1282,9 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th style="width: 42%;">Project Title & Slug</th>
-            <th style="width: 20%;">Location</th>
-            <th style="width: 12%;">Year</th>
+            <th style="width: 46%;">Project Title & Slug</th>
+            <th style="width: 18%;">Location</th>
+            <th style="width: 10%;">Year</th>
             <th style="width: 12%;">Status</th>
             <th style="width: 14%; text-align: right;">Actions</th>
           </tr>
@@ -1296,8 +1297,8 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <span class="cell-main-title">${p.title}</span>
-              <span class="cell-sub-desc">/${p.slug}</span>
+              <div class="cell-main-title">${p.title}</div>
+              <div class="cell-sub-desc">/${p.slug}</div>
             </div>
           </td>
           <td><span class="cell-text">${p.location || '—'}</span></td>
@@ -1425,8 +1426,8 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <span class="cell-main-title">${p.title}</span>
-              <span class="cell-sub-desc">/${p.slug}</span>
+              <div class="cell-main-title">${p.title}</div>
+              <div class="cell-sub-desc">/${p.slug}</div>
             </div>
           </td>
           <td><span class="badge badge--category">${p.category}</span></td>
