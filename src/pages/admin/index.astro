@@ -1117,6 +1117,7 @@ import Container from '@components/Container.astro';
           <td><span class="badge badge--published">${p.status}</span></td>
           <td>
             <div class="table-actions">
+              <button class="btn btn-secondary btn-sm" onclick="window.editProject('${p.id}')">Edit</button>
               <button class="btn btn-danger btn-sm" onclick="window.deleteProject('${p.id}')">Delete</button>
             </div>
           </td>
@@ -1127,6 +1128,25 @@ import Container from '@components/Container.astro';
     html += '</tbody></table>';
     projContainer.innerHTML = html;
   }
+
+  (window as any).editProject = async (id: string) => {
+    const { data } = await supabase.from('projects').select('*').eq('id', id).single();
+    if (data) {
+      (document.getElementById('project-id') as HTMLInputElement).value = data.id;
+      (document.getElementById('project-title') as HTMLInputElement).value = data.title;
+      (document.getElementById('project-slug') as HTMLInputElement).value = data.slug;
+      (document.getElementById('project-location') as HTMLInputElement).value = data.location || '';
+      (document.getElementById('project-year') as HTMLInputElement).value = data.year || '';
+      (document.getElementById('project-status') as HTMLSelectElement).value = data.status || 'Completed';
+      (document.getElementById('project-summary') as HTMLTextAreaElement).value = data.summary || '';
+      (document.getElementById('project-description') as HTMLTextAreaElement).value = data.description || '';
+      (document.getElementById('project-cover') as HTMLInputElement).value = data.cover_image || '';
+      (document.getElementById('project-report') as HTMLInputElement).value = data.report_file_url || '';
+      document.getElementById('project-form-title')!.textContent = 'Edit Project';
+      projFormCard.style.display = 'block';
+      window.scrollTo({ top: projFormCard.offsetTop - 50, behavior: 'smooth' });
+    }
+  };
 
   (window as any).deleteProject = async (id: string) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
@@ -1220,6 +1240,7 @@ import Container from '@components/Container.astro';
           <td><span class="badge ${p.is_published ? 'badge--published' : 'badge--draft'}">${p.is_published ? 'Published' : 'Draft'}</span></td>
           <td>
             <div class="table-actions">
+              <button class="btn btn-secondary btn-sm" onclick="window.editPost('${p.id}')">Edit</button>
               <button class="btn btn-danger btn-sm" onclick="window.deletePost('${p.id}')">Delete</button>
             </div>
           </td>
@@ -1230,6 +1251,22 @@ import Container from '@components/Container.astro';
     html += '</tbody></table>';
     postsContainer.innerHTML = html;
   }
+
+  (window as any).editPost = async (id: string) => {
+    const { data } = await supabase.from('posts').select('*').eq('id', id).single();
+    if (data) {
+      (document.getElementById('post-id') as HTMLInputElement).value = data.id;
+      (document.getElementById('post-title') as HTMLInputElement).value = data.title;
+      (document.getElementById('post-slug') as HTMLInputElement).value = data.slug;
+      (document.getElementById('post-category') as HTMLInputElement).value = data.category || 'Civil Engineering';
+      (document.getElementById('post-status') as HTMLSelectElement).value = data.is_published ? 'published' : 'draft';
+      (document.getElementById('post-excerpt') as HTMLTextAreaElement).value = data.excerpt || '';
+      (document.getElementById('post-content') as HTMLTextAreaElement).value = data.content || '';
+      document.getElementById('post-form-title')!.textContent = 'Edit Post';
+      postFormCard.style.display = 'block';
+      window.scrollTo({ top: postFormCard.offsetTop - 50, behavior: 'smooth' });
+    }
+  };
 
   (window as any).deletePost = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
