@@ -119,28 +119,33 @@ const formatDate = (date: Date) =>
           Useful references for study, engineering practice and continued learning.
         </p>
       </div>
-      {resources.length ? (
-        <div class="listing-grid">
-          {resources.map((resource) => (
-            <article class="listing-card">
-              <div class="listing-meta">
-                <span class="listing-category">{resource.data.category}</span>
-                {resource.data.publishDate && <span>{formatDate(resource.data.publishDate)}</span>}
-              </div>
-              <h3>{resource.data.title}</h3>
-              <p>{resource.data.description}</p>
-              <a href={`/resources/${resource.id}/`} class="listing-read">
-                Open resource <Icon name="arrow-right" size={15} />
-              </a>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div class="empty-state">
-          <h3>Resources are being organised.</h3>
-          <p>New resources will appear here as they are published.</p>
-        </div>
-      )}
+
+      <div id="home-resources-grid" class="listing-grid" style="display: none;"></div>
+
+      <div id="home-resources-fallback">
+        {resources.length ? (
+          <div class="listing-grid">
+            {resources.map((resource) => (
+              <article class="listing-card">
+                <div class="listing-meta">
+                  <span class="listing-category">{resource.data.category}</span>
+                  {resource.data.publishDate && <span>{formatDate(resource.data.publishDate)}</span>}
+                </div>
+                <h3>{resource.data.title}</h3>
+                <p>{resource.data.description}</p>
+                <a href={`/resources/${resource.id}/`} class="listing-read">
+                  Open resource <Icon name="arrow-right" size={15} />
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">
+            <h3>Resources are being organised.</h3>
+            <p>New resources will appear here as they are published.</p>
+          </div>
+        )}
+      </div>
       <div class="home-section-link">
         <a href="/resources/" class="text-link">
           Explore all resources <Icon name="arrow-right" size={16} />
@@ -150,6 +155,62 @@ const formatDate = (date: Date) =>
   </section>
 
   <script>
+    import { supabase } from '@lib/supabase';
+
+    // Live Resources Fetcher
+    const homeResourcesGrid = document.getElementById('home-resources-grid');
+    const homeResourcesFallback = document.getElementById('home-resources-fallback');
+
+    if (homeResourcesGrid) {
+      const loadHomeResources = async () => {
+        const { data, error } = await supabase
+          .from('resources')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (!error && data && data.length > 0) {
+          if (homeResourcesFallback) homeResourcesFallback.style.display = 'none';
+          homeResourcesGrid.style.display = 'grid';
+          homeResourcesGrid.innerHTML = data.map((item: any) => {
+            const categoryLabels: Record<string, string> = {
+              bachelor: 'Bachelor Civil Engineering',
+              loksewa: 'Loksewa',
+              codes: 'Codes and Laws',
+              'engineering-reference': 'Engineering Reference',
+            };
+            const categoryName = categoryLabels[item.category] || item.category;
+            const date = item.created_at
+              ? new Date(item.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })
+              : '';
+
+            return `
+              <article class="listing-card">
+                <div class="listing-meta">
+                  <span class="listing-category">${categoryName}</span>
+                  ${item.file_size ? `<span>${item.file_size}</span>` : `<span>${date}</span>`}
+                </div>
+                <h3>${item.title}</h3>
+                ${item.description ? `<p>${item.description}</p>` : ''}
+                ${item.file_url ? `
+                  <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="listing-read">
+                    Download / View Resource <span aria-hidden="true">↗</span>
+                  </a>
+                ` : `
+                  <a href="/resources/" class="listing-read">
+                    Explore resources <span aria-hidden="true">→</span>
+                  </a>
+                `}
+              </article>
+            `;
+          }).join('');
+        }
+      };
+
+      loadHomeResources();
+    }
+
     const motivationalQuotes = [
       {
         en: 'It does not matter how slowly you go as long as you do not stop.',
