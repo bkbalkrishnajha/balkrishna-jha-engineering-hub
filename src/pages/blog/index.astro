@@ -27,40 +27,41 @@ const formatDate = (date: Date) =>
     <Container>
       <div id="live-posts-grid" class="listing-grid" style="margin-bottom: 2rem; display: none;"></div>
 
-      {posts.length > 0 ? (
-        <div class="listing-grid">
-          {posts.map((post) => (
-            <article class="listing-card">
-              {post.data.coverImage && (
-                <img
-                  src={post.data.coverImage}
-                  alt={post.data.title}
-                  loading="lazy"
-                  style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
-                />
-              )}
-              <div class="listing-meta">
-                <span class="listing-category">{post.data.category}</span>
-                <span>{formatDate(post.data.publishDate)}</span>
-              </div>
-              <h2>{post.data.title}</h2>
-              <p>{post.data.description}</p>
-              <a href={`/blog/${post.id}/`} class="listing-read">
-                Read article <Icon name="arrow-right" size={15} />
-              </a>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div class="empty-state">
-          <p class="eyebrow">Editorial workspace</p>
-          <h2>Articles are being prepared.</h2>
-          <p>
-            Published articles will appear here after technical review. Draft posts are stored in{' '}
-            <code>src/content/blog</code> and are not shown publicly.
-          </p>
-        </div>
-      )}
+      <div id="blog-fallback">
+        {posts.length > 0 ? (
+          <div class="listing-grid">
+            {posts.map((post) => (
+              <article class="listing-card">
+                {post.data.coverImage && (
+                  <img
+                    src={post.data.coverImage}
+                    alt={post.data.title}
+                    loading="lazy"
+                    style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
+                  />
+                )}
+                <div class="listing-meta">
+                  <span class="listing-category">{post.data.category}</span>
+                  <span>{formatDate(post.data.publishDate)}</span>
+                </div>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+                <a href={`/blog/${post.id}/`} class="listing-read">
+                  Read article <Icon name="arrow-right" size={15} />
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">
+            <p class="eyebrow" data-en="Engineering Blog" data-ne="इन्जिनियरिङ ब्लग">Engineering Blog</p>
+            <h2 data-en="Articles are coming soon." data-ne="लेखहरू चाँडै आउँदैछन्।">Articles are coming soon.</h2>
+            <p data-en="New articles, field notes, and technical insights will appear here once published." data-ne="नयाँ लेख, फिल्ड नोट र प्राविधिक विश्लेषणहरू यहाँ प्रकाशित हुँदै जानेछन्।">
+              New articles, field notes, and technical insights will appear here once published.
+            </p>
+          </div>
+        )}
+      </div>
     </Container>
   </section>
 </BaseLayout>
@@ -69,6 +70,7 @@ const formatDate = (date: Date) =>
   import { supabase } from '@lib/supabase';
 
   const grid = document.getElementById('live-posts-grid');
+  const fallback = document.getElementById('blog-fallback');
 
   if (grid) {
     const loadPosts = async () => {
@@ -80,6 +82,7 @@ const formatDate = (date: Date) =>
 
       if (!error && data && data.length > 0) {
         grid.style.display = 'grid';
+        if (fallback) fallback.style.display = 'none';
         grid.innerHTML = data.map((post: any) => {
           const date = post.created_at ? new Date(post.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
           
