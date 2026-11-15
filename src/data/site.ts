@@ -4,7 +4,7 @@ export const site = {
   profession: 'Civil Engineer',
   description:
     'The personal website of Balkrishna Jha, Civil Engineer, showcasing professional works, technical insights, and engineering resources.',
-  url: 'https://balkrishnajha.com.np',
+  url: 'https://www.balkrishnajha.com.np',
   email: 'contact@balkrishnajha.com.np',
   phone: '+977 9844994437',
   location: 'Ramnagar–6, Sarlahi',
