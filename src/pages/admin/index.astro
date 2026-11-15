@@ -132,6 +132,13 @@ import Container from '@components/Container.astro';
                     <option value="miscellaneous">Miscellaneous</option>
                   </select>
                 </div>
+                <div class="form-group flex-1">
+                  <label for="resource-visibility">Visibility / Access *</label>
+                  <select id="resource-visibility" class="admin-input">
+                    <option value="public">🌐 Public (Visible on website)</option>
+                    <option value="admin_only">🔒 Admin Only (Hidden from public website)</option>
+                  </select>
+                </div>
               </div>
 
               <div class="form-group">
@@ -278,10 +285,10 @@ import Container from '@components/Container.astro';
                   <input type="text" id="post-cover" class="admin-input" />
                 </div>
                 <div class="form-group flex-1">
-                  <label for="post-status">Publication Status</label>
+                  <label for="post-status">Visibility / Access *</label>
                   <select id="post-status" class="admin-input">
-                    <option value="draft">Draft (Private)</option>
-                    <option value="published">Published (Public)</option>
+                    <option value="public">🌐 Public (Visible on website)</option>
+                    <option value="admin_only">🔒 Admin Only (Hidden from public website)</option>
                   </select>
                 </div>
               </div>
@@ -350,7 +357,7 @@ import Container from '@components/Container.astro';
   </div>
 </BaseLayout>
 
-<style>
+<style is:global>
   .admin-wrapper {
     padding: 3rem 0 5rem;
     min-height: 80vh;
@@ -704,30 +711,32 @@ import Container from '@components/Container.astro';
   /* Table / Item Lists */
   .admin-list-container {
     background: var(--surface);
-    border: 1px solid var(--line);
+    border: 2px solid color-mix(in srgb, var(--ink) 22%, transparent);
     border-radius: 10px;
     overflow-x: auto;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     margin-top: 1rem;
     -webkit-overflow-scrolling: touch;
   }
 
   .admin-table {
     width: 100%;
-    min-width: 860px;
-    border-collapse: collapse;
-    font-size: 0.95rem;
+    min-width: 920px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.92rem;
     text-align: left;
+    background: var(--surface);
   }
 
   .admin-table th {
-    padding: 1.15rem 1.5rem;
-    background: var(--surface-soft);
-    border-bottom: 3px solid var(--ink);
-    border-right: 1px solid var(--line);
-    color: var(--muted);
+    padding: 1rem 1.25rem;
+    background: color-mix(in srgb, var(--ink) 9%, var(--surface));
+    border-bottom: 2.5px solid var(--ink);
+    border-right: 1.5px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    color: var(--ink);
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 750;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     white-space: nowrap;
@@ -738,12 +747,12 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table td {
-    padding: 1.2rem 1.5rem;
+    padding: 1.15rem 1.25rem;
     color: var(--ink);
-    vertical-align: top;
-    line-height: 1.6;
-    border-bottom: 2px solid var(--line);
-    border-right: 1px solid var(--line);
+    vertical-align: middle;
+    line-height: 1.55;
+    border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    border-right: 1.5px solid color-mix(in srgb, var(--ink) 18%, transparent);
   }
 
   .admin-table td:last-child {
@@ -751,7 +760,7 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table tbody tr:last-child td {
-    border-bottom: 2px solid var(--line);
+    border-bottom: none;
   }
 
   .admin-table tbody tr {
@@ -763,22 +772,22 @@ import Container from '@components/Container.astro';
   }
 
   .admin-table tbody tr:nth-child(even) td {
-    background: var(--surface-soft);
+    background: color-mix(in srgb, var(--ink) 4%, var(--surface));
   }
 
   .admin-table tbody tr:hover td {
-    background: color-mix(in srgb, var(--ink) 10%, var(--surface));
+    background: color-mix(in srgb, var(--ink) 10%, var(--surface)) !important;
   }
 
   .cell-title-wrap {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.45rem;
     width: 100%;
   }
 
   .cell-main-title {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--ink);
     line-height: 1.45;
@@ -786,9 +795,9 @@ import Container from '@components/Container.astro';
   }
 
   .cell-sub-desc {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--muted);
-    line-height: 1.65;
+    line-height: 1.55;
     word-break: break-word;
   }
 
@@ -803,7 +812,7 @@ import Container from '@components/Container.astro';
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 3px;
-    font-weight: 500;
+    font-weight: 600;
     word-break: break-all;
   }
 
@@ -814,10 +823,11 @@ import Container from '@components/Container.astro';
   .badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.3rem 0.65rem;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
     border-radius: 6px;
     font-size: 0.775rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1;
     letter-spacing: 0.02em;
     white-space: nowrap;
@@ -826,31 +836,35 @@ import Container from '@components/Container.astro';
   .badge--category {
     background: var(--surface-soft);
     color: var(--ink);
-    border: 1px solid var(--line);
+    border: 1.5px solid color-mix(in srgb, var(--ink) 20%, transparent);
   }
 
-  .badge--published {
-    background: rgba(34, 197, 94, 0.15);
-    color: #16a34a;
-    border: 1px solid rgba(34, 197, 94, 0.25);
+  .badge--public, .badge--published {
+    background: rgba(34, 197, 94, 0.16);
+    color: #15803d;
+    border: 1.5px solid rgba(34, 197, 94, 0.45);
+    font-weight: 700;
   }
 
+  :root[data-theme='dark'] .badge--public,
   :root[data-theme='dark'] .badge--published {
-    background: rgba(34, 197, 94, 0.2);
+    background: rgba(34, 197, 94, 0.22);
     color: #4ade80;
-    border-color: rgba(34, 197, 94, 0.35);
+    border-color: rgba(74, 222, 128, 0.5);
   }
 
-  .badge--draft {
-    background: rgba(234, 179, 8, 0.15);
-    color: #ca8a04;
-    border: 1px solid rgba(234, 179, 8, 0.25);
+  .badge--admin, .badge--draft {
+    background: rgba(245, 158, 11, 0.16);
+    color: #b45309;
+    border: 1.5px solid rgba(245, 158, 11, 0.45);
+    font-weight: 700;
   }
 
+  :root[data-theme='dark'] .badge--admin,
   :root[data-theme='dark'] .badge--draft {
-    background: rgba(234, 179, 8, 0.2);
-    color: #facc15;
-    border-color: rgba(234, 179, 8, 0.35);
+    background: rgba(245, 158, 11, 0.22);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.5);
   }
 
   .table-actions {
@@ -1081,6 +1095,7 @@ import Container from '@components/Container.astro';
     resFilesContainer.innerHTML = '';
     addResourceFileRow();
     (document.getElementById('resource-id') as HTMLInputElement).value = '';
+    (document.getElementById('resource-visibility') as HTMLSelectElement).value = 'public';
     document.getElementById('resource-form-title')!.textContent = 'Add New Resource';
     resFormCard.style.display = resFormCard.style.display === 'none' ? 'block' : 'none';
   });
@@ -1094,7 +1109,9 @@ import Container from '@components/Container.astro';
     const id = (document.getElementById('resource-id') as HTMLInputElement).value;
     const title = (document.getElementById('resource-title') as HTMLInputElement).value;
     const category = (document.getElementById('resource-category') as HTMLSelectElement).value;
+    const visibility = (document.getElementById('resource-visibility') as HTMLSelectElement).value;
     const description = (document.getElementById('resource-description') as HTMLTextAreaElement).value;
+    const is_published = visibility === 'public';
 
     const rows = resFilesContainer.querySelectorAll<HTMLElement>('.multi-file-row');
     const files: { title: string; url: string; size: string }[] = [];
@@ -1117,7 +1134,7 @@ import Container from '@components/Container.astro';
       file_url: serializedUrl,
       file_size: serializedSize,
       files: files,
-      is_published: true
+      is_published: is_published
     };
 
     let res = id
@@ -1161,9 +1178,10 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th style="width: 50%;">Title & Description</th>
-            <th style="width: 18%;">Category</th>
-            <th style="width: 18%;">Files / Links</th>
+            <th style="width: 40%;">Title & Description</th>
+            <th style="width: 16%;">Category</th>
+            <th style="width: 14%;">Visibility</th>
+            <th style="width: 16%;">Files / Links</th>
             <th style="width: 14%; text-align: right;">Actions</th>
           </tr>
         </thead>
@@ -1174,7 +1192,7 @@ import Container from '@components/Container.astro';
       const files = extractFiles(item);
       let fileDisplay = '<span class="cell-sub-desc">No files</span>';
       if (files.length > 1) {
-        fileDisplay = `<span class="badge badge--published">${files.length} files attached</span>`;
+        fileDisplay = `<span class="badge badge--public">${files.length} files attached</span>`;
       } else if (files.length === 1 && files[0].url) {
         fileDisplay = `<a href="${files[0].url}" target="_blank" rel="noopener noreferrer" class="cell-link">${files[0].title || 'View File'} ↗</a>`;
       }
@@ -1188,6 +1206,11 @@ import Container from '@components/Container.astro';
       };
       const catName = categoryLabels[item.category] || item.category;
 
+      const isPublic = item.is_published !== false;
+      const visibilityBadge = isPublic
+        ? '<span class="badge badge--public">🌐 Public</span>'
+        : '<span class="badge badge--admin">🔒 Admin Only</span>';
+
       html += `
         <tr>
           <td>
@@ -1197,6 +1220,7 @@ import Container from '@components/Container.astro';
             </div>
           </td>
           <td><span class="badge badge--category">${catName}</span></td>
+          <td>${visibilityBadge}</td>
           <td>${fileDisplay}</td>
           <td>
             <div class="table-actions">
@@ -1218,6 +1242,7 @@ import Container from '@components/Container.astro';
       (document.getElementById('resource-id') as HTMLInputElement).value = data.id;
       (document.getElementById('resource-title') as HTMLInputElement).value = data.title;
       (document.getElementById('resource-category') as HTMLSelectElement).value = data.category;
+      (document.getElementById('resource-visibility') as HTMLSelectElement).value = data.is_published === false ? 'admin_only' : 'public';
       (document.getElementById('resource-description') as HTMLTextAreaElement).value = data.description || '';
       
       resFilesContainer.innerHTML = '';
@@ -1388,6 +1413,7 @@ import Container from '@components/Container.astro';
     postForm.reset();
     (document.getElementById('post-id') as HTMLInputElement).value = '';
     (document.getElementById('post-cover') as HTMLInputElement).value = '';
+    (document.getElementById('post-status') as HTMLSelectElement).value = 'public';
     document.getElementById('post-form-title')!.textContent = 'Write Blog Post';
     postFormCard.style.display = postFormCard.style.display === 'none' ? 'block' : 'none';
   });
@@ -1435,7 +1461,8 @@ import Container from '@components/Container.astro';
     const excerpt = (document.getElementById('post-excerpt') as HTMLTextAreaElement).value;
     const content = (document.getElementById('post-content') as HTMLTextAreaElement).value;
 
-    const payload = { title, slug, category, cover_image, is_published: status === 'published', excerpt, content };
+    const is_published = status === 'public' || status === 'published';
+    const payload = { title, slug, category, cover_image, is_published, excerpt, content };
 
     let res;
     if (id) {
@@ -1472,16 +1499,21 @@ import Container from '@components/Container.astro';
       <table class="admin-table">
         <thead>
           <tr>
-            <th style="width: 48%;">Article Title & Slug</th>
+            <th style="width: 44%;">Article Title & Slug</th>
             <th style="width: 22%;">Category</th>
-            <th style="width: 15%;">Status</th>
-            <th style="width: 15%; text-align: right;">Actions</th>
+            <th style="width: 18%;">Visibility</th>
+            <th style="width: 16%; text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
     `;
 
     data.forEach((p: any) => {
+      const isPublic = p.is_published === true;
+      const visibilityBadge = isPublic
+        ? '<span class="badge badge--public">🌐 Public</span>'
+        : '<span class="badge badge--admin">🔒 Admin Only</span>';
+
       html += `
         <tr>
           <td>
@@ -1491,7 +1523,7 @@ import Container from '@components/Container.astro';
             </div>
           </td>
           <td><span class="badge badge--category">${p.category}</span></td>
-          <td><span class="badge ${p.is_published ? 'badge--published' : 'badge--draft'}">${p.is_published ? 'Published' : 'Draft'}</span></td>
+          <td>${visibilityBadge}</td>
           <td>
             <div class="table-actions">
               <button class="btn btn-secondary btn-sm" onclick="window.editPost('${p.id}')">Edit</button>
@@ -1514,7 +1546,7 @@ import Container from '@components/Container.astro';
       (document.getElementById('post-slug') as HTMLInputElement).value = data.slug;
       (document.getElementById('post-category') as HTMLInputElement).value = data.category || 'Civil Engineering';
       (document.getElementById('post-cover') as HTMLInputElement).value = data.cover_image || '';
-      (document.getElementById('post-status') as HTMLSelectElement).value = data.is_published ? 'published' : 'draft';
+      (document.getElementById('post-status') as HTMLSelectElement).value = data.is_published ? 'public' : 'admin_only';
       (document.getElementById('post-excerpt') as HTMLTextAreaElement).value = data.excerpt || '';
       (document.getElementById('post-content') as HTMLTextAreaElement).value = data.content || '';
       document.getElementById('post-form-title')!.textContent = 'Edit Post';
