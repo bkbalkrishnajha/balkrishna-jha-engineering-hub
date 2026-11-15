@@ -27,7 +27,7 @@ const formatDate = (date: Date) =>
     <Container>
       <div id="live-posts-grid" class="listing-grid" style="margin-bottom: 2rem; display: none;"></div>
 
-      <div id="blog-fallback">
+      <div id="blog-fallback" style="display: none;">
         {posts.length > 0 ? (
           <div class="listing-grid">
             {posts.map((post) => (
@@ -115,6 +115,8 @@ const formatDate = (date: Date) =>
             </article>
           `;
         }).join('');
+      } else {
+        if (fallback) fallback.style.display = 'block';
       }
     };
 

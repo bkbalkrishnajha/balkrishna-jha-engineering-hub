@@ -73,7 +73,7 @@ const formatDate = (date: Date) =>
         </p>
       </div>
       <div id="home-posts-grid" class="listing-grid" style="display: none; margin-bottom: 24px;"></div>
-      <div id="home-posts-fallback">
+      <div id="home-posts-fallback" style="display: none;">
         {posts.length ? (
           <div class="listing-grid">
             {posts.map((post) => (
@@ -125,7 +125,7 @@ const formatDate = (date: Date) =>
 
       <div id="home-resources-grid" class="listing-grid" style="display: none;"></div>
 
-      <div id="home-resources-fallback">
+      <div id="home-resources-fallback" style="display: none;">
         {resources.length ? (
           <div class="listing-grid">
             {resources.map((resource) => (
@@ -226,6 +226,8 @@ const formatDate = (date: Date) =>
               </article>
             `;
           }).join('');
+        } else {
+          if (homePostsFallback) homePostsFallback.style.display = 'block';
         }
       };
 
@@ -302,6 +304,8 @@ const formatDate = (date: Date) =>
               </article>
             `;
           }).join('');
+        } else {
+          if (homeResourcesFallback) homeResourcesFallback.style.display = 'block';
         }
       };
 
