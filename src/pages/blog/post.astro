@@ -1,0 +1,346 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Icon from '@components/Icon.astro';
+---
+
+<BaseLayout
+  title="Article | Balkrishna Jha"
+  description="Engineering insights, notes, and professional practice by Balkrishna Jha."
+>
+  <section class="content-wrap" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    <Container>
+      <!-- Back Navigation -->
+      <a href="/blog/" class="article-back">
+        <Icon name="arrow-right" size={15} />
+        <span data-en="All articles" data-ne="सबै लेखहरू">All articles</span>
+      </a>
+
+      <!-- Loading State -->
+      <div id="post-loading" style="padding: 4rem 0; text-align: center; color: var(--muted);">
+        <div style="display: inline-block; width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem;"></div>
+        <p data-en="Loading article..." data-ne="लेख लोड हुँदैछ...">Loading article...</p>
+      </div>
+
+      <!-- Not Found / Error State -->
+      <div id="post-error" class="empty-state" style="display: none; margin-top: 2rem;">
+        <p class="eyebrow" data-en="Not Found" data-ne="भेटिएन">Not Found</p>
+        <h2 data-en="Article not found." data-ne="लेख फेला परेन।">Article not found.</h2>
+        <p data-en="The article you are looking for may have been removed, unpublished, or has an invalid URL." data-ne="तपाईंले खोज्नुभएको लेख हटाइएको, अप्रकाशित गरिएको वा लिङ्क गलत हुन सक्छ।">
+          The article you are looking for may have been removed, unpublished, or has an invalid URL.
+        </p>
+        <div style="margin-top: 1.5rem;">
+          <a href="/blog/" class="button button--primary">
+            <span data-en="Return to Blog" data-ne="ब्लगमा फर्कनुहोस्">Return to Blog</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Full Article Presentation -->
+      <article id="post-article" style="display: none; max-width: 820px; margin: 0 auto;">
+        <header class="article-header">
+          <div id="post-cover-wrap" style="display: none; margin-bottom: 24px;">
+            <img
+              id="post-cover"
+              src=""
+              alt=""
+              style="width: 100%; max-height: 480px; aspect-ratio: 16/9; object-fit: cover; border-radius: 14px; border: 1px solid var(--line);"
+            />
+          </div>
+
+          <div class="listing-meta" style="margin-bottom: 12px;">
+            <span id="post-category" class="listing-category"></span>
+            <span id="post-date"></span>
+          </div>
+
+          <h1 id="post-title" style="margin-top: 6px; margin-bottom: 16px;"></h1>
+
+          <p id="post-excerpt" class="article-description" style="display: none; margin-bottom: 24px; font-size: 1.15rem; line-height: 1.6; color: var(--ink-soft);"></p>
+        </header>
+
+        <hr style="border: 0; border-top: 1px solid var(--line); margin: 2rem 0;" />
+
+        <!-- Formatted Markdown Content -->
+        <div id="post-body" class="prose" style="font-size: 1.05rem; line-height: 1.8;"></div>
+
+        <!-- Article Footer / Navigation -->
+        <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <a href="/blog/" class="article-back" style="margin-bottom: 0;">
+            <Icon name="arrow-right" size={15} />
+            <span data-en="Back to all articles" data-ne="सबै लेखहरूमा फर्कनुहोस्">Back to all articles</span>
+          </a>
+
+          <button
+            type="button"
+            id="share-btn"
+            class="button button--secondary"
+            style="font-size: 0.85rem; padding: 6px 14px; border-radius: 6px; cursor: pointer;"
+          >
+            📋 <span data-en="Copy Link" data-ne="लिङ्क प्रतिलिपि गर्नुहोस्">Copy Link</span>
+          </button>
+        </footer>
+      </article>
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .article-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 24px;
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .article-back:hover {
+    opacity: 0.8;
+  }
+  .article-back svg {
+    transform: rotate(180deg);
+  }
+
+  /* Rich prose enhancements for dynamically rendered markdown */
+  :global(.prose img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    margin: 1.5rem 0;
+    display: block;
+  }
+
+  :global(.prose a.cell-link) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--blue);
+    margin: 8px 0;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  :global(.prose a.cell-link:hover) {
+    border-color: var(--blue);
+    transform: translateY(-1px);
+  }
+
+  :global(.prose ul, .prose ol) {
+    padding-left: 1.5rem;
+    margin: 1.25rem 0;
+  }
+  :global(.prose li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+</style>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  function renderMarkdown(md: string): string {
+    if (!md) return '';
+
+    const lines = md.split('\n');
+    let html = '';
+    let inList = false;
+    let inBlockquote = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const rawLine = lines[i];
+      const trimmed = rawLine.trim();
+
+      // Heading 3
+      if (rawLine.startsWith('### ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        html += `<h3>${formatInline(rawLine.slice(4))}</h3>`;
+        continue;
+      }
+      // Heading 2
+      if (rawLine.startsWith('## ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        html += `<h2>${formatInline(rawLine.slice(3))}</h2>`;
+        continue;
+      }
+      // Heading 1
+      if (rawLine.startsWith('# ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        html += `<h1>${formatInline(rawLine.slice(2))}</h1>`;
+        continue;
+      }
+      // Blockquote
+      if (rawLine.startsWith('> ')) {
+        if (!inBlockquote) { html += '<blockquote>'; inBlockquote = true; }
+        html += `<p>${formatInline(rawLine.slice(2))}</p>`;
+        continue;
+      } else if (inBlockquote && !rawLine.startsWith('>')) {
+        html += '</blockquote>';
+        inBlockquote = false;
+      }
+
+      // Unordered list item
+      if (rawLine.startsWith('- ') || rawLine.startsWith('* ')) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += `<li>${formatInline(rawLine.slice(2))}</li>`;
+        continue;
+      } else if (inList && !trimmed) {
+        html += '</ul>';
+        inList = false;
+      }
+
+      // Empty blank line
+      if (!trimmed) {
+        continue;
+      }
+
+      // Standalone Image block ![alt](url)
+      const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+      if (imgMatch) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        html += `
+          <figure style="margin: 28px 0; text-align: center;">
+            <img src="${imgMatch[2]}" alt="${imgMatch[1]}" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; margin: 0 auto;" />
+            ${imgMatch[1] ? `<figcaption style="font-size: 0.85rem; color: var(--muted); margin-top: 8px;">${imgMatch[1]}</figcaption>` : ''}
+          </figure>
+        `;
+        continue;
+      }
+
+      // Standalone Download/Attachment link [title](url)
+      const linkMatch = trimmed.match(/^\[(.*?)\]\((.*?)\)$/);
+      if (linkMatch) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        html += `
+          <div style="margin: 16px 0;">
+            <a href="${linkMatch[2]}" target="_blank" rel="noopener noreferrer" class="cell-link">
+              📎 ${linkMatch[1]} ↗
+            </a>
+          </div>
+        `;
+        continue;
+      }
+
+      // Paragraph
+      html += `<p>${formatInline(rawLine)}</p>`;
+    }
+
+    if (inList) html += '</ul>';
+    if (inBlockquote) html += '</blockquote>';
+
+    return html;
+  }
+
+  function formatInline(text: string): string {
+    // Images
+    text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin: 12px 0;" />');
+    // Inline links
+    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1 ↗</a>');
+    // Bold
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // Inline code
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return text;
+  }
+
+  async function initPost() {
+    const loadingEl = document.getElementById('post-loading')!;
+    const errorEl = document.getElementById('post-error')!;
+    const articleEl = document.getElementById('post-article')!;
+
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+    const id = params.get('id');
+
+    if (!slug && !id) {
+      loadingEl.style.display = 'none';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      let query = supabase.from('posts').select('*').eq('is_published', true);
+
+      if (slug) {
+        query = query.eq('slug', slug);
+      } else if (id) {
+        query = query.eq('id', id);
+      }
+
+      const { data, error } = await query.single();
+
+      if (error || !data) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      // Update Page Title
+      document.title = `${data.title} | Balkrishna Jha`;
+
+      // Fill in metadata
+      document.getElementById('post-title')!.textContent = data.title;
+      document.getElementById('post-category')!.textContent = data.category || 'Civil Engineering';
+      
+      const dateStr = data.created_at
+        ? new Date(data.created_at).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })
+        : '';
+      document.getElementById('post-date')!.textContent = dateStr;
+
+      // Excerpt
+      const excerptEl = document.getElementById('post-excerpt')!;
+      if (data.excerpt) {
+        excerptEl.textContent = data.excerpt;
+        excerptEl.style.display = 'block';
+      }
+
+      // Cover image
+      const coverWrap = document.getElementById('post-cover-wrap')!;
+      const coverImg = document.getElementById('post-cover') as HTMLImageElement;
+      if (data.cover_image) {
+        coverImg.src = data.cover_image;
+        coverImg.alt = data.title;
+        coverWrap.style.display = 'block';
+      }
+
+      // Render formatted body
+      const bodyEl = document.getElementById('post-body')!;
+      bodyEl.innerHTML = renderMarkdown(data.content || '');
+
+      // Setup Share button
+      const shareBtn = document.getElementById('share-btn');
+      shareBtn?.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href);
+        const originalText = shareBtn.innerHTML;
+        shareBtn.innerHTML = '✅ Copied!';
+        setTimeout(() => { shareBtn.innerHTML = originalText; }, 2000);
+      });
+
+      loadingEl.style.display = 'none';
+      articleEl.style.display = 'block';
+    } catch (err) {
+      loadingEl.style.display = 'none';
+      errorEl.style.display = 'block';
+    }
+  }
+
+  initPost();
+</script>

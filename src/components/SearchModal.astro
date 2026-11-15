@@ -296,7 +296,7 @@
     if (posts.length > 0) {
       html += `<div class="search-section-label">📝 Blog Posts (${posts.length})</div>`;
       html += posts.map((p: any) => {
-        const href = p.slug ? `/blog/${p.slug}/` : '/blog/';
+        const href = `/blog/post/?slug=${encodeURIComponent(p.slug || p.id)}`;
         return `
           <a class="search-item" href="${href}">
             <div class="search-item-title">${highlightMatch(escapeHtml(p.title), query)}</div>
