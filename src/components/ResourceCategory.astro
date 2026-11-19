@@ -48,6 +48,25 @@ const { title, eyebrow, description, nepaliTitle, nepaliEyebrow, nepaliDescripti
 <script>
   import { supabase } from '@lib/supabase';
 
+  function escapeHtml(str: string): string {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function sanitizeUrl(url: string): string {
+    if (!url) return '#';
+    const trimmed = url.trim();
+    if (/^(https?:\/\/|\/|mailto:|tel:)/i.test(trimmed)) {
+      return escapeHtml(trimmed);
+    }
+    return '#';
+  }
+
   function extractFiles(item: any): { title: string; url: string; size?: string }[] {
     if (item.files && Array.isArray(item.files) && item.files.length > 0) {
       return item.files;
@@ -94,9 +113,9 @@ const { title, eyebrow, description, nepaliTitle, nepaliEyebrow, nepaliDescripti
             linksMarkup = `
               <div class="resource-files-links" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
                 ${filesList.map((f: any) => `
-                  <a class="feature-card__link" href="${f.url}" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.75rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600;">
-                    <span>📄 ${f.title || 'Download Document'}</span>
-                    <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? f.size + ' ↗' : '↗'}</span>
+                  <a class="feature-card__link" href="${sanitizeUrl(f.url)}" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.75rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                    <span>📄 ${escapeHtml(f.title || 'Download Document')}</span>
+                    <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? escapeHtml(f.size) + ' ↗' : '↗'}</span>
                   </a>
                 `).join('')}
               </div>
@@ -104,9 +123,9 @@ const { title, eyebrow, description, nepaliTitle, nepaliEyebrow, nepaliDescripti
           } else if (filesList.length === 1) {
             const f = filesList[0];
             linksMarkup = `
-              ${f.size ? `<span style="font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; display: block;">${f.size}</span>` : ''}
-              <a class="feature-card__link" href="${f.url}" target="_blank" rel="noopener noreferrer">
-                ${f.title || 'Download / View Resource'} <span aria-hidden="true">↗</span>
+              ${f.size ? `<span style="font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; display: block;">${escapeHtml(f.size)}</span>` : ''}
+              <a class="feature-card__link" href="${sanitizeUrl(f.url)}" target="_blank" rel="noopener noreferrer">
+                ${escapeHtml(f.title || 'Download / View Resource')} <span aria-hidden="true">↗</span>
               </a>
             `;
           }
@@ -114,8 +133,8 @@ const { title, eyebrow, description, nepaliTitle, nepaliEyebrow, nepaliDescripti
           return `
             <article class="feature-card resource-subcard">
               <span class="feature-card__number">${number} / RESOURCE</span>
-              <h2>${item.title}</h2>
-              ${item.description ? `<p style="white-space: pre-line;">${item.description}</p>` : ''}
+              <h2>${escapeHtml(item.title)}</h2>
+              ${item.description ? `<p style="white-space: pre-line;">${escapeHtml(item.description)}</p>` : ''}
               ${linksMarkup}
             </article>
           `;

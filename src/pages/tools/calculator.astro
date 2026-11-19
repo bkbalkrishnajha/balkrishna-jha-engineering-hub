@@ -30,6 +30,6 @@ import Container from '@components/Container.astro';
     };
     const run=()=>{if(!display||!answer)return;try{const value=calculate(display.value);answer.textContent=value.toLocaleString('en',{maximumSignificantDigits:12});}catch(e){answer.textContent=e instanceof Error?e.message:'Invalid expression';}};
     document.querySelectorAll<HTMLButtonElement>('[data-calc-key]').forEach((button)=>button.addEventListener('click',()=>{if(!display||!answer)return;const key=button.dataset.calcKey??'';if(key==='AC'){display.value='';answer.textContent='0';return;}if(key==='⌫'){display.value=display.value.slice(0,-1);return;}if(key==='='){run();return;}const value:Record<string,string>={'×':'*','÷':'/','−':'-','π':'pi','√':'sqrt('};display.value+=(value[key]??key);}));
-    display?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();run();}});
+    display?.addEventListener('keydown',(event)=>{if(!event.isComposing && event.keyCode !== 229 && event.key==='Enter'){event.preventDefault();run();}});
   </script>
 </BaseLayout>

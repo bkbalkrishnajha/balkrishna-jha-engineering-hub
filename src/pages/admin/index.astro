@@ -932,6 +932,25 @@ import Container from '@components/Container.astro';
 <script>
   import { supabase } from '@lib/supabase';
 
+  function escapeHtml(str: string): string {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function sanitizeUrl(url: string): string {
+    if (!url) return '';
+    const trimmed = url.trim();
+    if (/^(https?:\/\/|\/|data:image\/)/i.test(trimmed)) {
+      return escapeHtml(trimmed);
+    }
+    return '';
+  }
+
   // --- UI References ---
   const authLoading = document.getElementById('auth-loading')!;
   const authLogin = document.getElementById('auth-login')!;
@@ -1092,7 +1111,7 @@ import Container from '@components/Container.astro';
 
   toggleResFormBtn?.addEventListener('click', () => {
     resForm.reset();
-    resFilesContainer.innerHTML = '';
+    resFilesContainer.replaceChildren();
     addResourceFileRow();
     (document.getElementById('resource-id') as HTMLInputElement).value = '';
     (document.getElementById('resource-visibility') as HTMLSelectElement).value = 'public';
@@ -1154,7 +1173,7 @@ import Container from '@components/Container.astro';
       showFeedback(`Resource "${title}" saved successfully!`);
       resFormCard.style.display = 'none';
       resForm.reset();
-      resFilesContainer.innerHTML = '';
+      resFilesContainer.replaceChildren();
       loadResources();
       loadOverviewStats();
     }
@@ -1194,7 +1213,7 @@ import Container from '@components/Container.astro';
       if (files.length > 1) {
         fileDisplay = `<span class="badge badge--public">${files.length} files attached</span>`;
       } else if (files.length === 1 && files[0].url) {
-        fileDisplay = `<a href="${files[0].url}" target="_blank" rel="noopener noreferrer" class="cell-link">${files[0].title || 'View File'} ↗</a>`;
+        fileDisplay = `<a href="${sanitizeUrl(files[0].url)}" target="_blank" rel="noopener noreferrer" class="cell-link">${escapeHtml(files[0].title || 'View File')} ↗</a>`;
       }
 
       const categoryLabels: Record<string, string> = {
@@ -1215,17 +1234,17 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <div class="cell-main-title">${item.title}</div>
-              ${item.description ? `<div class="cell-sub-desc">${item.description}</div>` : ''}
+              <div class="cell-main-title">${escapeHtml(item.title)}</div>
+              ${item.description ? `<div class="cell-sub-desc">${escapeHtml(item.description)}</div>` : ''}
             </div>
           </td>
-          <td><span class="badge badge--category">${catName}</span></td>
+          <td><span class="badge badge--category">${escapeHtml(catName)}</span></td>
           <td>${visibilityBadge}</td>
           <td>${fileDisplay}</td>
           <td>
             <div class="table-actions">
-              <button class="btn btn-secondary btn-sm" onclick="window.editResource('${item.id}')">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="window.deleteResource('${item.id}')">Delete</button>
+              <button class="btn btn-secondary btn-sm" onclick="window.editResource('${encodeURIComponent(item.id)}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="window.deleteResource('${encodeURIComponent(item.id)}')">Delete</button>
             </div>
           </td>
         </tr>
@@ -1245,7 +1264,7 @@ import Container from '@components/Container.astro';
       (document.getElementById('resource-visibility') as HTMLSelectElement).value = data.is_published === false ? 'admin_only' : 'public';
       (document.getElementById('resource-description') as HTMLTextAreaElement).value = data.description || '';
       
-      resFilesContainer.innerHTML = '';
+      resFilesContainer.replaceChildren();
       const files = extractFiles(data);
       if (files.length > 0) {
         files.forEach((f: any) => addResourceFileRow(f));
@@ -1352,17 +1371,17 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <div class="cell-main-title">${p.title}</div>
-              <div class="cell-sub-desc">/${p.slug}</div>
+              <div class="cell-main-title">${escapeHtml(p.title)}</div>
+              <div class="cell-sub-desc">/${escapeHtml(p.slug)}</div>
             </div>
           </td>
-          <td><span class="cell-text">${p.location || '—'}</span></td>
-          <td><span class="cell-text">${p.year || '—'}</span></td>
-          <td><span class="badge badge--published">${p.status}</span></td>
+          <td><span class="cell-text">${escapeHtml(p.location || '—')}</span></td>
+          <td><span class="cell-text">${escapeHtml(p.year || '—')}</span></td>
+          <td><span class="badge badge--published">${escapeHtml(p.status)}</span></td>
           <td>
             <div class="table-actions">
-              <button class="btn btn-secondary btn-sm" onclick="window.editProject('${p.id}')">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="window.deleteProject('${p.id}')">Delete</button>
+              <button class="btn btn-secondary btn-sm" onclick="window.editProject('${encodeURIComponent(p.id)}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="window.deleteProject('${encodeURIComponent(p.id)}')">Delete</button>
             </div>
           </td>
         </tr>
@@ -1518,16 +1537,16 @@ import Container from '@components/Container.astro';
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <div class="cell-main-title">${p.title}</div>
-              <div class="cell-sub-desc">/${p.slug}</div>
+              <div class="cell-main-title">${escapeHtml(p.title)}</div>
+              <div class="cell-sub-desc">/${escapeHtml(p.slug)}</div>
             </div>
           </td>
-          <td><span class="badge badge--category">${p.category}</span></td>
+          <td><span class="badge badge--category">${escapeHtml(p.category)}</span></td>
           <td>${visibilityBadge}</td>
           <td>
             <div class="table-actions">
-              <button class="btn btn-secondary btn-sm" onclick="window.editPost('${p.id}')">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="window.deletePost('${p.id}')">Delete</button>
+              <button class="btn btn-secondary btn-sm" onclick="window.editPost('${encodeURIComponent(p.id)}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="window.deletePost('${encodeURIComponent(p.id)}')">Delete</button>
             </div>
           </td>
         </tr>
@@ -1629,21 +1648,23 @@ import Container from '@components/Container.astro';
     data.forEach((file: any) => {
       const { data: publicUrlData } = supabase.storage.from('portfolio-assets').getPublicUrl(file.name);
       const url = publicUrlData.publicUrl;
+      const safeUrl = sanitizeUrl(url);
+      const safeFileName = escapeHtml(file.name);
 
       html += `
         <tr>
           <td>
             <div class="cell-title-wrap">
-              <span class="cell-main-title">📄 ${file.name}</span>
+              <span class="cell-main-title">📄 ${safeFileName}</span>
             </div>
           </td>
           <td>
-            <a href="${url}" target="_blank" rel="noopener noreferrer" class="cell-link">Open File ↗</a>
+            <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="cell-link">Open File ↗</a>
           </td>
           <td>
             <div class="table-actions">
-              <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText('${url}'); alert('File URL copied to clipboard!');">Copy Link</button>
-              <button class="btn btn-danger btn-sm" onclick="window.deleteStorageFile('${file.name}')">Delete</button>
+              <button class="btn btn-secondary btn-sm" data-copy-file-url="${safeUrl}" onclick="navigator.clipboard.writeText(this.dataset.copyFileUrl || ''); alert('File URL copied to clipboard!');">Copy Link</button>
+              <button class="btn btn-danger btn-sm" data-delete-file="${safeFileName}" onclick="window.deleteStorageFile(this.dataset.deleteFile || '')">Delete</button>
             </div>
           </td>
         </tr>

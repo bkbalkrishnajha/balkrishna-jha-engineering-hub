@@ -150,6 +150,25 @@ import Icon from '@components/Icon.astro';
 <script>
   import { supabase } from '@lib/supabase';
 
+  function escapeHtml(str: string): string {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function sanitizeUrl(url: string): string {
+    if (!url) return '#';
+    const trimmed = url.trim();
+    if (/^(https?:\/\/|\/|mailto:|tel:)/i.test(trimmed)) {
+      return escapeHtml(trimmed);
+    }
+    return '#';
+  }
+
   function renderMarkdown(md: string): string {
     if (!md) return '';
 
@@ -213,10 +232,12 @@ import Icon from '@components/Icon.astro';
       if (imgMatch) {
         if (inList) { html += '</ul>'; inList = false; }
         if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        const safeImgSrc = sanitizeUrl(imgMatch[2]);
+        const safeAlt = escapeHtml(imgMatch[1]);
         html += `
           <figure style="margin: 28px 0; text-align: center;">
-            <img src="${imgMatch[2]}" alt="${imgMatch[1]}" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; margin: 0 auto;" />
-            ${imgMatch[1] ? `<figcaption style="font-size: 0.85rem; color: var(--muted); margin-top: 8px;">${imgMatch[1]}</figcaption>` : ''}
+            <img src="${safeImgSrc}" alt="${safeAlt}" loading="lazy" style="max-width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; margin: 0 auto;" />
+            ${safeAlt ? `<figcaption style="font-size: 0.85rem; color: var(--muted); margin-top: 8px;">${safeAlt}</figcaption>` : ''}
           </figure>
         `;
         continue;
@@ -227,10 +248,12 @@ import Icon from '@components/Icon.astro';
       if (linkMatch) {
         if (inList) { html += '</ul>'; inList = false; }
         if (inBlockquote) { html += '</blockquote>'; inBlockquote = false; }
+        const safeLinkUrl = sanitizeUrl(linkMatch[2]);
+        const safeTitle = escapeHtml(linkMatch[1]);
         html += `
           <div style="margin: 16px 0;">
-            <a href="${linkMatch[2]}" target="_blank" rel="noopener noreferrer" class="cell-link">
-              📎 ${linkMatch[1]} ↗
+            <a href="${safeLinkUrl}" target="_blank" rel="noopener noreferrer" class="cell-link">
+              📎 ${safeTitle} ↗
             </a>
           </div>
         `;
@@ -248,17 +271,19 @@ import Icon from '@components/Icon.astro';
   }
 
   function formatInline(text: string): string {
+    // Escape HTML first to prevent injection
+    let escaped = escapeHtml(text);
     // Images
-    text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin: 12px 0;" />');
+    escaped = escaped.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_m, alt, url) => `<img src="${sanitizeUrl(url)}" alt="${escapeHtml(alt)}" loading="lazy" style="max-width: 100%; border-radius: 8px; margin: 12px 0;" />`);
     // Inline links
-    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1 ↗</a>');
+    escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, title, url) => `<a href="${sanitizeUrl(url)}" target="_blank" rel="noopener noreferrer">${title} ↗</a>`);
     // Bold
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     // Italic
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
     // Inline code
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-    return text;
+    escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return escaped;
   }
 
   async function initPost() {
@@ -316,7 +341,7 @@ import Icon from '@components/Icon.astro';
       const coverWrap = document.getElementById('post-cover-wrap')!;
       const coverImg = document.getElementById('post-cover') as HTMLImageElement;
       if (data.cover_image) {
-        coverImg.src = data.cover_image;
+        coverImg.src = sanitizeUrl(data.cover_image);
         coverImg.alt = data.title;
         coverWrap.style.display = 'block';
       }

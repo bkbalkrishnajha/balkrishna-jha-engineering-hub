@@ -160,6 +160,25 @@ const formatDate = (date: Date) =>
   <script>
     import { supabase } from '@lib/supabase';
 
+    function escapeHtml(str: string): string {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function sanitizeUrl(url: string): string {
+      if (!url) return '';
+      const trimmed = url.trim();
+      if (/^(https?:\/\/|\/|data:image\/)/i.test(trimmed)) {
+        return escapeHtml(trimmed);
+      }
+      return '';
+    }
+
     function extractFiles(item: any): { title: string; url: string; size?: string }[] {
       if (item.files && Array.isArray(item.files) && item.files.length > 0) {
         return item.files;
@@ -198,28 +217,29 @@ const formatDate = (date: Date) =>
           homePostsGrid.innerHTML = data.map((post: any) => {
             const date = post.created_at ? new Date(post.created_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
             const postUrl = `/blog/post/?slug=${encodeURIComponent(post.slug || post.id)}`;
+            const safeCover = sanitizeUrl(post.cover_image);
             return `
               <article class="listing-card">
-                ${post.cover_image ? `
+                ${safeCover ? `
                   <a href="${postUrl}" style="display: block;">
                     <img
-                      src="${post.cover_image}"
-                      alt="${post.title}"
+                      src="${safeCover}"
+                      alt="${escapeHtml(post.title)}"
                       loading="lazy"
                       style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:16px"
                     />
                   </a>
                 ` : ''}
                 <div class="listing-meta">
-                  <span class="listing-category">${post.category || 'Civil Engineering'}</span>
-                  <span>${date}</span>
+                  <span class="listing-category">${escapeHtml(post.category || 'Civil Engineering')}</span>
+                  <span>${escapeHtml(date)}</span>
                 </div>
                 <h3>
                   <a href="${postUrl}" style="color: inherit; text-decoration: none;">
-                    ${post.title}
+                    ${escapeHtml(post.title)}
                   </a>
                 </h3>
-                ${post.excerpt ? `<p>${post.excerpt}</p>` : ''}
+                ${post.excerpt ? `<p>${escapeHtml(post.excerpt)}</p>` : ''}
                 <a href="${postUrl}" class="listing-read">
                   Read article <span aria-hidden="true">→</span>
                 </a>
@@ -270,9 +290,9 @@ const formatDate = (date: Date) =>
               linksMarkup = `
                 <div class="resource-files-links" style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
                   ${filesList.map((f: any) => `
-                    <a href="${f.url}" target="_blank" rel="noopener noreferrer" class="listing-read" style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.65rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; font-size: 0.825rem; text-decoration: none;">
-                      <span>📄 ${f.title || 'Download File'}</span>
-                      <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? f.size + ' ↗' : '↗'}</span>
+                    <a href="${sanitizeUrl(f.url)}" target="_blank" rel="noopener noreferrer" class="listing-read" style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.65rem; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 6px; font-size: 0.825rem; text-decoration: none;">
+                      <span>📄 ${escapeHtml(f.title || 'Download File')}</span>
+                      <span style="font-size: 0.75rem; color: var(--muted);">${f.size ? escapeHtml(f.size) + ' ↗' : '↗'}</span>
                     </a>
                   `).join('')}
                 </div>
@@ -280,8 +300,8 @@ const formatDate = (date: Date) =>
             } else if (filesList.length === 1) {
               const f = filesList[0];
               linksMarkup = `
-                <a href="${f.url}" target="_blank" rel="noopener noreferrer" class="listing-read">
-                  ${f.title || 'Download / View Resource'} <span aria-hidden="true">↗</span>
+                <a href="${sanitizeUrl(f.url)}" target="_blank" rel="noopener noreferrer" class="listing-read">
+                  ${escapeHtml(f.title || 'Download / View Resource')} <span aria-hidden="true">↗</span>
                 </a>
               `;
             } else {
@@ -295,11 +315,11 @@ const formatDate = (date: Date) =>
             return `
               <article class="listing-card">
                 <div class="listing-meta">
-                  <span class="listing-category">${categoryName}</span>
-                  ${item.file_size ? `<span>${item.file_size}</span>` : `<span>${date}</span>`}
+                  <span class="listing-category">${escapeHtml(categoryName)}</span>
+                  ${item.file_size ? `<span>${escapeHtml(item.file_size)}</span>` : `<span>${escapeHtml(date)}</span>`}
                 </div>
-                <h3>${item.title}</h3>
-                ${item.description ? `<p>${item.description}</p>` : ''}
+                <h3>${escapeHtml(item.title)}</h3>
+                ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
                 ${linksMarkup}
               </article>
             `;

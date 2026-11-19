@@ -79,6 +79,8 @@ const socialImage = new URL(image, site.url).toString();
       type Theme = 'light' | 'dark';
       const applyTheme = (theme: Theme): void => {
         root.dataset.theme = theme;
+        const colorSchemeMeta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+        if (colorSchemeMeta) colorSchemeMeta.content = theme;
         themeButton?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
         const icon = themeButton?.querySelector('[data-theme-icon]');
         if (icon) icon.innerHTML = theme === 'dark'

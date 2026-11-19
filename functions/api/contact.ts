@@ -17,10 +17,15 @@ const json = (body: Record<string, unknown>, status = 200): Response =>
   });
 
 export const onRequestPost = async ({ request, env }: PagesContext): Promise<Response> => {
-  // Accept requests only from this site's own origin.
+  // Accept requests only from this site's trusted origins.
   const origin = request.headers.get('Origin');
   const requestOrigin = new URL(request.url).origin;
-  if (origin && origin !== requestOrigin) {
+  const allowedOrigins = new Set([
+    requestOrigin,
+    'https://www.balkrishnajha.com.np',
+    'https://balkrishnajha.com.np',
+  ]);
+  if (origin && !allowedOrigins.has(origin)) {
     return json({ success: false, error: 'Invalid request origin.' }, 403);
   }
 
