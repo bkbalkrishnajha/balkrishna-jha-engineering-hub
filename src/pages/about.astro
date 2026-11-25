@@ -141,7 +141,7 @@ import { site } from '@data/site';
       </div>
 
       <!-- SECTION 2: CERTIFICATES & ACCREDITATIONS -->
-      <section class="about-certs-section" id="certificates" aria-labelledby="certs-heading">
+      <section class="about-certs-section" id="certificates" aria-labelledby="certs-heading" style="display: none;">
         <div class="certs-section-header">
           <div>
             <p class="eyebrow">Accreditations</p>
@@ -155,50 +155,8 @@ import { site } from '@data/site';
           </div>
         </div>
 
-        <!-- Dynamic Certificates Grid (Placeholders until managed via Admin) -->
-        <div class="certs-grid" id="certificates-grid">
-          <!-- Certificate Placeholder 1 -->
-          <article class="cert-card cert-card--placeholder">
-            <div class="cert-card__top">
-              <span class="cert-card__icon" aria-hidden="true">🏛️</span>
-              <span class="cert-card__badge">NEC Regd. 92653</span>
-            </div>
-            <h3 class="cert-card__title">Professional Engineering License</h3>
-            <p class="cert-card__issuer">Nepal Engineering Council (Govt. of Nepal)</p>
-            <p class="cert-card__meta">Registration No: 92653 "Civil" · Official professional engineer license and accreditation record placeholder.</p>
-            <div class="cert-placeholder-action">
-              <span>Verification Document Pending</span>
-            </div>
-          </article>
-
-          <!-- Certificate Placeholder 2 -->
-          <article class="cert-card cert-card--placeholder">
-            <div class="cert-card__top">
-              <span class="cert-card__icon" aria-hidden="true">🎓</span>
-              <span class="cert-card__badge">Placeholder</span>
-            </div>
-            <h3 class="cert-card__title">Academic Degree & Accreditation</h3>
-            <p class="cert-card__issuer">Institute of Engineering / Tribhuvan University</p>
-            <p class="cert-card__meta">Civil engineering degree, distinction, and academic credential placeholder.</p>
-            <div class="cert-placeholder-action">
-              <span>Verification Document Pending</span>
-            </div>
-          </article>
-
-          <!-- Certificate Placeholder 3 -->
-          <article class="cert-card cert-card--placeholder">
-            <div class="cert-card__top">
-              <span class="cert-card__icon" aria-hidden="true">📜</span>
-              <span class="cert-card__badge">Placeholder</span>
-            </div>
-            <h3 class="cert-card__title">Technical Certifications & Training</h3>
-            <p class="cert-card__issuer">Professional Engineering Bodies</p>
-            <p class="cert-card__meta">Specialized training in hydrology, structural modeling, and engineering software.</p>
-            <div class="cert-placeholder-action">
-              <span>Verification Document Pending</span>
-            </div>
-          </article>
-        </div>
+        <!-- Dynamic Certificates Grid (Populated via Admin panel) -->
+        <div class="certs-grid" id="certificates-grid"></div>
       </section>
     </Container>
   </section>
@@ -742,34 +700,6 @@ import { site } from '@data/site';
     color: var(--blue);
   }
 
-  .cert-card--placeholder {
-    border-style: dashed;
-    border-color: var(--line);
-    background: var(--surface-soft);
-  }
-
-  .cert-card--placeholder:hover {
-    border-color: var(--muted);
-    transform: none;
-    box-shadow: none;
-  }
-
-  .cert-placeholder-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0.55rem 0.85rem;
-    background: transparent;
-    border: 1px dashed var(--line);
-    border-radius: 6px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--muted);
-    letter-spacing: 0.02em;
-    user-select: none;
-  }
-
   /* --- ACCESSIBLE DIALOG MODAL (Modern Web Guidance) --- */
   dialog.cert-dialog:modal {
     overscroll-behavior: contain;
@@ -1119,6 +1049,8 @@ import { site } from '@data/site';
         .order('created_at', { ascending: false });
 
       if (!certsError && certsData && certsData.length > 0) {
+        const certsSection = document.getElementById('certificates');
+        if (certsSection) certsSection.style.display = 'block';
         const grid = document.getElementById('certificates-grid');
         if (grid) {
           currentCertificates = certsData.map((item: any) => ({
