@@ -40,7 +40,7 @@ import { site } from '@data/site';
               <span class="badge badge--engineer">Civil Engineer · NEC Regd. 92653</span>
               <h2>Balkrishna Jha</h2>
               <p class="about-bio-lead" id="bio-headline">
-                Hydrologist Engineer (Gazetted Third Class Officer) at the Department of Roads, Bridge Division · B.E. Civil (Distinction).
+                Civil Engineer
               </p>
             </div>
           </div>
@@ -48,10 +48,7 @@ import { site } from '@data/site';
           <!-- Dynamic / Editable Biography Content -->
           <div class="about-bio-body" id="bio-body">
             <p>
-              I am a Civil Engineer and Hydrologist Engineer (Gazetted Third Class Officer) serving at the Bridge Division, Department of Roads, Ministry of Physical Infrastructure and Transport, Lalitpur. My work focuses on hydrological and hydraulic checks for bridges, river training works, and designing the safety and stability of streams in the vicinity of bridge sites.
-            </p>
-            <p>
-              Previously, I served as an Engineer (Level 7 Officer) at the Infrastructure Development Office, Sarlahi, verifying and certifying contractor and user committee works alongside billing compliance. I graduated with Distinction (81.07%) in Civil Engineering from Khwopa College of Engineering (Tribhuvan University), secured Rank 1 in the Public Service Commission (Hydrology Sub-group, 2082/83), and received the Best Undergraduate Geotechnical Project Award (2025) from the Nepal Geotechnical Society. I am a licensed Civil Engineer registered with the Nepal Engineering Council (NEC Regd. No. 92653).
+              I am a Civil Engineer who is always eager to learn new things.
             </p>
           </div>
 
@@ -59,13 +56,10 @@ import { site } from '@data/site';
           <div class="about-specialties-wrap">
             <h3 class="about-section-subhead">Core Expertise & Technical Skills</h3>
             <div class="about-badges-grid" id="bio-badges">
-              <span class="spec-badge">🛡️ NEC Regd. No. 92653 (Civil)</span>
-              <span class="spec-badge">💧 Hydrology & Bridge Hydraulics</span>
-              <span class="spec-badge">🌊 River Training & Stream Stability</span>
-              <span class="spec-badge">🏔️ Geotechnical & Tunnel Analysis</span>
-              <span class="spec-badge">📐 AutoCAD, SketchUp & ArcGIS</span>
-              <span class="spec-badge">💻 Python, C++ & Astro</span>
-              <span class="spec-badge">📋 Work Verification & Billing</span>
+              <span class="spec-badge">Rock and Tunneling</span>
+              <span class="spec-badge">Rock Slope</span>
+              <span class="spec-badge">Hydrology</span>
+              <span class="spec-badge">Estimation</span>
             </div>
           </div>
 
@@ -1093,15 +1087,18 @@ import { site } from '@data/site';
       if (!bioError && bioData) {
         const headlineEl = document.getElementById('bio-headline');
         const bodyEl = document.getElementById('bio-body');
-        if (headlineEl && bioData.title) {
+        if (headlineEl && bioData.title && headlineEl.textContent?.trim() !== bioData.title.trim()) {
           headlineEl.textContent = bioData.title;
         }
         if (bodyEl && bioData.description) {
-          bodyEl.innerHTML = bioData.description
+          const newHtml = bioData.description
             .split('\n\n')
             .filter((p: string) => p.trim())
             .map((p: string) => `<p>${escapeHtml(p.trim())}</p>`)
             .join('');
+          if (bodyEl.innerHTML.trim() !== newHtml.trim()) {
+            bodyEl.innerHTML = newHtml;
+          }
         }
 
         // Parse specializations if present in file_url
@@ -1111,9 +1108,12 @@ import { site } from '@data/site';
             if (Array.isArray(parsed.specializations) && parsed.specializations.length > 0) {
               const badgesContainer = document.getElementById('bio-badges');
               if (badgesContainer) {
-                badgesContainer.innerHTML = parsed.specializations
+                const newBadgesHtml = parsed.specializations
                   .map((badgeText: string) => `<span class="spec-badge">${escapeHtml(badgeText)}</span>`)
                   .join('');
+                if (badgesContainer.innerHTML.trim() !== newBadgesHtml.trim()) {
+                  badgesContainer.innerHTML = newBadgesHtml;
+                }
               }
             }
           } catch (e) {}
