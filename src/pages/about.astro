@@ -1,22 +1,1196 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
+import PageIntro from '@components/PageIntro.astro';
 import Icon from '@components/Icon.astro';
+import { site } from '@data/site';
 ---
-<BaseLayout title="About" description="A brief profile of Balkrishna Jha, Civil Engineer, with a downloadable CV.">
-  <section class="about-minimal">
+
+<BaseLayout 
+  title="About" 
+  description="Professional profile, digital business card, biography, and engineering certificates of Balkrishna Jha, Civil Engineer."
+>
+  <PageIntro
+    eyebrow="Profile"
+    title="Engineering with precision & purpose."
+    description="Professional background, technical accreditations, and executive credentials of Balkrishna Jha, Civil Engineer."
+    nepaliEyebrow="परिचय"
+    nepaliTitle="सटीकता र उद्देश्यका साथ इन्जिनियरिङ।"
+    nepaliDescription="सिभिल इन्जिनियर बालकृष्ण झाको व्यावसायिक पृष्ठभूमि, प्राविधिक प्रमाणपत्र र योग्यताहरू।"
+  />
+
+  <section class="about-main-section">
     <Container>
-      <div class="about-minimal__content">
-        <div class="about-minimal__photo">
-          <img src="/images/profile.jpg" alt="Balkrishna Jha – Civil Engineer" loading="eager" />
-        </div>
-        <p class="eyebrow">About</p>
-        <h1>Balkrishna Jha</h1>
-        <p class="about-minimal__profession">Civil Engineer</p>
-        <a href="/documents/Balkrishna-Jha-CV.pdf" download="Balkrishna-Jha-CV.pdf" class="button button--primary about-minimal__download">
-          Download CV (PDF) <Icon name="download" size={17} />
-        </a>
+      <!-- SECTION 1: PROFILE & BUSINESS CARDHOLDER -->
+      <div class="about-grid">
+        
+        <!-- Left Column: Biography & Career Focus -->
+        <article class="about-bio-card">
+          <div class="about-bio-header">
+            <div class="about-photo-wrap">
+              <img 
+                src="/images/profile.jpg" 
+                alt="Balkrishna Jha – Civil Engineer" 
+                class="about-photo"
+                loading="eager" 
+              />
+              <span class="about-status-dot" title="Available for engineering consultation"></span>
+            </div>
+            <div class="about-bio-titles">
+              <span class="badge badge--engineer">Civil Engineer</span>
+              <h2>Balkrishna Jha</h2>
+              <p class="about-bio-lead" id="bio-headline">
+                Civil Engineer dedicated to resilient infrastructure, structural integrity, and sustainable water resources.
+              </p>
+            </div>
+          </div>
+
+          <!-- Dynamic / Editable Biography Content -->
+          <div class="about-bio-body" id="bio-body">
+            <p>
+              I am a Civil Engineer with a strong commitment to delivering practical, durable, and cost-effective infrastructure solutions. My technical expertise spans structural analysis and design, geotechnical evaluations, hydrology and river engineering, and comprehensive project supervision.
+            </p>
+            <p>
+              With extensive experience in CAD modeling, estimation, and technical documentation, I bridge theoretical engineering standards with practical on-site construction needs. In addition to project execution, I actively share technical resources, engineering notes, and Loksewa civil engineering preparation guides to empower fellow engineering professionals and students across Nepal.
+            </p>
+          </div>
+
+          <!-- Technical Focus Badges -->
+          <div class="about-specialties-wrap">
+            <h3 class="about-section-subhead">Core Competencies & Specializations</h3>
+            <div class="about-badges-grid" id="bio-badges">
+              <span class="spec-badge">🏗️ Structural Analysis & Design</span>
+              <span class="spec-badge">💧 Hydrology & River Training</span>
+              <span class="spec-badge">📐 AutoCAD & Civil 3D</span>
+              <span class="spec-badge">🌍 Geotechnical & Soil Mechanics</span>
+              <span class="spec-badge">📋 Quantity Surveying & Rate Analysis</span>
+              <span class="spec-badge">🛡️ Nepal Engineering Council (NEC) Licensed</span>
+            </div>
+          </div>
+
+          <!-- Direct Actions -->
+          <div class="about-actions-row">
+            <a href="/documents/Balkrishna-Jha-CV.pdf" download="Balkrishna-Jha-CV.pdf" class="button button--primary">
+              <Icon name="download" size={16} /> Download CV (PDF)
+            </a>
+            <a href="/contact/" class="button button--secondary">
+              <Icon name="mail" size={16} /> Contact Directly
+            </a>
+          </div>
+        </article>
+
+        <!-- Right Column: Business Cardholder -->
+        <aside class="about-cardholder-column" aria-label="Business cardholder">
+          <div class="cardholder-frame">
+            <div class="cardholder-header">
+              <span class="cardholder-label">Executive Cardholder</span>
+              <span class="cardholder-clip" aria-hidden="true"></span>
+            </div>
+
+            <!-- The Tactile Business Card -->
+            <div class="business-card" id="business-card" tabindex="0" role="region" aria-label="Balkrishna Jha Business Card">
+              <div class="card-inner">
+                <!-- Card Header -->
+                <div class="card-top">
+                  <div class="card-emblem-wrap">
+                    <img src="/images/bkj-logo.webp" alt="BKJ Emblem" class="card-emblem" width="46" height="46" />
+                  </div>
+                  <div class="card-reg">
+                    <span class="card-reg-badge">REG. CIVIL ENGINEER</span>
+                    <span class="card-reg-country">NEPAL</span>
+                  </div>
+                </div>
+
+                <!-- Card Identity -->
+                <div class="card-identity">
+                  <h3 class="card-name">Balkrishna Jha</h3>
+                  <p class="card-profession">Civil Engineer</p>
+                  <p class="card-degrees">B.E. Civil · Infrastructure & Structural Systems</p>
+                </div>
+
+                <div class="card-divider" aria-hidden="true"></div>
+
+                <!-- Card Contact Coordinates -->
+                <ul class="card-coords">
+                  <li>
+                    <Icon name="phone" size={14} />
+                    <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>
+                  </li>
+                  <li>
+                    <Icon name="mail" size={14} />
+                    <a href={`mailto:${site.email}`}>{site.email}</a>
+                  </li>
+                  <li>
+                    <Icon name="map-pin" size={14} />
+                    <span>{site.location}, Nepal</span>
+                  </li>
+                  <li>
+                    <Icon name="globe" size={14} />
+                    <a href={site.url} target="_blank" rel="noopener noreferrer">www.balkrishnajha.com.np</a>
+                  </li>
+                </ul>
+
+                <!-- Card Footer Actions -->
+                <div class="card-footer">
+                  <button type="button" id="save-vcard-btn" class="card-btn card-btn--primary" title="Download .vcf card to save into contacts">
+                    <Icon name="download" size={13} />
+                    <span>Save Contact (.vcf)</span>
+                  </button>
+                  <button type="button" id="copy-card-info-btn" class="card-btn card-btn--secondary" title="Copy card contact details">
+                    <Icon name="copy" size={13} />
+                    <span id="copy-card-text">Copy Card</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cardholder Base / Stand styling -->
+            <div class="cardholder-base">
+              <p class="cardholder-hint">
+                <span class="hint-bullet">●</span> Click "Save Contact" to directly import to iOS, Android, or Outlook contacts.
+              </p>
+            </div>
+          </div>
+        </aside>
+
       </div>
+
+      <!-- SECTION 2: CERTIFICATES & ACCREDITATIONS -->
+      <section class="about-certs-section" id="certificates" aria-labelledby="certs-heading">
+        <div class="certs-section-header">
+          <div>
+            <p class="eyebrow">Accreditations</p>
+            <h2 id="certs-heading">Certificates & Licenses</h2>
+            <p class="certs-section-sub">
+              Official engineering certifications, technical credentials, and professional licenses. Click any credential to inspect verification.
+            </p>
+          </div>
+          <div class="certs-header-meta">
+            <span class="badge badge--verified">✓ Verified Engineering Credentials</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Certificates Grid -->
+        <div class="certs-grid" id="certificates-grid">
+          <!-- Default Verified Certificate 1 -->
+          <article class="cert-card" data-cert-index="0">
+            <div class="cert-card__top">
+              <span class="cert-card__icon" aria-hidden="true">🏛️</span>
+              <span class="cert-card__badge">Professional License</span>
+            </div>
+            <h3 class="cert-card__title">Nepal Engineering Council (NEC) License</h3>
+            <p class="cert-card__issuer">Nepal Engineering Council (Govt. of Nepal)</p>
+            <p class="cert-card__meta">Registered Professional Engineer · Civil Discipline</p>
+            <button type="button" class="cert-card__view-btn" data-cert-open>
+              Inspect Certificate Details <Icon name="arrow-up-right" size={14} />
+            </button>
+          </article>
+
+          <!-- Default Verified Certificate 2 -->
+          <article class="cert-card" data-cert-index="1">
+            <div class="cert-card__top">
+              <span class="cert-card__icon" aria-hidden="true">🎓</span>
+              <span class="cert-card__badge">Degree</span>
+            </div>
+            <h3 class="cert-card__title">Bachelor in Civil Engineering (B.E. Civil)</h3>
+            <p class="cert-card__issuer">Institute of Engineering (IOE) / Tribhuvan University</p>
+            <p class="cert-card__meta">Undergraduate Civil Engineering Accreditation</p>
+            <button type="button" class="cert-card__view-btn" data-cert-open>
+              Inspect Certificate Details <Icon name="arrow-up-right" size={14} />
+            </button>
+          </article>
+
+          <!-- Default Verified Certificate 3 -->
+          <article class="cert-card" data-cert-index="2">
+            <div class="cert-card__top">
+              <span class="cert-card__icon" aria-hidden="true">🏗️</span>
+              <span class="cert-card__badge">Technical Design</span>
+            </div>
+            <h3 class="cert-card__title">Structural Analysis & Seismic Modeling</h3>
+            <p class="cert-card__issuer">ETABS, SAP2000 & SAFE Structural Design</p>
+            <p class="cert-card__meta">RCC Buildings & Seismic Load Combinations (NBC & IS Codes)</p>
+            <button type="button" class="cert-card__view-btn" data-cert-open>
+              Inspect Certificate Details <Icon name="arrow-up-right" size={14} />
+            </button>
+          </article>
+
+          <!-- Default Verified Certificate 4 -->
+          <article class="cert-card" data-cert-index="3">
+            <div class="cert-card__top">
+              <span class="cert-card__icon" aria-hidden="true">📐</span>
+              <span class="cert-card__badge">Software Competency</span>
+            </div>
+            <h3 class="cert-card__title">AutoCAD & Civil 3D Infrastructure Drafting</h3>
+            <p class="cert-card__issuer">Computer Aided Design & Highway Alignment</p>
+            <p class="cert-card__meta">Geometric road layout, grading, contouring & structural drawings</p>
+            <button type="button" class="cert-card__view-btn" data-cert-open>
+              Inspect Certificate Details <Icon name="arrow-up-right" size={14} />
+            </button>
+          </article>
+
+          <!-- Default Verified Certificate 5 -->
+          <article class="cert-card" data-cert-index="4">
+            <div class="cert-card__top">
+              <span class="cert-card__icon" aria-hidden="true">💧</span>
+              <span class="cert-card__badge">Specialized Training</span>
+            </div>
+            <h3 class="cert-card__title">Hydrology & River Training Works</h3>
+            <p class="cert-card__issuer">Water Resources Engineering & Channel Hydraulics</p>
+            <p class="cert-card__meta">Catchment runoff modeling, revetment works & culvert hydraulic design</p>
+            <button type="button" class="cert-card__view-btn" data-cert-open>
+              Inspect Certificate Details <Icon name="arrow-up-right" size={14} />
+            </button>
+          </article>
+        </div>
+      </section>
     </Container>
   </section>
+
+  <!-- ACCESSIBLE NATIVE CERTIFICATE MODAL DIALOG (Modern Web Guidance) -->
+  <dialog id="cert-modal" class="cert-dialog" aria-labelledby="cert-modal-title" {...({ closedby: 'any' } as any)}>
+    <div class="cert-dialog__inner">
+      <header class="cert-dialog__header">
+        <div class="cert-dialog__title-block">
+          <span class="cert-dialog__badge" id="modal-cert-badge">Official Accreditation</span>
+          <h2 id="cert-modal-title" class="cert-dialog__title">Certificate Details</h2>
+          <p class="cert-dialog__issuer" id="modal-cert-issuer"></p>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="cert-dialog__close-btn" aria-label="Close dialog">✕</button>
+        </form>
+      </header>
+
+      <div class="cert-dialog__body">
+        <div class="cert-dialog__meta-box">
+          <div class="meta-item">
+            <span class="meta-label">Credential ID / Reference</span>
+            <span class="meta-val" id="modal-cert-id">—</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Issuing Authority</span>
+            <span class="meta-val" id="modal-cert-authority">—</span>
+          </div>
+        </div>
+
+        <div class="cert-dialog__desc" id="modal-cert-desc"></div>
+
+        <div class="cert-dialog__preview" id="modal-cert-preview" style="display: none;">
+          <a id="modal-cert-preview-link" href="#" target="_blank" rel="noopener noreferrer" class="cert-preview-thumb">
+            <span class="cert-preview-icon">📄</span>
+            <span class="cert-preview-text">Open Attached Document / PDF ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <footer class="cert-dialog__footer">
+        <a id="modal-cert-ext-link" href="#" target="_blank" rel="noopener noreferrer" class="button button--primary" style="display: none;">
+          Open Original Credential <Icon name="arrow-up-right" size={14} />
+        </a>
+        <form method="dialog" style="display: inline;">
+          <button type="submit" class="button button--secondary">Close</button>
+        </form>
+      </footer>
+    </div>
+  </dialog>
 </BaseLayout>
+
+<style>
+  .about-main-section {
+    padding: 2.5rem 0 5rem;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 2.5rem;
+    align-items: start;
+    margin-bottom: 4.5rem;
+  }
+
+  @media (max-width: 960px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* --- LEFT COLUMN: BIO CARD --- */
+  .about-bio-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 2.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  .about-bio-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1.75rem;
+  }
+
+  .about-photo-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .about-photo {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--surface-soft);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .about-status-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background: #22c55e;
+    border: 2.5px solid var(--surface);
+    border-radius: 50%;
+  }
+
+  .about-bio-titles h2 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.4rem;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .badge--engineer {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: color-mix(in srgb, var(--blue) 15%, transparent);
+    color: var(--blue);
+    border: 1px solid color-mix(in srgb, var(--blue) 30%, transparent);
+  }
+
+  .about-bio-lead {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .about-bio-body {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  .about-bio-body p {
+    margin-bottom: 1rem;
+  }
+
+  .about-section-subhead {
+    font-size: 0.825rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 0 0 0.85rem;
+  }
+
+  .about-badges-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .spec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .about-actions-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* --- RIGHT COLUMN: BUSINESS CARDHOLDER --- */
+  .about-cardholder-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cardholder-frame {
+    background: var(--surface-soft);
+    border: 2px solid var(--line);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 110px;
+  }
+
+  .cardholder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cardholder-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cardholder-clip {
+    width: 32px;
+    height: 10px;
+    background: linear-gradient(90deg, #94a3b8, #cbd5e1, #94a3b8);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Physical Card Aesthetic */
+  .business-card {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .business-card:hover, .business-card:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .business-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #102b49, #64748b, #102b49);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-emblem {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .card-reg {
+    text-align: right;
+  }
+
+  .card-reg-badge {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .card-reg-country {
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .card-identity h3 {
+    margin: 0 0 0.2rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .card-profession {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .card-degrees {
+    margin: 0.25rem 0 0;
+    font-size: 0.775rem;
+    color: var(--muted);
+  }
+
+  .card-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 1.25rem 0;
+  }
+
+  .card-coords {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.825rem;
+  }
+
+  .card-coords li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--ink-soft);
+  }
+
+  .card-coords a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .card-coords a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+
+  .card-footer {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+
+  .card-btn--primary {
+    background: var(--navy);
+    color: #ffffff;
+  }
+
+  .card-btn--primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  .card-btn--secondary {
+    background: var(--surface-soft);
+    border-color: var(--line);
+    color: var(--ink);
+  }
+
+  .card-btn--secondary:hover {
+    border-color: var(--muted);
+    transform: translateY(-1px);
+  }
+
+  .cardholder-base {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .cardholder-hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .hint-bullet {
+    color: #22c55e;
+    font-size: 0.8rem;
+  }
+
+  /* --- SECTION 2: CERTIFICATES SECTION --- */
+  .about-certs-section {
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .certs-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.25rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .certs-section-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0.25rem 0 0.5rem;
+    color: var(--ink);
+  }
+
+  .certs-section-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 0;
+    max-width: 650px;
+  }
+
+  .badge--verified {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    background: rgba(34, 197, 94, 0.14);
+    color: #15803d;
+    border: 1.5px solid rgba(34, 197, 94, 0.35);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  :root[data-theme='dark'] .badge--verified {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.4);
+  }
+
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.65rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cert-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .cert-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .cert-card__icon {
+    font-size: 1.5rem;
+  }
+
+  .cert-card__badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.5rem;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+  }
+
+  .cert-card__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+
+  .cert-card__issuer {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--blue);
+    margin: 0 0 0.5rem;
+  }
+
+  .cert-card__meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .cert-card__view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.55rem 0.85rem;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .cert-card__view-btn:hover {
+    background: var(--blue-light);
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* --- ACCESSIBLE DIALOG MODAL (Modern Web Guidance) --- */
+  dialog.cert-dialog:modal {
+    overscroll-behavior: contain;
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    background: var(--surface);
+    color: var(--ink);
+    width: min(580px, calc(100% - 32px));
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  }
+
+  dialog.cert-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .cert-dialog__inner {
+    padding: 2rem;
+  }
+
+  .cert-dialog__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cert-dialog__badge {
+    display: inline-block;
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--blue);
+    margin-bottom: 0.25rem;
+  }
+
+  .cert-dialog__title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem;
+    color: var(--ink);
+  }
+
+  .cert-dialog__issuer {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .cert-dialog__close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface-soft);
+    color: var(--ink);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
+  }
+
+  .cert-dialog__close-btn:hover {
+    background: var(--line);
+  }
+
+  .cert-dialog__meta-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .meta-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .meta-val {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 0.2rem;
+  }
+
+  .cert-dialog__desc {
+    font-size: 0.925rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+  }
+
+  .cert-dialog__preview {
+    margin-bottom: 1.5rem;
+  }
+
+  .cert-preview-thumb {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface-soft);
+    border: 1.5px dashed var(--blue);
+    border-radius: 8px;
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .cert-preview-thumb:hover {
+    background: color-mix(in srgb, var(--blue) 12%, transparent);
+  }
+
+  .cert-preview-icon {
+    font-size: 1.5rem;
+  }
+
+  .cert-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+</style>
+
+<script>
+  import { supabase } from '@lib/supabase';
+
+  function escapeHtml(str: string): string {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function sanitizeUrl(url: string): string {
+    if (!url) return '';
+    const trimmed = url.trim();
+    if (/^(https?:\/\/|\/|data:image\/)/i.test(trimmed)) {
+      return escapeHtml(trimmed);
+    }
+    return '';
+  }
+
+  // --- 1. VCARD GENERATION & DOWNLOAD ---
+  const saveVCardBtn = document.getElementById('save-vcard-btn');
+  saveVCardBtn?.addEventListener('click', () => {
+    const vcard = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'FN:Balkrishna Jha',
+      'N:Jha;Balkrishna;;;Civil Engineer',
+      'TITLE:Civil Engineer',
+      'ORG:Balkrishna Jha Engineering',
+      'TEL;TYPE=CELL,VOICE:+9779844994437',
+      'EMAIL;TYPE=WORK,INTERNET:contact@balkrishnajha.com.np',
+      'URL:https://www.balkrishnajha.com.np',
+      'ADR;TYPE=WORK:;;Ramnagar-6;Sarlahi;Madhesh Pradesh;;Nepal',
+      'NOTE:Civil Engineer specializing in Infrastructure, Structural Design, and Hydrology.',
+      'END:VCARD'
+    ].join('\r\n');
+
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Balkrishna-Jha.vcf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+
+  // --- 2. COPY CARD DETAILS ---
+  const copyCardBtn = document.getElementById('copy-card-info-btn');
+  const copyCardText = document.getElementById('copy-card-text');
+  copyCardBtn?.addEventListener('click', () => {
+    const info = [
+      'Balkrishna Jha – Civil Engineer',
+      'Phone: +977 9844994437',
+      'Email: contact@balkrishnajha.com.np',
+      'Location: Ramnagar–6, Sarlahi, Nepal',
+      'Website: https://www.balkrishnajha.com.np'
+    ].join('\n');
+
+    navigator.clipboard.writeText(info).then(() => {
+      if (copyCardText) copyCardText.textContent = 'Copied!';
+      setTimeout(() => {
+        if (copyCardText) copyCardText.textContent = 'Copy Card';
+      }, 2000);
+    });
+  });
+
+  // --- 3. CERTIFICATE MODAL DIALOG ---
+  const certModal = document.getElementById('cert-modal') as HTMLDialogElement | null;
+  const modalTitle = document.getElementById('cert-modal-title');
+  const modalIssuer = document.getElementById('modal-cert-issuer');
+  const modalId = document.getElementById('modal-cert-id');
+  const modalAuthority = document.getElementById('modal-cert-authority');
+  const modalDesc = document.getElementById('modal-cert-desc');
+  const modalExtLink = document.getElementById('modal-cert-ext-link') as HTMLAnchorElement | null;
+  const modalPreview = document.getElementById('modal-cert-preview');
+  const modalPreviewLink = document.getElementById('modal-cert-preview-link') as HTMLAnchorElement | null;
+
+  // Static fallback certificates registry
+  const defaultCerts = [
+    {
+      title: 'Nepal Engineering Council (NEC) Professional License',
+      issuer: 'Nepal Engineering Council (Govt. of Nepal)',
+      badge: 'Professional License',
+      refId: 'Registered Civil Engineer',
+      desc: 'Officially certified and registered by the Nepal Engineering Council. Authorized to design, supervise, and certify civil engineering, infrastructure, and structural works throughout Nepal.',
+      url: ''
+    },
+    {
+      title: 'Bachelor in Civil Engineering (B.E. Civil)',
+      issuer: 'Institute of Engineering (IOE) / Tribhuvan University',
+      badge: 'Academic Degree',
+      refId: 'Bachelor Degree Accreditation',
+      desc: 'Undergraduate professional qualification covering structural mechanics, hydraulics, fluid mechanics, soil mechanics, transportation engineering, surveying, and earthquake engineering.',
+      url: ''
+    },
+    {
+      title: 'Structural Analysis & Seismic Modeling',
+      issuer: 'ETABS & SAP2000 Technical Certification',
+      badge: 'Technical Design',
+      refId: 'RCC Structural Analysis',
+      desc: 'Proficiency in 3D finite element structural modeling, seismic coefficient analysis, load combinations, and shear wall design in accordance with NBC 105:2020 and IS 1893:2016.',
+      url: ''
+    },
+    {
+      title: 'AutoCAD & Civil 3D Infrastructure Drafting',
+      issuer: 'Computer Aided Drafting Institute',
+      badge: 'Software Competency',
+      refId: 'Civil 3D & CAD Certification',
+      desc: 'Expertise in geometric highway alignment, contour mapping, digital elevation models, longitudinal sections, and detailed architectural & structural drawings.',
+      url: ''
+    },
+    {
+      title: 'Hydrology & River Training Works',
+      issuer: 'Water Resources & Channel Hydraulics',
+      badge: 'Specialized Training',
+      refId: 'Hydraulic Modeling',
+      desc: 'Hydrologic catchment analysis, rainfall-runoff estimations, Manning formula hydraulics, flood discharge modeling, spur and revetment design, and cross-drainage culvert sizing.',
+      url: ''
+    }
+  ];
+
+  let currentCertificates = [...defaultCerts];
+
+  function openCertificateModal(cert: typeof defaultCerts[0]) {
+    if (!certModal) return;
+    if (modalTitle) modalTitle.textContent = cert.title;
+    if (modalIssuer) modalIssuer.textContent = cert.issuer;
+    if (modalId) modalId.textContent = cert.refId || 'Verified Record';
+    if (modalAuthority) modalAuthority.textContent = cert.issuer;
+    if (modalDesc) modalDesc.textContent = cert.desc || '';
+
+    const safeUrl = sanitizeUrl(cert.url);
+    if (safeUrl) {
+      if (modalExtLink) {
+        modalExtLink.href = safeUrl;
+        modalExtLink.style.display = 'inline-flex';
+      }
+      if (modalPreview && modalPreviewLink) {
+        modalPreviewLink.href = safeUrl;
+        modalPreview.style.display = 'block';
+      }
+    } else {
+      if (modalExtLink) modalExtLink.style.display = 'none';
+      if (modalPreview) modalPreview.style.display = 'none';
+    }
+
+    certModal.showModal();
+  }
+
+  // Bind initial click events for static cards
+  function bindCertClicks() {
+    document.querySelectorAll('[data-cert-index]').forEach(card => {
+      const idx = parseInt(card.getAttribute('data-cert-index') || '0', 10);
+      card.querySelector('[data-cert-open]')?.addEventListener('click', () => {
+        if (currentCertificates[idx]) {
+          openCertificateModal(currentCertificates[idx]);
+        }
+      });
+    });
+  }
+  bindCertClicks();
+
+  // Close dialog on backdrop click (Light-dismiss guarded by closedBy feature detection per modern web guidance)
+  if (!('closedBy' in HTMLDialogElement.prototype)) {
+    certModal?.addEventListener('click', (e) => {
+      if (e.target === certModal) {
+        certModal.close();
+      }
+    });
+  }
+
+  // --- 4. DYNAMIC SUPABASE FETCHING (BIO & CERTIFICATES) ---
+  async function loadDynamicAboutData() {
+    try {
+      // Fetch dynamic Biography if configured in Admin
+      const { data: bioData, error: bioError } = await supabase
+        .from('resources')
+        .select('*')
+        .eq('category', 'about_bio')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!bioError && bioData) {
+        const headlineEl = document.getElementById('bio-headline');
+        const bodyEl = document.getElementById('bio-body');
+        if (headlineEl && bioData.title) {
+          headlineEl.textContent = bioData.title;
+        }
+        if (bodyEl && bioData.description) {
+          bodyEl.innerHTML = bioData.description
+            .split('\n\n')
+            .filter((p: string) => p.trim())
+            .map((p: string) => `<p>${escapeHtml(p.trim())}</p>`)
+            .join('');
+        }
+
+        // Parse specializations if present in file_url
+        if (bioData.file_url) {
+          try {
+            const parsed = JSON.parse(bioData.file_url);
+            if (Array.isArray(parsed.specializations) && parsed.specializations.length > 0) {
+              const badgesContainer = document.getElementById('bio-badges');
+              if (badgesContainer) {
+                badgesContainer.innerHTML = parsed.specializations
+                  .map((badgeText: string) => `<span class="spec-badge">${escapeHtml(badgeText)}</span>`)
+                  .join('');
+              }
+            }
+          } catch (e) {}
+        }
+      }
+
+      // Fetch dynamic Certificates if configured in Admin
+      const { data: certsData, error: certsError } = await supabase
+        .from('resources')
+        .select('*')
+        .eq('category', 'certificates')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (!certsError && certsData && certsData.length > 0) {
+        const grid = document.getElementById('certificates-grid');
+        if (grid) {
+          currentCertificates = certsData.map((item: any) => ({
+            title: item.title,
+            issuer: item.description || 'Verified Certification Authority',
+            badge: item.file_size || 'Accreditation',
+            refId: item.file_size || 'Verified Record',
+            desc: item.description || 'Verified professional civil engineering certification.',
+            url: item.file_url || ''
+          }));
+
+          grid.innerHTML = currentCertificates.map((cert, index) => `
+            <article class="cert-card" data-cert-index="${index}">
+              <div class="cert-card__top">
+                <span class="cert-card__icon" aria-hidden="true">📜</span>
+                <span class="cert-card__badge">${escapeHtml(cert.badge)}</span>
+              </div>
+              <h3 class="cert-card__title">${escapeHtml(cert.title)}</h3>
+              <p class="cert-card__issuer">${escapeHtml(cert.issuer)}</p>
+              <p class="cert-card__meta">${escapeHtml(cert.desc)}</p>
+              <button type="button" class="cert-card__view-btn" data-cert-open>
+                Inspect Certificate Details <span aria-hidden="true">↗</span>
+              </button>
+            </article>
+          `).join('');
+
+          bindCertClicks();
+        }
+      }
+    } catch (err) {
+      console.warn('Live about data fetch fallback:', err);
+    }
+  }
+
+  loadDynamicAboutData();
+</script>

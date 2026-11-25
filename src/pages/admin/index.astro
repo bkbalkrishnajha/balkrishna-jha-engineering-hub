@@ -57,6 +57,7 @@ import Container from '@components/Container.astro';
         <!-- Navigation Tabs -->
         <nav class="dash-tabs" aria-label="Dashboard sections">
           <button type="button" class="dash-tab active" data-tab="overview">📊 Overview</button>
+          <button type="button" class="dash-tab" data-tab="about">👤 Bio & Certificates</button>
           <button type="button" class="dash-tab" data-tab="resources">📚 Resources</button>
           <button type="button" class="dash-tab" data-tab="projects">🏗️ Projects</button>
           <button type="button" class="dash-tab" data-tab="posts">✍️ Blog Posts</button>
@@ -69,6 +70,11 @@ import Container from '@components/Container.astro';
         <!-- TAB 1: OVERVIEW -->
         <section id="tab-overview" class="tab-pane active">
           <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Certificates</span>
+              <span class="stat-value" id="stat-certs-count">-</span>
+              <span class="stat-desc">Accreditations & licenses</span>
+            </div>
             <div class="stat-card">
               <span class="stat-label">Resources</span>
               <span class="stat-value" id="stat-resources-count">-</span>
@@ -94,6 +100,7 @@ import Container from '@components/Container.astro';
           <div class="overview-quick-actions admin-card">
             <h3>Quick Actions</h3>
             <div class="action-buttons">
+              <button type="button" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=about]').click();">Edit Bio & Certificates</button>
               <button type="button" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=resources]').click();">Add Resource</button>
               <button type="button" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=projects]').click();">Add Project</button>
               <button type="button" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-tab=posts]').click();">Write Blog Post</button>
@@ -350,6 +357,107 @@ import Container from '@components/Container.astro';
 
           <div id="storage-files-container" class="admin-list-container">
             <div class="admin-loading-inline">Loading storage files...</div>
+          </div>
+        </section>
+
+        <!-- TAB 6: BIO & CERTIFICATES -->
+        <section id="tab-about" class="tab-pane">
+          <div class="tab-header">
+            <div>
+              <h2>Biography & Certificates</h2>
+              <p class="text-muted">Edit your public biography, core specializations, and manage professional certificates displayed on the About page.</p>
+            </div>
+            <a href="/about/" target="_blank" class="btn btn-outline btn-sm">Preview About Page ↗</a>
+          </div>
+
+          <!-- SUB-SECTION 1: BIOGRAPHY EDITOR -->
+          <div class="admin-card" style="margin-bottom: 2.5rem;">
+            <h3>Edit Biography & Profile Headline</h3>
+            <p class="text-muted text-sm">Updates the narrative biography, headline, and competencies on the public About page in real-time.</p>
+            
+            <form id="bio-editor-form" style="margin-top: 1.5rem;">
+              <div class="form-group">
+                <label for="admin-bio-headline">Profile Headline *</label>
+                <input type="text" id="admin-bio-headline" required class="admin-input" placeholder="e.g. Civil Engineer dedicated to resilient infrastructure, structural integrity, and sustainable water resources." />
+              </div>
+
+              <div class="form-group">
+                <label for="admin-bio-body">Biography Narrative (Separate paragraphs with blank lines) *</label>
+                <textarea id="admin-bio-body" rows="6" required class="admin-input" placeholder="Write your professional bio narrative here..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="admin-bio-specs">Core Specializations (Comma-separated)</label>
+                <input type="text" id="admin-bio-specs" class="admin-input" placeholder="e.g. Structural Analysis & Design, Hydrology & River Training, AutoCAD & Civil 3D, Geotechnical & Soil Mechanics, Quantity Surveying & Rate Analysis, Nepal Engineering Council (NEC) Licensed" />
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" id="save-bio-btn" class="btn btn-primary">Save Biography</button>
+                <button type="button" id="reset-bio-btn" class="btn btn-secondary">Restore Default Bio</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- SUB-SECTION 2: CERTIFICATES MANAGER -->
+          <div class="tab-header" style="margin-top: 2rem;">
+            <div>
+              <h3>Certificates & Accreditations</h3>
+              <p class="text-muted text-sm">Manage civil engineering certificates, licenses, and verified credentials.</p>
+            </div>
+            <button type="button" id="toggle-cert-form-btn" class="btn btn-primary btn-sm">+ New Certificate</button>
+          </div>
+
+          <!-- Certificate Add/Edit Form Card -->
+          <div id="cert-form-card" class="admin-card" style="display: none; margin-bottom: 1.5rem;">
+            <h4 id="cert-form-header" style="margin-top: 0;">Add New Certificate</h4>
+            <form id="cert-form" style="margin-top: 1rem;">
+              <input type="hidden" id="cert-id" />
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="cert-title">Certificate / License Title *</label>
+                  <input type="text" id="cert-title" required class="admin-input" placeholder="e.g. Nepal Engineering Council (NEC) License" />
+                </div>
+                <div class="form-group flex-1">
+                  <label for="cert-issuer">Issuing Authority / Organization *</label>
+                  <input type="text" id="cert-issuer" required class="admin-input" placeholder="e.g. Nepal Engineering Council (Govt of Nepal)" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="cert-date">Credential ID / Reference / Year</label>
+                  <input type="text" id="cert-date" class="admin-input" placeholder="e.g. 2024 · Reg: Civil-12345" />
+                </div>
+                <div class="form-group flex-1">
+                  <label for="cert-visibility">Visibility *</label>
+                  <select id="cert-visibility" class="admin-input">
+                    <option value="public">🌐 Public (Visible on About page)</option>
+                    <option value="admin_only">🔒 Admin Only (Draft)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="cert-url">Certificate Document / PDF / Image URL</label>
+                <input type="text" id="cert-url" class="admin-input" placeholder="https://... (or upload file in File Storage tab and paste URL here)" />
+              </div>
+
+              <div class="form-group">
+                <label for="cert-description">Short Description / Scope</label>
+                <textarea id="cert-description" rows="2" class="admin-input" placeholder="e.g. Registered Professional Engineer authorized for structural, infrastructural, and civil design."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Certificate</button>
+                <button type="button" id="cancel-cert-btn" class="btn btn-secondary">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Certificates Table -->
+          <div id="certs-list-container" class="admin-list-container">
+            <div class="admin-loading-inline">Loading certificates...</div>
           </div>
         </section>
       </div>
@@ -984,6 +1092,10 @@ import Container from '@components/Container.astro';
       tabPanes.forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`tab-${target}`)?.classList.add('active');
+      if (target === 'about') {
+        loadAdminBio();
+        loadCertificates();
+      }
       if (target === 'resources') loadResources();
       if (target === 'projects') loadProjects();
       if (target === 'posts') loadPosts();
@@ -1046,18 +1158,262 @@ import Container from '@components/Container.astro';
 
   // --- STATS OVERVIEW ---
   async function loadOverviewStats() {
-    const { count: resCount } = await supabase.from('resources').select('*', { count: 'exact', head: true });
+    const { count: certCount } = await supabase.from('resources').select('*', { count: 'exact', head: true }).eq('category', 'certificates');
+    const { count: resCount } = await supabase.from('resources').select('*', { count: 'exact', head: true }).neq('category', 'about_bio').neq('category', 'certificates');
     const { count: projCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
     const { count: postCount } = await supabase.from('posts').select('*', { count: 'exact', head: true });
 
+    const certNode = document.getElementById('stat-certs-count');
     const resNode = document.getElementById('stat-resources-count');
     const projNode = document.getElementById('stat-projects-count');
     const postNode = document.getElementById('stat-posts-count');
 
+    if (certNode) certNode.textContent = String(certCount ?? 0);
     if (resNode) resNode.textContent = String(resCount ?? 0);
     if (projNode) projNode.textContent = String(projCount ?? 0);
     if (postNode) postNode.textContent = String(postCount ?? 0);
   }
+
+  // --- BIO & ABOUT LOGIC ---
+  const defaultHeadline = 'Civil Engineer dedicated to resilient infrastructure, structural integrity, and sustainable water resources.';
+  const defaultBody = `I am a Civil Engineer with a strong commitment to delivering practical, durable, and cost-effective infrastructure solutions. My technical expertise spans structural analysis and design, geotechnical evaluations, hydrology and river engineering, and comprehensive project supervision.
+
+With extensive experience in CAD modeling, estimation, and technical documentation, I bridge theoretical engineering standards with practical on-site construction needs. In addition to project execution, I actively share technical resources, engineering notes, and Loksewa civil engineering preparation guides to empower fellow engineering professionals and students across Nepal.`;
+  const defaultSpecs = 'Structural Analysis & Design, Hydrology & River Training, AutoCAD & Civil 3D, Geotechnical & Soil Mechanics, Quantity Surveying & Rate Analysis, Nepal Engineering Council (NEC) Licensed';
+
+  const bioForm = document.getElementById('bio-editor-form') as HTMLFormElement | null;
+  const bioHeadlineInput = document.getElementById('admin-bio-headline') as HTMLInputElement | null;
+  const bioBodyInput = document.getElementById('admin-bio-body') as HTMLTextAreaElement | null;
+  const bioSpecsInput = document.getElementById('admin-bio-specs') as HTMLInputElement | null;
+  const resetBioBtn = document.getElementById('reset-bio-btn');
+
+  let currentBioId: string | null = null;
+
+  async function loadAdminBio() {
+    try {
+      const { data } = await supabase
+        .from('resources')
+        .select('*')
+        .eq('category', 'about_bio')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        currentBioId = data.id;
+        if (bioHeadlineInput) bioHeadlineInput.value = data.title || defaultHeadline;
+        if (bioBodyInput) bioBodyInput.value = data.description || defaultBody;
+        if (bioSpecsInput && data.file_url) {
+          try {
+            const parsed = JSON.parse(data.file_url);
+            bioSpecsInput.value = Array.isArray(parsed.specializations) ? parsed.specializations.join(', ') : defaultSpecs;
+          } catch {
+            bioSpecsInput.value = defaultSpecs;
+          }
+        }
+      } else {
+        currentBioId = null;
+        if (bioHeadlineInput && !bioHeadlineInput.value) bioHeadlineInput.value = defaultHeadline;
+        if (bioBodyInput && !bioBodyInput.value) bioBodyInput.value = defaultBody;
+        if (bioSpecsInput && !bioSpecsInput.value) bioSpecsInput.value = defaultSpecs;
+      }
+    } catch (err: any) {
+      console.error('Error loading bio:', err);
+    }
+  }
+
+  bioForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const headline = bioHeadlineInput?.value.trim() || defaultHeadline;
+    const body = bioBodyInput?.value.trim() || defaultBody;
+    const specs = (bioSpecsInput?.value || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const payload = {
+      title: headline,
+      category: 'about_bio',
+      description: body,
+      file_url: JSON.stringify({ specializations: specs }),
+      file_size: 'Profile Biography',
+      is_published: true
+    };
+
+    let res;
+    if (currentBioId) {
+      res = await supabase.from('resources').update(payload).eq('id', currentBioId);
+    } else {
+      res = await supabase.from('resources').insert([payload]);
+    }
+
+    if (res.error) {
+      showFeedback(`Error saving biography: ${res.error.message}`, true);
+    } else {
+      showFeedback('Biography updated successfully! Public About page is now updated.');
+      loadAdminBio();
+    }
+  });
+
+  resetBioBtn?.addEventListener('click', () => {
+    if (confirm('Reset form fields to official default biography? (You still need to click Save Biography to apply).')) {
+      if (bioHeadlineInput) bioHeadlineInput.value = defaultHeadline;
+      if (bioBodyInput) bioBodyInput.value = defaultBody;
+      if (bioSpecsInput) bioSpecsInput.value = defaultSpecs;
+    }
+  });
+
+  // --- CERTIFICATES LOGIC ---
+  const toggleCertFormBtn = document.getElementById('toggle-cert-form-btn');
+  const certFormCard = document.getElementById('cert-form-card')!;
+  const certForm = document.getElementById('cert-form') as HTMLFormElement;
+  const certsContainer = document.getElementById('certs-list-container')!;
+  const cancelCertBtn = document.getElementById('cancel-cert-btn');
+
+  toggleCertFormBtn?.addEventListener('click', () => {
+    certForm.reset();
+    (document.getElementById('cert-id') as HTMLInputElement).value = '';
+    (document.getElementById('cert-visibility') as HTMLSelectElement).value = 'public';
+    document.getElementById('cert-form-header')!.textContent = 'Add New Certificate';
+    certFormCard.style.display = certFormCard.style.display === 'none' ? 'block' : 'none';
+  });
+
+  cancelCertBtn?.addEventListener('click', () => {
+    certFormCard.style.display = 'none';
+  });
+
+  certForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById('cert-id') as HTMLInputElement).value;
+    const title = (document.getElementById('cert-title') as HTMLInputElement).value.trim();
+    const issuer = (document.getElementById('cert-issuer') as HTMLInputElement).value.trim();
+    const date = (document.getElementById('cert-date') as HTMLInputElement).value.trim();
+    const url = (document.getElementById('cert-url') as HTMLInputElement).value.trim();
+    const visibility = (document.getElementById('cert-visibility') as HTMLSelectElement).value;
+    const description = (document.getElementById('cert-description') as HTMLTextAreaElement).value.trim() || issuer;
+
+    const payload = {
+      title,
+      category: 'certificates',
+      description,
+      file_url: url,
+      file_size: date,
+      is_published: visibility === 'public'
+    };
+
+    let res;
+    if (id) {
+      res = await supabase.from('resources').update(payload).eq('id', id);
+    } else {
+      res = await supabase.from('resources').insert([payload]);
+    }
+
+    if (res.error) {
+      showFeedback(`Error: ${res.error.message}`, true);
+    } else {
+      showFeedback(`Certificate "${title}" saved successfully!`);
+      certFormCard.style.display = 'none';
+      certForm.reset();
+      loadCertificates();
+      loadOverviewStats();
+    }
+  });
+
+  async function loadCertificates() {
+    certsContainer.innerHTML = '<div class="admin-loading-inline">Loading certificates...</div>';
+    const { data, error } = await supabase
+      .from('resources')
+      .select('*')
+      .eq('category', 'certificates')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      certsContainer.innerHTML = `<div class="empty-state">Error loading certificates: ${escapeHtml(error.message)}</div>`;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      certsContainer.innerHTML = '<div class="empty-state"><p>No custom certificates added yet. Default verified certificates are currently displayed on the About page. Click "+ New Certificate" above to add your own.</p></div>';
+      return;
+    }
+
+    let html = `
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th style="width: 38%;">Certificate Title & Reference</th>
+            <th style="width: 24%;">Issuing Organization</th>
+            <th style="width: 14%;">Visibility</th>
+            <th style="width: 12%;">Attached URL</th>
+            <th style="width: 12%; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach((cert: any) => {
+      const isPublic = cert.is_published !== false;
+      const visibilityBadge = isPublic
+        ? '<span class="badge badge--public">🌐 Public</span>'
+        : '<span class="badge badge--admin">🔒 Admin Only</span>';
+
+      const fileLink = cert.file_url
+        ? `<a href="${sanitizeUrl(cert.file_url)}" target="_blank" rel="noopener noreferrer" class="cell-link">View File ↗</a>`
+        : '<span class="cell-sub-desc">No link</span>';
+
+      html += `
+        <tr>
+          <td>
+            <div class="cell-title-wrap">
+              <div class="cell-main-title">${escapeHtml(cert.title)}</div>
+              ${cert.file_size ? `<div class="cell-sub-desc">${escapeHtml(cert.file_size)}</div>` : ''}
+            </div>
+          </td>
+          <td><span class="cell-text">${escapeHtml(cert.description || '—')}</span></td>
+          <td>${visibilityBadge}</td>
+          <td>${fileLink}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn btn-secondary btn-sm" onclick="window.editCertificate('${encodeURIComponent(cert.id)}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="window.deleteCertificate('${encodeURIComponent(cert.id)}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += '</tbody></table>';
+    certsContainer.innerHTML = html;
+  }
+
+  (window as any).editCertificate = async (id: string) => {
+    const { data } = await supabase.from('resources').select('*').eq('id', decodeURIComponent(id)).single();
+    if (data) {
+      (document.getElementById('cert-id') as HTMLInputElement).value = data.id;
+      (document.getElementById('cert-title') as HTMLInputElement).value = data.title;
+      (document.getElementById('cert-issuer') as HTMLInputElement).value = data.description || '';
+      (document.getElementById('cert-date') as HTMLInputElement).value = data.file_size || '';
+      (document.getElementById('cert-url') as HTMLInputElement).value = data.file_url || '';
+      (document.getElementById('cert-visibility') as HTMLSelectElement).value = data.is_published === false ? 'admin_only' : 'public';
+      (document.getElementById('cert-description') as HTMLTextAreaElement).value = data.description || '';
+
+      document.getElementById('cert-form-header')!.textContent = `Edit Certificate: ${data.title}`;
+      certFormCard.style.display = 'block';
+      certFormCard.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  (window as any).deleteCertificate = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this certificate?')) return;
+    const { error } = await supabase.from('resources').delete().eq('id', decodeURIComponent(id));
+    if (error) {
+      showFeedback(`Delete error: ${error.message}`, true);
+    } else {
+      showFeedback('Certificate deleted successfully.');
+      loadCertificates();
+      loadOverviewStats();
+    }
+  };
 
   // --- 1. RESOURCES LOGIC ---
   const toggleResFormBtn = document.getElementById('toggle-resource-form-btn');
